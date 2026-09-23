@@ -1,8 +1,10 @@
 import type { CategoryRow } from '@fia/shared/db'
 import type { Hono } from 'hono'
 import { createApp } from '../app/create-app'
+import type { BetterAuthInstance } from '../core/auth/better-auth'
 import type { AppEnv, SessionUser } from '../core/auth/session'
 import { type Logger, silentLogger } from '../core/logger'
+import type { AuthHandler } from '../features/auth/auth.routes'
 import {
   createInMemoryCategoriesRepository,
   type InMemoryCategoriesRepository,
@@ -16,6 +18,7 @@ export type TestAppOptions = {
   readonly categories?: readonly CategoryRow[]
   readonly databaseUp?: boolean
   readonly logger?: Logger
+  readonly auth?: BetterAuthInstance | AuthHandler
 }
 
 export type TestApp = {
@@ -31,6 +34,7 @@ export const createTestApp = (options: TestAppOptions = {}): TestApp => {
     sessionResolver: fixedSessionResolver(options.sessionUser ?? null),
     databasePing: () => Promise.resolve(options.databaseUp ?? true),
     repositories: { categories },
+    ...(options.auth !== undefined ? { auth: options.auth } : {}),
   })
   return { app, categories }
 }

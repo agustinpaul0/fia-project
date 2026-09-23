@@ -18,6 +18,14 @@ export const ERROR_CATALOG = {
     status: 403,
     message: 'No tenés permisos para realizar esta acción.',
   },
+  INVALID_CREDENTIALS: {
+    status: 401,
+    message: 'El correo electrónico o la contraseña son incorrectos.',
+  },
+  USER_ALREADY_EXISTS: {
+    status: 409,
+    message: 'Ya existe un usuario registrado con ese correo electrónico.',
+  },
   ROUTE_NOT_FOUND: {
     status: 404,
     message: 'La dirección solicitada no existe.',

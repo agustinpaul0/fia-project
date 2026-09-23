@@ -24,7 +24,7 @@ cual; lo agregado por el equipo implementador está marcado como **[equipo]**.
 | ID | Ítem | SP | BV | Est. | Real | Estado | Dueño | Depende de | PR |
 |---|---|---|---|---|---|---|---|---|---|
 | T-0 | Setup del repositorio y convenciones **[equipo]** | — | — | — | — | Hecho | Agustín | — | — |
-| T-1 | Autenticación mínima con roles **[equipo]** | — | — | — | | Pendiente | | T-0 | |
+| T-1 | Autenticación mínima con roles **[equipo]** | — | — | — | 3 h | Hecho | Agustín | T-0 | |
 | T-2 | Modelo de datos base y seed **[equipo]** | — | — | — | | Pendiente | | T-0 | |
 | US-23 | Gestión de cuentas del personal de escuderías | 5 | 13 | 17 h | | Pendiente | | T-1 | |
 | US-20 | Carga y modificación del puntaje de una carrera | 1 | 21 | 12 h | | Pendiente | | T-1, T-2 | |
@@ -42,14 +42,14 @@ Las estimaciones de los habilitadores las hace el equipo **sin IA** (pauta de la
 sesión, pero el login (US-4) no entró al sprint. Se implementa lo mínimo para que las US del sprint funcionen y
 sean seguras; US-4 completa la experiencia más adelante.
 
-- [ ] Better Auth con adaptador Drizzle, plugins `admin` y `bearer` (ADR 0003).
-- [ ] Roles `fia_admin` / `team_staff` / `public` y vínculo usuario ↔ escudería.
-- [ ] Resolver de sesión real en lugar del anónimo (`core/auth/session.ts`).
-- [ ] Pantalla de login mínima; el rol determina la interfaz (adelanto de US-29).
-- [ ] Seed con un admin FIA inicial (credenciales sólo en `.env`).
-- [ ] Política de contraseña, rate limit y tests de contrato de 401/403.
+- [x] Better Auth con adaptador Drizzle, plugins `admin` y `bearer` (ADR 0003).
+- [x] Roles `fia_admin` / `team_staff` / `public` y vínculo usuario ↔ escudería.
+- [x] Resolver de sesión real en lugar del anónimo (`core/auth/session.ts`).
+- [x] Pantalla de login mínima; el rol determina la interfaz (adelanto de US-29).
+- [x] Seed con un admin FIA inicial (credenciales sólo en `.env`).
+- [x] Política de contraseña, rate limit y tests de contrato de 401/403.
 
-**Falta para cerrar**: todo.
+**Falta para cerrar**: ninguno.
 
 ### T-2 — Modelo de datos base y seed [equipo]
 

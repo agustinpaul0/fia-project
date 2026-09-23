@@ -5,7 +5,12 @@ const VALID = { WEB_ORIGIN: 'http://localhost:5173', DATABASE_URL: 'postgres://u
 
 describe('loadEnv', () => {
   it('aplica valores por defecto', () => {
-    expect(loadEnv(VALID)).toMatchObject({ NODE_ENV: 'development', API_PORT: 3000 })
+    expect(loadEnv(VALID)).toMatchObject({
+      NODE_ENV: 'development',
+      API_PORT: 3000,
+      BETTER_AUTH_URL: 'http://localhost:3000',
+      FIA_ADMIN_EMAIL: 'admin@fia.com',
+    })
   })
 
   it('falla si falta una variable obligatoria', () => {

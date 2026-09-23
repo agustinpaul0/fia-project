@@ -5,6 +5,7 @@ import { type AppEnv, resolveSession } from '../core/auth/session'
 import { toErrorBody } from '../core/errors/error-body'
 import { createErrorHandler } from '../core/errors/error-handler'
 import { securityMiddlewares } from '../core/security/security-middlewares'
+import { createAuthRoutes } from '../features/auth/auth.routes'
 import { createCategoriesRoutes } from '../features/categories/categories.routes'
 import { createCategoriesService } from '../features/categories/categories.service'
 import { createHealthRoutes } from '../features/health/health.routes'
@@ -15,6 +16,9 @@ export const createApp = (deps: AppDependencies): Hono<AppEnv> => {
   app.use(...securityMiddlewares(deps.webOrigin))
   app.use(resolveSession(deps.sessionResolver))
   app.route(API_PATHS.health, createHealthRoutes(deps.databasePing))
+  if (deps.auth) {
+    app.route(API_PATHS.auth, createAuthRoutes(deps.auth))
+  }
   app.route(
     API_PATHS.categories,
     createCategoriesRoutes(createCategoriesService(deps.repositories.categories)),
