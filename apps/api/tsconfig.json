@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": { "types": ["node"] },
+  "include": [
+    "src",
+    "tsdown.config.ts",
+    "vitest.setup.ts",
+    "vitest.int.global-setup.ts",
+    "vitest.config.ts",
+    "vitest.int.config.ts"
+  ]
+}

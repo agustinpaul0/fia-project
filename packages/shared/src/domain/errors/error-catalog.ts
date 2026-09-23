@@ -1,0 +1,58 @@
+export type ErrorStatus = 400 | 401 | 403 | 404 | 409 | 413 | 422 | 429 | 500 | 503
+
+export type ErrorDefinition = {
+  readonly status: ErrorStatus
+  readonly message: string
+}
+
+export const ERROR_CATALOG = {
+  VALIDATION_FAILED: {
+    status: 400,
+    message: 'Hay datos inválidos. Revisá los campos marcados y volvé a intentar.',
+  },
+  UNAUTHENTICATED: {
+    status: 401,
+    message: 'Tenés que iniciar sesión para realizar esta acción.',
+  },
+  FORBIDDEN: {
+    status: 403,
+    message: 'No tenés permisos para realizar esta acción.',
+  },
+  ROUTE_NOT_FOUND: {
+    status: 404,
+    message: 'La dirección solicitada no existe.',
+  },
+  CATEGORY_NOT_FOUND: {
+    status: 404,
+    message: 'La categoría no existe o fue eliminada.',
+  },
+  CATEGORY_ALREADY_EXISTS: {
+    status: 409,
+    message: 'Ya existe una categoría con ese nombre o código.',
+  },
+  STALE_VERSION: {
+    status: 409,
+    message:
+      'Otra persona modificó este registro mientras lo editabas. Recargá para ver los cambios y volvé a intentar.',
+  },
+  PAYLOAD_TOO_LARGE: {
+    status: 413,
+    message: 'Los datos enviados son demasiado grandes.',
+  },
+  RATE_LIMITED: {
+    status: 429,
+    message: 'Hiciste demasiados intentos. Esperá unos minutos y volvé a probar.',
+  },
+  INTERNAL_ERROR: {
+    status: 500,
+    message: 'Ocurrió un error inesperado. Intentá de nuevo en unos minutos.',
+  },
+  NETWORK_ERROR: {
+    status: 503,
+    message: 'No pudimos conectarnos con el servidor. Revisá tu conexión y volvé a intentar.',
+  },
+} as const satisfies Record<string, ErrorDefinition>
+
+export type ErrorCode = keyof typeof ERROR_CATALOG
+
+export const ERROR_CODES = Object.keys(ERROR_CATALOG) as readonly ErrorCode[]

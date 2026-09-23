@@ -1,0 +1,10 @@
+import { defineProject } from 'vitest/config'
+
+export default defineProject({
+  test: {
+    name: 'shared',
+    include: ['src/**/*.test.ts'],
+    environment: 'node',
+    typecheck: { enabled: true, include: ['src/**/*.test-d.ts'] },
+  },
+})
