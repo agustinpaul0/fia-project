@@ -1,0 +1,53 @@
+# Dependencias
+node_modules/
+.pnpm-store/
+
+# Builds y artefactos
+dist/
+build/
+*.tsbuildinfo
+.vite/
+.tanstack/
+
+# Tests y reportes
+coverage/
+reports/
+.stryker-tmp/
+test-results/
+playwright-report/
+
+# Variables de entorno: NUNCA se versiona un .env real (en ningún directorio)
+.env
+.env.*
+*.env
+!.env.example
+
+# Secretos y credenciales
+*.pem
+*.key
+*.p12
+*.pfx
+*.keystore
+*.jks
+credentials*.json
+service-account*.json
+
+# Mobile (Capacitor, cuando se agregue)
+apps/web/android/app/build/
+apps/web/ios/App/Pods/
+
+# Editores y sistema operativo
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+*.swp
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Configuración local de agentes (la compartida sí se versiona)
+.claude/settings.local.json

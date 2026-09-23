@@ -1,0 +1,27 @@
+pre-commit:
+  parallel: false
+  commands:
+    block-env-files:
+      glob: "{.env,.env.*,*.env,**/.env,**/.env.*,**/*.env}"
+      exclude:
+        - ".env.example"
+        - "**/.env.example"
+      run: echo "Prohibido commitear archivos .env reales ({staged_files}). Usá .env.example." && exit 1
+    format-staged:
+      glob: "*.{ts,tsx,js,mjs,json,jsonc,css}"
+      run: pnpm exec biome check --write --no-errors-on-unmatched {staged_files}
+      stage_fixed: true
+    lint-all:
+      run: pnpm lint
+    typecheck:
+      run: pnpm typecheck
+
+commit-msg:
+  commands:
+    commitlint:
+      run: pnpm exec commitlint --edit {1}
+
+pre-push:
+  commands:
+    tests-with-coverage:
+      run: pnpm test:coverage

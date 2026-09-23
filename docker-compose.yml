@@ -1,0 +1,78 @@
+name: fia
+
+x-app: &app
+  build:
+    context: .
+    dockerfile: Dockerfile.dev
+  volumes:
+    - .:/app
+    - /app/node_modules
+    - /app/apps/api/node_modules
+    - /app/apps/web/node_modules
+    - /app/packages/shared/node_modules
+  environment: &app-env
+    NODE_ENV: development
+    DATABASE_URL: postgres://fia:fia@db:5432/fia
+    WEB_ORIGIN: http://localhost:5173
+    API_PORT: "3000"
+    VITE_API_URL: http://localhost:3000
+
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: fia
+      POSTGRES_PASSWORD: fia
+      POSTGRES_DB: fia
+    ports:
+      - "${DB_PORT:-5442}:5432"
+    volumes:
+      - fia-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fia -d fia"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  db-test:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: fia
+      POSTGRES_PASSWORD: fia
+      POSTGRES_DB: fia_test
+    ports:
+      - "${TEST_DB_PORT:-5443}:5432"
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fia -d fia_test"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  migrate:
+    <<: *app
+    command: sh -c "pnpm db:migrate && pnpm db:seed"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  api:
+    <<: *app
+    command: pnpm --filter @fia/api dev
+    ports:
+      - "${API_PORT:-3000}:3000"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  web:
+    <<: *app
+    command: pnpm --filter @fia/web exec vite --host 0.0.0.0
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api
+
+volumes:
+  fia-db-data:

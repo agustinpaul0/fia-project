@@ -1,0 +1,135 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+  "files": {
+    "includes": [
+      "**",
+      "!**/migrations",
+      "!**/routeTree.gen.ts",
+      "!**/dist",
+      "!**/coverage",
+      "!**/reports",
+      "!.agents",
+      "!.claude",
+      "!.opencode",
+      "!.agent",
+      "!skills-lock.json"
+    ]
+  },
+  "formatter": { "enabled": true, "indentStyle": "space", "indentWidth": 2, "lineWidth": 100 },
+  "javascript": {
+    "formatter": { "quoteStyle": "single", "semicolons": "asNeeded", "trailingCommas": "all" }
+  },
+  "css": { "parser": { "tailwindDirectives": true } },
+  "assist": { "enabled": true, "actions": { "source": { "organizeImports": "on" } } },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "recommended",
+      "style": {
+        "noExcessiveLinesPerFile": { "level": "error", "options": { "maxLines": 100 } },
+        "noNonNullAssertion": "error",
+        "useImportType": "error",
+        "useExportType": "error",
+        "noDefaultExport": "error",
+        "noEnum": "error",
+        "noParameterAssign": "error",
+        "noNestedTernary": "error",
+        "useConst": "error",
+        "useBlockStatements": "error",
+        "useNamingConvention": "off",
+        "noRestrictedImports": {
+          "level": "error",
+          "options": {
+            "paths": {
+              "drizzle-orm": {
+                "importNames": ["sql"],
+                "message": "Prohibido el SQL plano: usar siempre el query builder de Drizzle."
+              },
+              "pg": "Sólo apps/api/src/core/db puede usar el driver de Postgres directamente."
+            }
+          }
+        }
+      },
+      "suspicious": {
+        "noExplicitAny": "error",
+        "noConsole": "error",
+        "noImportCycles": "error",
+        "noEmptyBlockStatements": "error"
+      },
+      "complexity": {
+        "noExcessiveLinesPerFunction": { "level": "error", "options": { "maxLines": 40 } },
+        "noExcessiveCognitiveComplexity": "error",
+        "useMaxParams": { "level": "error", "options": { "max": 3 } },
+        "noForEach": "error",
+        "noUselessUndefined": "error",
+        "useLiteralKeys": "off"
+      },
+      "correctness": {
+        "noUnusedImports": "error",
+        "noUnusedVariables": "error",
+        "noUnusedFunctionParameters": "error"
+      },
+      "nursery": {
+        "noFloatingPromises": "error",
+        "noMisusedPromises": "error"
+      }
+    }
+  },
+  "overrides": [
+    {
+      "includes": ["packages/shared/src/db/**"],
+      "linter": { "rules": { "style": { "noRestrictedImports": "off" } } }
+    },
+    {
+      "includes": ["apps/api/src/core/db/**"],
+      "linter": { "rules": { "style": { "noRestrictedImports": "off" } } }
+    },
+    {
+      "includes": ["apps/web/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": [
+                      "@fia/shared/db",
+                      "@fia/shared/db/*",
+                      "drizzle-orm",
+                      "drizzle-orm/*",
+                      "pg"
+                    ],
+                    "message": "La web sólo importa @fia/shared/contracts y @fia/shared/domain."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["**/*.test.ts", "**/*.test.tsx"],
+      "linter": { "rules": { "complexity": { "noExcessiveLinesPerFunction": "off" } } }
+    },
+    {
+      "includes": ["apps/api/src/core/logger.ts", "scripts/**"],
+      "linter": { "rules": { "suspicious": { "noConsole": "off" } } }
+    },
+    {
+      "includes": [
+        "**/*.config.ts",
+        "**/*.config.js",
+        "**/*.config.mjs",
+        "**/vitest.config.ts",
+        "**/vite.config.ts",
+        "**/drizzle.config.ts",
+        "**/tsdown.config.ts"
+      ],
+      "linter": { "rules": { "style": { "noDefaultExport": "off" } } }
+    }
+  ]
+}

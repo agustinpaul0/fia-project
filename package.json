@@ -1,0 +1,45 @@
+{
+  "name": "fia-project",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.5.1",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "prepare": "lefthook install",
+    "dev": "pnpm --parallel --filter @fia/api --filter @fia/web dev",
+    "build": "pnpm --filter @fia/api --filter @fia/web build",
+    "lint": "biome check .",
+    "format": "biome check --write .",
+    "typecheck": "tsc -p tsconfig.json && pnpm -r typecheck",
+    "test": "vitest run --project shared --project api --project web",
+    "test:watch": "vitest --project shared --project api --project web",
+    "test:coverage": "vitest run --coverage --project shared --project api --project web",
+    "test:int": "vitest run --project api-int",
+    "test:mutation": "pnpm -r --workspace-concurrency=1 test:mutation",
+    "db:generate": "pnpm --filter @fia/shared db:generate",
+    "db:migrate": "pnpm --filter @fia/api db:migrate",
+    "db:seed": "pnpm --filter @fia/api db:seed",
+    "db:studio": "pnpm --filter @fia/shared db:studio",
+    "verify": "pnpm lint && pnpm typecheck && pnpm test:coverage && pnpm test:int && pnpm test:mutation && pnpm build",
+    "docker:up": "docker compose up --build",
+    "docker:down": "docker compose down",
+    "docker:reset": "docker compose down -v",
+    "skills:sync": "node scripts/skills.mjs sync",
+    "skills:check": "node scripts/skills.mjs check"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.14",
+    "@commitlint/cli": "^21.2.3",
+    "@commitlint/config-conventional": "^21.2.3",
+    "@stryker-mutator/core": "^10.0.0",
+    "@stryker-mutator/vitest-runner": "^10.0.0",
+    "@types/node": "^26.6.2",
+    "@vitest/coverage-v8": "^4.1.11",
+    "fast-check": "^4.10.2",
+    "lefthook": "^2.1.14",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.11"
+  }
+}
