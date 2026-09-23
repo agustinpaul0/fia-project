@@ -25,7 +25,7 @@ cual; lo agregado por el equipo implementador está marcado como **[equipo]**.
 |---|---|---|---|---|---|---|---|---|---|
 | T-0 | Setup del repositorio y convenciones **[equipo]** | — | — | — | — | Hecho | Agustín | — | — |
 | T-1 | Autenticación mínima con roles **[equipo]** | — | — | — | 3 h | Hecho | Agustín | T-0 | |
-| T-2 | Modelo de datos base y seed **[equipo]** | — | — | — | | Pendiente | | T-0 | |
+| T-2 | Modelo de datos base y seed **[equipo]** | — | — | — | 3 h | Hecho | Agustín | T-0 | |
 | US-23 | Gestión de cuentas del personal de escuderías | 5 | 13 | 17 h | | Pendiente | | T-1 | |
 | US-20 | Carga y modificación del puntaje de una carrera | 1 | 21 | 12 h | | Pendiente | | T-1, T-2 | |
 | US-9 | Confirmar notificación del puntaje recibido | 1 | 13 | 10 h | | Pendiente | | US-20, US-23 | |
@@ -57,13 +57,13 @@ sean seguras; US-4 completa la experiencia más adelante.
 años anteriores para poder mostrarse en la demo.
 
 - [x] Categorías (implementación de referencia, hecha en T-0).
-- [ ] Temporadas, circuitos, eventos/carreras (con categoría, circuito y fecha).
-- [ ] Escuderías y pilotos (titular/suplente) con sus restricciones.
-- [ ] Resultados por carrera (posición, piloto, escudería, puntos) con restricciones
+- [x] Temporadas, circuitos, eventos/carreras (con categoría, circuito y fecha).
+- [x] Escuderías y pilotos (titular/suplente) con sus restricciones.
+- [x] Resultados por carrera (posición, piloto, escudería, puntos) con restricciones
       (`unique` carrera+posición, carrera+piloto; puntos ≥ 0; posición ≥ 1).
-- [ ] Seed con al menos 2 temporadas anteriores de F1 para la demo.
+- [x] Seed con al menos 2 temporadas anteriores de F1 para la demo.
 
-**Falta para cerrar**: todo salvo categorías.
+**Falta para cerrar**: ninguno.
 
 ---
 

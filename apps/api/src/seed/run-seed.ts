@@ -3,6 +3,7 @@ import { connectDatabase } from '../core/db/client'
 import { consoleLogger } from '../core/logger'
 import { loadEnv } from '../env'
 import { seedAdminUser } from './auth.seed'
+import { seedBaseData } from './base-data.seed'
 import { seedCategories } from './categories.seed'
 
 const env = loadEnv(process.env)
@@ -14,6 +15,7 @@ const auth = createBetterAuth({
   trustedOrigins: [env.WEB_ORIGIN],
 })
 await seedCategories(connection.db)
+await seedBaseData(connection.db)
 await seedAdminUser(connection.db, auth, env)
 await connection.close()
 consoleLogger.info('Datos de ejemplo cargados')
