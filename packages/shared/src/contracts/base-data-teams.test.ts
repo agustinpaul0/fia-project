@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createTeamBodySchema, teamSchema } from './teams'
+import { createTeamBodySchema, teamOptionListSchema, teamOptionSchema, teamSchema } from './teams'
 
 describe('contratos de equipos', () => {
   const catId = '00000000-0000-4000-8000-000000000001'
@@ -30,5 +30,13 @@ describe('contratos de equipos', () => {
       updatedAt: '2026-01-01T00:00:00.000Z',
     }
     expect(teamSchema.parse(dto)).toEqual(dto)
+  })
+
+  it('valida opción mínima de equipo para selectores', () => {
+    const option = { id: '00000000-0000-4000-8000-000000000002', name: 'Ferrari' }
+    expect(teamOptionSchema.parse(option)).toEqual(option)
+    expect(teamOptionListSchema.parse([option])).toEqual([option])
+    expect(teamOptionSchema.safeParse({ id: 'invalido', name: 'Ferrari' }).success).toBe(false)
+    expect(teamOptionSchema.safeParse({ ...option, extra: 1 }).success).toBe(false)
   })
 })

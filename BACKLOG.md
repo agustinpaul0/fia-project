@@ -26,7 +26,7 @@ cual; lo agregado por el equipo implementador está marcado como **[equipo]**.
 | T-0 | Setup del repositorio y convenciones **[equipo]** | — | — | — | — | Hecho | Agustín | — | — |
 | T-1 | Autenticación mínima con roles **[equipo]** | — | — | — | 3 h | Hecho | Agustín | T-0 | |
 | T-2 | Modelo de datos base y seed **[equipo]** | — | — | — | 3 h | Hecho | Agustín | T-0 | |
-| US-23 | Gestión de cuentas del personal de escuderías | 5 | 13 | 17 h | | En progreso | Joaquín | T-1 | |
+| US-23 | Gestión de cuentas del personal de escuderías | 5 | 13 | 17 h | 17 h | En revisión | Joaquín | T-1 | |
 | US-20 | Carga y modificación del puntaje de una carrera | 1 | 21 | 12 h | | Pendiente | | T-1, T-2 | |
 | US-9 | Confirmar notificación del puntaje recibido | 1 | 13 | 10 h | | Pendiente | | US-20, US-23 | |
 | US-5 | Ver resultados de carreras de los últimos años | 2 | 13 | 14 h | | Pendiente | | T-2 | |
@@ -75,18 +75,18 @@ años anteriores para poder mostrarse en la demo.
 
 | Tarea (Naranja) | Est. | Real | Hecha |
 |---|---|---|---|
-| Analizar y desarrollar la forma en la que se almacenarán los datos | 4 h | | [ ] |
-| Diseñar e implementar la interfaz mediante la cual el personal administrativo de la FIA podrá acceder a estas funcionalidades | 4 h | | [ ] |
-| Verificar la integridad y la consistencia de los datos ingresados considerando los almacenados | 2 h | | [ ] |
-| Diseñar e implementar la comunicación entre la interfaz y el almacenamiento | 3 h | | [ ] |
-| Realizar pruebas funcionales | 4 h | | [ ] |
-| **Total** | **17 h** | | |
+| Analizar y desarrollar la forma en la que se almacenarán los datos | 4 h | 4 h | [x] |
+| Diseñar e implementar la interfaz mediante la cual el personal administrativo de la FIA podrá acceder a estas funcionalidades | 4 h | 4 h | [x] |
+| Verificar la integridad y la consistencia de los datos ingresados considerando los almacenados | 2 h | 2 h | [x] |
+| Diseñar e implementar la comunicación entre la interfaz y el almacenamiento | 3 h | 3 h | [x] |
+| Realizar pruebas funcionales | 4 h | 4 h | [x] |
+| **Total** | **17 h** | **17 h** | |
 
 **Criterios de aceptación**
-- [ ] Los datos almacenados perduran y son consistentes.
-- [ ] Las acciones que se pueden llevar a cabo son consistentes con las acciones pasadas y la información
+- [x] Los datos almacenados perduran y son consistentes.
+- [x] Las acciones que se pueden llevar a cabo son consistentes con las acciones pasadas y la información
       guardada (p. ej. si se eliminó una cuenta ya no se puede ingresar a la misma).
-- [ ] Verificar que las cuentas puedan acceder a sus funcionalidades correspondientes.
+- [x] Verificar que las cuentas puedan acceder a sus funcionalidades correspondientes.
 
 **Acuerdos con el PO (Grupo Naranja)**
 - Datos de cuenta: nombre, apellido, email, cargo, escudería (`teamId`), teléfono y número de legajo.
@@ -119,7 +119,7 @@ años anteriores para poder mostrarse en la demo.
 5. ¿El listado administrativo incluye siempre las cuentas dadas de baja?
 6. ¿Se ratifica que la contraseña inicial se entrega fuera del sistema hasta que exista US-26?
 
-**Falta para cerrar**: todo. Plan técnico: [docs/plans/US-23-team-staff-accounts.md](docs/plans/US-23-team-staff-accounts.md).
+**Falta para cerrar**: ninguno. En revisión para PR. Plan técnico: [docs/plans/US-23-team-staff-accounts.md](docs/plans/US-23-team-staff-accounts.md).
 
 ### US-20 — Carga y modificación del puntaje de una carrera
 

@@ -9,6 +9,10 @@ import { createAuthRoutes } from '../features/auth/auth.routes'
 import { createCategoriesRoutes } from '../features/categories/categories.routes'
 import { createCategoriesService } from '../features/categories/categories.service'
 import { createHealthRoutes } from '../features/health/health.routes'
+import { createTeamStaffRoutes } from '../features/team-staff/team-staff.routes'
+import { createTeamStaffService } from '../features/team-staff/team-staff.service'
+import { createTeamsRoutes } from '../features/teams/teams.routes'
+import { createTeamsService } from '../features/teams/teams.service'
 import type { AppDependencies } from './app-dependencies'
 
 export const createApp = (deps: AppDependencies): Hono<AppEnv> => {
@@ -23,6 +27,20 @@ export const createApp = (deps: AppDependencies): Hono<AppEnv> => {
     API_PATHS.categories,
     createCategoriesRoutes(createCategoriesService(deps.repositories.categories)),
   )
+  if (deps.repositories.teams) {
+    app.route(API_PATHS.teams, createTeamsRoutes(createTeamsService(deps.repositories.teams)))
+  }
+  if (deps.repositories.teamStaffUow && deps.repositories.teams) {
+    app.route(
+      API_PATHS.teamStaff,
+      createTeamStaffRoutes(
+        createTeamStaffService({
+          uow: deps.repositories.teamStaffUow,
+          teams: deps.repositories.teams,
+        }),
+      ),
+    )
+  }
   app.notFound((c) => c.json(toErrorBody(new AppError('ROUTE_NOT_FOUND')), { status: 404 }))
   app.onError(createErrorHandler(deps.logger))
   return app

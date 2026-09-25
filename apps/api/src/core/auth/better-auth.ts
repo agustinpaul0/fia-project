@@ -5,6 +5,8 @@ import { admin } from 'better-auth/plugins/admin'
 import { bearer } from 'better-auth/plugins/bearer'
 import type { Database } from '../db/client'
 
+import { ADMIN_ROLES, authRoles } from './better-auth-roles'
+
 export type BetterAuthConfig = {
   readonly db: Database
   readonly secret: string
@@ -28,12 +30,6 @@ export const createBetterAuth = ({ db, secret, baseURL, trustedOrigins }: Better
     },
     user: {
       additionalFields: {
-        role: {
-          type: 'string',
-          required: false,
-          defaultValue: 'public',
-          input: false,
-        },
         teamId: {
           type: 'string',
           required: false,
@@ -42,7 +38,14 @@ export const createBetterAuth = ({ db, secret, baseURL, trustedOrigins }: Better
         },
       },
     },
-    plugins: [admin({ defaultRole: 'public', adminRole: 'fia_admin' }), bearer()],
+    plugins: [
+      admin({
+        defaultRole: 'public',
+        adminRoles: [...ADMIN_ROLES],
+        roles: authRoles,
+      }),
+      bearer(),
+    ],
     rateLimit: {
       enabled: true,
       window: 60,

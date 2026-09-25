@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { z } from 'zod'
-import { categoryPath } from './api-paths'
+import { categoryPath, teamStaffPath } from './api-paths'
 import {
   configureSpanishValidation,
   errorResponseSchema,
@@ -52,5 +52,9 @@ describe('contratos comunes', () => {
 
   it('arma la ruta de una categoría', () => {
     expect(categoryPath('abc')).toBe('/categories/abc')
+  })
+
+  it('arma la ruta de un miembro del personal', () => {
+    expect(teamStaffPath('abc')).toBe('/team-staff/abc')
   })
 })
