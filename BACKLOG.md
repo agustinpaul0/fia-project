@@ -26,7 +26,7 @@ cual; lo agregado por el equipo implementador está marcado como **[equipo]**.
 | T-0 | Setup del repositorio y convenciones **[equipo]** | — | — | — | — | Hecho | Agustín | — | — |
 | T-1 | Autenticación mínima con roles **[equipo]** | — | — | — | 3 h | Hecho | Agustín | T-0 | |
 | T-2 | Modelo de datos base y seed **[equipo]** | — | — | — | 3 h | Hecho | Agustín | T-0 | |
-| US-23 | Gestión de cuentas del personal de escuderías | 5 | 13 | 17 h | | Pendiente | | T-1 | |
+| US-23 | Gestión de cuentas del personal de escuderías | 5 | 13 | 17 h | | En progreso | Agustín | T-1 | |
 | US-20 | Carga y modificación del puntaje de una carrera | 1 | 21 | 12 h | | Pendiente | | T-1, T-2 | |
 | US-9 | Confirmar notificación del puntaje recibido | 1 | 13 | 10 h | | Pendiente | | US-20, US-23 | |
 | US-5 | Ver resultados de carreras de los últimos años | 2 | 13 | 14 h | | Pendiente | | T-2 | |
@@ -88,11 +88,11 @@ años anteriores para poder mostrarse en la demo.
       guardada (p. ej. si se eliminó una cuenta ya no se puede ingresar a la misma).
 - [ ] Verificar que las cuentas puedan acceder a sus funcionalidades correspondientes.
 
-**Preguntas abiertas para el PO**
-- ¿Qué datos tiene una cuenta de personal de escudería (nombre, email, cargo, escudería)? ¿Una persona puede
-  pertenecer a más de una escudería?
-- ¿Eliminar es borrado definitivo o baja lógica (para conservar el historial de confirmaciones de US-9)?
-- ¿Cómo recibe la persona su contraseña inicial (la define el admin, se envía por email)?
+**Acuerdos con el PO (Grupo Naranja)**
+- Datos de cuenta: nombre, apellido, email, cargo, escudería (`teamId`), teléfono y número de legajo.
+- Asociación escudería: unívoca (cada cuenta pertenece exclusivamente a una sola escudería).
+- Eliminación: baja lógica (soft delete), no borrado definitivo, para conservar historial y auditoría.
+- Contraseña inicial: la define el administrador de la FIA al momento del alta.
 
 **Falta para cerrar**: todo.
 
@@ -113,12 +113,11 @@ años anteriores para poder mostrarse en la demo.
 - [ ] Rápida actualización en las modificaciones de los puntajes.
 - [ ] El formulario valida adecuadamente las entradas de datos.
 
-**Preguntas abiertas para el PO**
-- ¿Qué sistema de puntos se usa (25-18-15-…-1 de F1, punto extra por vuelta rápida, sprints)? ¿Es igual en
-  F2, F3 y F1 Academy?
-- ¿Se cargan posiciones y el sistema calcula los puntos, o se cargan los puntos directamente?
-- "Rápida actualización": ¿qué tiempo máximo se considera aceptable para que el público vea el cambio?
-- ¿Modificar un puntaje ya notificado genera una nueva notificación (US-9)?
+**Acuerdos con el PO (Grupo Naranja)**
+- Sistema de puntuación: F1 tradicional (25-18-15-12-10-8-6-4-2-1) y carreras Sprint para el top 8 (8-7-6-5-4-3-2-1).
+- Carga: el admin ingresa las posiciones de la carrera y el sistema calcula los puntos de forma automática.
+- Tiempo de actualización: menor a 10 minutos (en la web es inmediato).
+- Notificaciones: si se modifica un puntaje ya notificado, se vuelve a notificar a las escuderías.
 
 **Falta para cerrar**: todo.
 
@@ -140,11 +139,10 @@ años anteriores para poder mostrarse en la demo.
 - [ ] Verificar que la confirmación quedó asentada correctamente.
 - [ ] La confirmación se puede realizar de forma fácil y rápida.
 
-**Preguntas abiertas para el PO**
-- ¿"Notificación de la app" es una notificación dentro de la web (bandeja) o push al celular? Para el Sprint 1
-  se propone in-app (la app móvil no existe todavía).
-- ¿Confirma una persona por escudería o cada miembro del personal?
-- ¿Qué queda registrado de la confirmación (quién, cuándo)? ¿Lo puede ver la FIA?
+**Acuerdos con el PO (Grupo Naranja)**
+- Canal de notificación: sección de notificaciones in-app en la web (notificaciones push móviles reservadas a la app móvil).
+- Destinatarios / confirmación: confirma una sola persona por escudería. Si otro miembro intenta confirmar, la UI le informa que ya fue confirmado.
+- Auditoría: se registra quién confirmó y cuándo; la FIA tiene acceso a consultarlo.
 
 **Falta para cerrar**: todo.
 
@@ -166,10 +164,10 @@ años anteriores para poder mostrarse en la demo.
 - [ ] La información de las carreras se visualiza de forma clara y ordenada.
 - [ ] La carga de los datos es rápida.
 
-**Preguntas abiertas para el PO**
-- ¿Cuántos años son "los últimos años"? ¿Qué categorías?
-- ¿De dónde salen los datos históricos (carga manual, importación de una fuente pública)?
-- "Carga rápida": ¿qué tiempo máximo es aceptable?
+**Acuerdos con el PO (Grupo Naranja)**
+- Alcance temporal: los últimos 5 años.
+- Origen de datos: provistos por el equipo implementador mediante seed demo.
+- Tiempo de respuesta: menos de 10 minutos (en la web es inmediato).
 
 **Falta para cerrar**: todo.
 
