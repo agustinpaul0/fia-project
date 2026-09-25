@@ -26,7 +26,7 @@ cual; lo agregado por el equipo implementador está marcado como **[equipo]**.
 | T-0 | Setup del repositorio y convenciones **[equipo]** | — | — | — | — | Hecho | Agustín | — | — |
 | T-1 | Autenticación mínima con roles **[equipo]** | — | — | — | 3 h | Hecho | Agustín | T-0 | |
 | T-2 | Modelo de datos base y seed **[equipo]** | — | — | — | 3 h | Hecho | Agustín | T-0 | |
-| US-23 | Gestión de cuentas del personal de escuderías | 5 | 13 | 17 h | | En progreso | Agustín | T-1 | |
+| US-23 | Gestión de cuentas del personal de escuderías | 5 | 13 | 17 h | | En progreso | Joaquín | T-1 | |
 | US-20 | Carga y modificación del puntaje de una carrera | 1 | 21 | 12 h | | Pendiente | | T-1, T-2 | |
 | US-9 | Confirmar notificación del puntaje recibido | 1 | 13 | 10 h | | Pendiente | | US-20, US-23 | |
 | US-5 | Ver resultados de carreras de los últimos años | 2 | 13 | 14 h | | Pendiente | | T-2 | |
@@ -94,7 +94,32 @@ años anteriores para poder mostrarse en la demo.
 - Eliminación: baja lógica (soft delete), no borrado definitivo, para conservar historial y auditoría.
 - Contraseña inicial: la define el administrador de la FIA al momento del alta.
 
-**Falta para cerrar**: todo.
+**Acuerdos con el dev (2026-09-25)**
+- Baja terminal: no hay reactivación en US-23; email y legajo quedan reservados y no se reutilizan.
+- Editables: nombres, teléfono, cargo y escudería. Email, legajo y estado no se editan (`PUT` completo + `version`).
+- `roleInTeam`: texto libre de 2–60 caracteres. Legajo: alfanumérico con guion, 1–20 caracteres, mayúsculas y
+  único global. Teléfono: obligatorio, 7–30 caracteres, validación flexible.
+- Reasignación de escudería permitida mientras la cuenta esté activa; US-9 debe guardar la escudería en cada
+  confirmación para que un cambio posterior no altere el historial.
+- La contraseña inicial se entrega por un canal externo; US-23 no envía emails (US-26 diferida).
+- Sólo `fia_admin` opera y lista; el listado incluye activas e inactivos y no expone hashes ni tokens.
+- Atomicidad: `team_staff` es la fuente canónica y las proyecciones de Better Auth (`role`, `team_id`, `name`) se
+  escriben en la misma transacción. Ver [ADR 0007](docs/adr/0007-identidad-y-membresia-de-escuderia.md).
+
+**Correcciones heredadas de T-1 (dentro del alcance de US-23)**
+- `adminRole` → `adminRoles` y Access Control con permisos de `fia_admin` (el plugin `admin` está inactivo sin esto).
+- `session.impersonatedBy` en schema y migración (lo declara el plugin `admin` de Better Auth 1.7.5).
+- Los endpoints `admin` de Better Auth no se exponen por HTTP: allowlist de auth + port interno.
+
+**Preguntas abiertas para el PO**
+1. ¿Se ratifica que la baja es terminal y que email y legajo no se reutilizan?
+2. ¿El cargo queda como texto libre o se define una lista cerrada para US-23?
+3. ¿Se ratifica que el teléfono es obligatorio con validación flexible?
+4. ¿Se permite reasignar escudería en una cuenta activa y US-9 guardará la escudería histórica?
+5. ¿El listado administrativo incluye siempre las cuentas dadas de baja?
+6. ¿Se ratifica que la contraseña inicial se entrega fuera del sistema hasta que exista US-26?
+
+**Falta para cerrar**: todo. Plan técnico: [docs/plans/US-23-team-staff-accounts.md](docs/plans/US-23-team-staff-accounts.md).
 
 ### US-20 — Carga y modificación del puntaje de una carrera
 

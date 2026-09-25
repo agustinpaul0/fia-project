@@ -18,3 +18,4 @@ sin rediscutirlo.
 | [0004](0004-concurrencia-optimista.md) | Concurrencia optimista con columna `version` | Aceptado |
 | [0005](0005-estrategia-de-tests.md) | Pirámide de tests con contrato, fuzz, integración y mutación | Aceptado |
 | [0006](0006-manejo-de-errores.md) | Catálogo único de errores compartido | Aceptado |
+| [0007](0007-identidad-y-membresia-de-escuderia.md) | Identidad de autenticación (Better Auth) y membresía de escudería (`team_staff`) | Aceptado |
