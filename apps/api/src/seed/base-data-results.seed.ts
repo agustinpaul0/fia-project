@@ -1,12 +1,14 @@
 import { raceResults } from '@fia/shared/db'
+import type { RaceType } from '@fia/shared/domain'
+import { pointsFor } from '@fia/shared/domain'
 import type { DbExecutor } from '../core/db/executor'
-import { F1_POINTS } from './base-data-races-definitions'
 
 export type DriverSeedMap = Map<string, { id: string; teamId: string | null }>
 
 export interface SeedResultParams {
   db: DbExecutor
   raceId: string
+  type: RaceType
   results: readonly string[]
   driverMap: DriverSeedMap
 }
@@ -28,7 +30,7 @@ export const seedRaceResults = async (p: SeedResultParams): Promise<void> => {
         driverId: driver.id,
         teamId: driver.teamId,
         position: i + 1,
-        points: F1_POINTS[i] ?? 0,
+        points: pointsFor(p.type, i + 1),
       })
       .onConflictDoNothing()
   }

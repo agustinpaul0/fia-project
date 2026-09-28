@@ -1,11 +1,10 @@
-export type ErrorStatus = 400 | 401 | 403 | 404 | 409 | 413 | 422 | 429 | 500 | 503
+import type { ErrorDefinition } from './error-definition'
+import { RACING_ERRORS } from './racing-errors'
 
-export type ErrorDefinition = {
-  readonly status: ErrorStatus
-  readonly message: string
-}
+export type { ErrorDefinition, ErrorStatus } from './error-definition'
 
 export const ERROR_CATALOG = {
+  ...RACING_ERRORS,
   VALIDATION_FAILED: {
     status: 400,
     message: 'Hay datos inválidos. Revisá los campos marcados y volvé a intentar.',

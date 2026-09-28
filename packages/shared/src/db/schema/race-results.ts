@@ -27,6 +27,7 @@ export const raceResults = pgTable(
     unique('race_results_race_driver_unique').on(table.raceId, table.driverId),
     check('race_results_position_positive', sql`${table.position} >= 1`),
     check('race_results_points_non_negative', sql`${table.points} >= 0`),
+    check('race_results_points_max', sql`${table.points} <= 25`),
     ...versionedChecks('race_results', table),
   ],
 )

@@ -21,11 +21,18 @@ export const UserNav = (): ReactNode => {
   return (
     <div className="flex items-center gap-3">
       {role === 'fia_admin' && (
-        <Link to="/admin/team-staff">
-          <Button variant="ghost" size="sm">
-            Personal
-          </Button>
-        </Link>
+        <>
+          <Link to="/admin/team-staff">
+            <Button variant="ghost" size="sm">
+              Personal
+            </Button>
+          </Link>
+          <Link to="/admin/results">
+            <Button variant="ghost" size="sm">
+              Carga de resultados
+            </Button>
+          </Link>
+        </>
       )}
       <span className="text-sm font-medium">{session.user.name}</span>
       <Badge variant="outline">{role}</Badge>

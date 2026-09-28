@@ -15,9 +15,15 @@ describe('contratos de carreras', () => {
   }
 
   it('valida creación de carrera y recorta nombre', () => {
-    expect(createRaceBodySchema.parse({ ...valid, name: ' Gran Premio de Bahréin ' })).toEqual(
-      valid,
-    )
+    expect(createRaceBodySchema.parse({ ...valid, name: ' Gran Premio de Bahréin ' })).toEqual({
+      ...valid,
+      type: 'grand_prix',
+    })
+  })
+
+  it('acepta carreras sprint y rechaza tipos desconocidos', () => {
+    expect(createRaceBodySchema.parse({ ...valid, type: 'sprint' }).type).toBe('sprint')
+    expect(createRaceBodySchema.safeParse({ ...valid, type: 'qualy' }).success).toBe(false)
   })
 
   it.each([
@@ -40,6 +46,8 @@ describe('contratos de carreras', () => {
     const dto = {
       id: '00000000-0000-4000-8000-000000000010',
       ...valid,
+      type: 'sprint',
+      resultsRevision: 2,
       version: 1,
       createdAt: '2026-01-01T00:00:00.000Z',
       updatedAt: '2026-01-01T00:00:00.000Z',
