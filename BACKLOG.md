@@ -27,7 +27,7 @@ cual; lo agregado por el equipo implementador está marcado como **[equipo]**.
 | T-1 | Autenticación mínima con roles **[equipo]** | — | — | — | 3 h | Hecho | Agustín | T-0 | |
 | T-2 | Modelo de datos base y seed **[equipo]** | — | — | — | 3 h | Hecho | Agustín | T-0 | |
 | US-23 | Gestión de cuentas del personal de escuderías | 5 | 13 | 17 h | 17 h | Hecho | Joaquín | T-1 | #2 |
-| US-20 | Carga y modificación del puntaje de una carrera | 1 | 21 | 12 h | | Pendiente | | T-1, T-2 | |
+| US-20 | Carga y modificación del puntaje de una carrera | 1 | 21 | 12 h | | Hecho | Agustín | T-1, T-2 | #3 |
 | US-9 | Confirmar notificación del puntaje recibido | 1 | 13 | 10 h | | Pendiente | | US-20, US-23 | |
 | US-5 | Ver resultados de carreras de los últimos años | 2 | 13 | 14 h | | Pendiente | | T-2 | |
 
@@ -136,15 +136,15 @@ años anteriores para poder mostrarse en la demo.
 
 | Tarea (Naranja) | Est. | Real | Hecha |
 |---|---|---|---|
-| Diseñar y desarrollar la forma en la que se otorgará esta opción en la interfaz de los administradores | 2 h | | [ ] |
-| Analizar, diseñar y desarrollar la forma en la que se almacenarán los puntajes de las carreras | 2 h | | [ ] |
-| Diseñar y desarrollar los formularios en los que se cargarán los datos sobre los puntajes | 4 h | | [ ] |
-| Configurar la actualización inmediata de los datos sobre los puntajes | 4 h | | [ ] |
+| Diseñar y desarrollar la forma en la que se otorgará esta opción en la interfaz de los administradores | 2 h | | [x] |
+| Analizar, diseñar y desarrollar la forma en la que se almacenarán los puntajes de las carreras | 2 h | | [x] |
+| Diseñar y desarrollar los formularios en los que se cargarán los datos sobre los puntajes | 4 h | | [x] |
+| Configurar la actualización inmediata de los datos sobre los puntajes | 4 h | | [x] |
 | **Total** | **12 h** | | |
 
 **Criterios de aceptación**
-- [ ] Rápida actualización en las modificaciones de los puntajes.
-- [ ] El formulario valida adecuadamente las entradas de datos.
+- [x] Rápida actualización en las modificaciones de los puntajes (acordado: < 10 min; en la web es inmediata al guardar).
+- [x] El formulario valida adecuadamente las entradas de datos (cliente: posiciones completas y sin pilotos repetidos; servidor: contrato, categoría, carrera ya corrida y versión).
 
 **Acuerdos con el PO (Grupo Naranja)**
 - Sistema de puntuación: F1 tradicional (25-18-15-12-10-8-6-4-2-1) y carreras Sprint para el top 8 (8-7-6-5-4-3-2-1).
@@ -152,7 +152,21 @@ años anteriores para poder mostrarse en la demo.
 - Tiempo de actualización: menor a 10 minutos (en la web es inmediato).
 - Notificaciones: si se modifica un puntaje ya notificado, se vuelve a notificar a las escuderías.
 
-**Falta para cerrar**: todo.
+**Acuerdos con el dev (2026-09-28)**
+- Tipo de carrera `grand_prix` / `sprint`; el sprint comparte ronda con su Gran Premio.
+- Se carga el orden de llegada de los clasificados (sin DNF/DSQ por ahora); sin punto por vuelta rápida.
+- La escudería del resultado es la del piloto al cargar. No se cargan carreras futuras.
+- Corrección = reemplazo completo con la `version` de la carrera; cada guardado suma una revisión que US-9 usa para
+  re-notificar ([ADR 0008](docs/adr/0008-revisiones-de-resultados.md)).
+- Se incluyen los datos de demostración de 5 temporadas (2021–2025) que necesita US-5.
+
+**Preguntas abiertas para el PO**
+1. ¿F2, F3 y F1 Academy usan la misma escala de puntos que F1?
+
+**Horas reales**: a completar por el equipo (implementación asistida por IA en una sesión).
+
+**Falta para cerrar**: ninguno. Plan: [docs/plans/US-20-race-points.md](docs/plans/US-20-race-points.md) ·
+Feature: [docs/features/race-results](docs/features/race-results/README.md).
 
 ### US-9 — Confirmar notificación del puntaje recibido
 

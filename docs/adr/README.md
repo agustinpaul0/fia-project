@@ -19,3 +19,4 @@ sin rediscutirlo.
 | [0005](0005-estrategia-de-tests.md) | Pirámide de tests con contrato, fuzz, integración y mutación | Aceptado |
 | [0006](0006-manejo-de-errores.md) | Catálogo único de errores compartido | Aceptado |
 | [0007](0007-identidad-y-membresia-de-escuderia.md) | Identidad de autenticación (Better Auth) y membresía de escudería (`team_staff`) | Aceptado |
+| [0008](0008-revisiones-de-resultados.md) | Revisiones de resultados como base de las notificaciones | Aceptado |

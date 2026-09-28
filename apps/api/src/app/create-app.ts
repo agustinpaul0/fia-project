@@ -9,6 +9,8 @@ import { createAuthRoutes } from '../features/auth/auth.routes'
 import { createCategoriesRoutes } from '../features/categories/categories.routes'
 import { createCategoriesService } from '../features/categories/categories.service'
 import { createHealthRoutes } from '../features/health/health.routes'
+import { createRaceResultsRoutes } from '../features/race-results/race-results.routes'
+import { createRaceResultsService } from '../features/race-results/race-results.service'
 import { createTeamStaffRoutes } from '../features/team-staff/team-staff.routes'
 import { createTeamStaffService } from '../features/team-staff/team-staff.service'
 import { createTeamsRoutes } from '../features/teams/teams.routes'
@@ -40,6 +42,13 @@ export const createApp = (deps: AppDependencies): Hono<AppEnv> => {
         }),
       ),
     )
+  }
+  if (deps.repositories.raceResults) {
+    const service = createRaceResultsService({
+      repository: deps.repositories.raceResults,
+      clock: deps.clock ?? (() => new Date()),
+    })
+    app.route(API_PATHS.races, createRaceResultsRoutes(service))
   }
   app.notFound((c) => c.json(toErrorBody(new AppError('ROUTE_NOT_FOUND')), { status: 404 }))
   app.onError(createErrorHandler(deps.logger))

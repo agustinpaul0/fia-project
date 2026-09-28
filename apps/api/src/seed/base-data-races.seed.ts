@@ -29,6 +29,7 @@ const seedSingleRace = async (
       categoryId: ctx.categoryId,
       circuitId,
       round: def.round,
+      type: def.type,
       name: def.name,
       date: new Date(def.date),
     })
@@ -42,12 +43,19 @@ const seedSingleRace = async (
         eq(races.seasonId, seasonId),
         eq(races.categoryId, ctx.categoryId),
         eq(races.round, def.round),
+        eq(races.type, def.type),
       ),
     )
     .limit(1)
 
   if (race) {
-    await seedRaceResults({ db, raceId: race.id, results: def.results, driverMap: ctx.driverMap })
+    await seedRaceResults({
+      db,
+      raceId: race.id,
+      type: def.type,
+      results: def.results,
+      driverMap: ctx.driverMap,
+    })
   }
 }
 

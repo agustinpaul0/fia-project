@@ -36,6 +36,13 @@
       "when": 1790355033315,
       "tag": "0004_create_team_staff",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1790600158468,
+      "tag": "0005_add_race_type_and_results_revision",
+      "breakpoints": true
     }
   ]
 }

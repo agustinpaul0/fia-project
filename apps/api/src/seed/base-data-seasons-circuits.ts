@@ -1,4 +1,7 @@
 export const SEED_SEASONS = [
+  { year: 2021, name: 'Temporada F1 2021' },
+  { year: 2022, name: 'Temporada F1 2022' },
+  { year: 2023, name: 'Temporada F1 2023' },
   { year: 2024, name: 'Temporada F1 2024' },
   { year: 2025, name: 'Temporada F1 2025' },
   { year: 2026, name: 'Temporada F1 2026' },

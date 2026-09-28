@@ -5,6 +5,7 @@ import { createDatabasePing } from '../core/db/ping'
 import type { Logger } from '../core/logger'
 import type { Env } from '../env'
 import { createDrizzleCategoriesRepository } from '../features/categories/categories.repository'
+import { createDrizzleRaceResultsRepository } from '../features/race-results/race-results.repository'
 import { createDrizzleTeamStaffUnitOfWork } from '../features/team-staff/team-staff-unit-of-work'
 import { createDrizzleTeamsRepository } from '../features/teams/teams.repository'
 import type { AppDependencies } from './app-dependencies'
@@ -38,6 +39,7 @@ export const createProductionDependencies = ({
       categories: createDrizzleCategoriesRepository(db),
       teams: createDrizzleTeamsRepository(db),
       teamStaffUow: createDrizzleTeamStaffUnitOfWork(db, authConfig),
+      raceResults: createDrizzleRaceResultsRepository(db),
     },
     auth,
   }

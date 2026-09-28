@@ -9,7 +9,7 @@
 
 ## Qué hace
 
-Provee el modelo relacional base para la gestión deportiva de la FIA: temporadas, circuitos, equipos, pilotos, carreras y resultados con puntuación oficial. Carga datos reales/coherentes para demos de al menos 2 temporadas completas de F1 (2024 y 2025) y la temporada 2026 planificada. Permite consultar el catálogo de escuderías activas para selectores de formularios administrativos.
+Provee el modelo relacional base para la gestión deportiva de la FIA: temporadas, circuitos, equipos, pilotos, carreras y resultados con puntuación oficial. Carga datos de demostración de las últimas 5 temporadas de F1 (2021–2025, pedido del PO para US-5) y la temporada 2026 planificada. Permite consultar el catálogo de escuderías activas para selectores de formularios administrativos.
 
 ## Reglas de negocio y restricciones
 
@@ -29,8 +29,9 @@ Provee el modelo relacional base para la gestión deportiva de la FIA: temporada
 
 ## Datos cargados en el seed
 
-- **Temporadas**: 2024, 2025, 2026 (F1).
+- **Temporadas**: 2021 a 2026 (F1).
 - **Circuitos**: Monza, Silverstone, Spa-Francorchamps, Interlagos, Monaco, Bahrain.
 - **Equipos**: Red Bull Racing, Scuderia Ferrari, McLaren, Mercedes-AMG, Aston Martin.
 - **Pilotos**: 10 pilotos oficiales con dorsales y códigos reales.
-- **Carreras y resultados**: 6 grandes premios oficiales (Bahréin, Mónaco, Silverstone en 2024 y 2025) con posiciones del 1 al 10 y escala de puntos oficial de la FIA (25, 18, 15, 12, 10, 8, 6, 4, 2, 1).
+- **Carreras y resultados**: por temporada, 4 Grandes Premios y 1 Sprint (Bahréin, Mónaco y Silverstone, más un Gran Premio en Monza, Interlagos o Spa; el Sprint se corre en Silverstone, Interlagos o Spa), con el top 10 de los 10 pilotos cargados. Los puntos se calculan con `pointsFor` (escala de Gran Premio o de Sprint). **Son datos de demostración coherentes, no los resultados oficiales**: sólo hay 10 pilotos y se usa su escudería actual.
+- **2026**: Gran Premio de Bahréin planificado para diciembre, sin resultados (sirve para probar que no se pueden cargar carreras futuras).
