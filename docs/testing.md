@@ -17,6 +17,14 @@ Todo cambio de comportamiento viene con tests. Se escriben **antes** del código
 | **Mutación** | todos | `stryker.config.mjs` | Stryker muta el código y exige que los tests lo detecten: umbral 70% por paquete. Mide la **calidad** de los tests, no sólo si pasan por el código. |
 | E2E (diferido) | — | — | Playwright, al final del proyecto (habilitador T-3). |
 
+### Infraestructura: integración, no mutación
+
+Los archivos que sólo hablan con Postgres o con Better Auth —`*.repository.ts`, `*.adapter.ts`,
+`*-unit-of-work.ts`, `*-constraints.ts` (mapas de restricciones) y `core/auth/better-auth.ts`— quedan fuera
+de la cobertura unitaria y de la mutación, porque con fakes no se puede probar lo que importa de ellos.
+**A cambio, cada uno está obligado a tener tests de integración** (`*.int.test.ts`) que cubran todas sus
+operaciones y la traducción de cada restricción a su error.
+
 ### Qué **no** cubre cada capa (y por eso existen las otras)
 
 - Drizzle y Postgres garantizan tipos y restricciones de columna, pero **no** el formato de un email, rangos

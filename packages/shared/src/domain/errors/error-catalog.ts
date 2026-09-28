@@ -34,9 +34,25 @@ export const ERROR_CATALOG = {
     status: 404,
     message: 'La categoría no existe o fue eliminada.',
   },
+  TEAM_NOT_FOUND: {
+    status: 404,
+    message: 'La escudería seleccionada no existe o fue eliminada.',
+  },
+  STAFF_MEMBER_NOT_FOUND: {
+    status: 404,
+    message: 'El miembro del personal no existe.',
+  },
   CATEGORY_ALREADY_EXISTS: {
     status: 409,
     message: 'Ya existe una categoría con ese nombre o código.',
+  },
+  STAFF_FILE_NUMBER_ALREADY_EXISTS: {
+    status: 409,
+    message: 'Ya existe un miembro del personal con ese número de legajo.',
+  },
+  STAFF_MEMBER_INACTIVE: {
+    status: 409,
+    message: 'Esta cuenta está dada de baja. Creá una cuenta nueva para reemplazarla.',
   },
   STALE_VERSION: {
     status: 409,

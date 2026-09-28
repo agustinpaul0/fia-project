@@ -20,6 +20,13 @@ export const UserNav = (): ReactNode => {
   const role = session.user.role ?? 'public'
   return (
     <div className="flex items-center gap-3">
+      {role === 'fia_admin' && (
+        <Link to="/admin/team-staff">
+          <Button variant="ghost" size="sm">
+            Personal
+          </Button>
+        </Link>
+      )}
       <span className="text-sm font-medium">{session.user.name}</span>
       <Badge variant="outline">{role}</Badge>
       <Button

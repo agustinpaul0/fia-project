@@ -1,14 +1,15 @@
 # Feature: modelo de datos base y seed
 
-- **US relacionadas**: T-2 (habilitador técnico), US-1 a US-10
+- **US relacionadas**: T-2 (habilitador técnico), US-1 a US-10, US-23
 - **Código**:
   - Esquemas Drizzle: `packages/shared/src/db/schema/{seasons,circuits,teams,drivers,races,race-results}.ts`
   - Contratos Zod: `packages/shared/src/contracts/{seasons,circuits,teams,drivers,races,race-results}.ts`
   - Seed: `apps/api/src/seed/base-data*.ts`
+  - Endpoints: `apps/api/src/features/teams/`
 
 ## Qué hace
 
-Provee el modelo relacional base para la gestión deportiva de la FIA: temporadas, circuitos, equipos, pilotos, carreras y resultados con puntuación oficial. Carga datos reales/coherentes para demos de al menos 2 temporadas completas de F1 (2024 y 2025) y la temporada 2026 planificada.
+Provee el modelo relacional base para la gestión deportiva de la FIA: temporadas, circuitos, equipos, pilotos, carreras y resultados con puntuación oficial. Carga datos reales/coherentes para demos de al menos 2 temporadas completas de F1 (2024 y 2025) y la temporada 2026 planificada. Permite consultar el catálogo de escuderías activas para selectores de formularios administrativos.
 
 ## Reglas de negocio y restricciones
 
@@ -19,6 +20,12 @@ Provee el modelo relacional base para la gestión deportiva de la FIA: temporada
 - **Carreras**: Rondas secuenciales positivas por temporada y categoría (único `[season_id, category_id, round]`).
 - **Resultados**: Posición positiva única por carrera, un único resultado por piloto por carrera, puntos $\ge 0$. Cascada en borrado de carrera (`cascade`), restricción en borrado de piloto/equipo (`restrict`).
 - **Concurrencia**: Todas las tablas mutables cuentan con columna `version` para concurrencia optimista y auditoría `created_at` / `updated_at`.
+
+## API
+
+| Método | Ruta | Acceso | Body / query | Respuesta |
+|---|---|---|---|---|
+| GET | `/teams` | `fia_admin` | — | 200 `TeamOption[]` ordenadas por nombre |
 
 ## Datos cargados en el seed
 

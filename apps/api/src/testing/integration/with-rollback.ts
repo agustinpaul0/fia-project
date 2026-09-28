@@ -1,11 +1,10 @@
-import type { DatabaseConnection } from '../../core/db/client'
-import type { DbExecutor } from '../../core/db/executor'
+import type { DatabaseConnection, DatabaseTransaction } from '../../core/db/client'
 
 class RollbackSignal extends Error {}
 
 export const withRollback = async (
   connection: DatabaseConnection,
-  scenario: (tx: DbExecutor) => Promise<void>,
+  scenario: (tx: DatabaseTransaction) => Promise<void>,
 ): Promise<void> => {
   try {
     await connection.db.transaction(async (tx) => {
