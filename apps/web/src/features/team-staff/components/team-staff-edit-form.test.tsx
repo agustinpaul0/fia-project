@@ -5,7 +5,8 @@ import { TeamStaffEditForm } from './team-staff-edit-form'
 
 describe('TeamStaffEditForm', () => {
   const member = aTeamStaffMember()
-  const teams = [{ id: member.teamId, name: 'Ferrari' }]
+  const OTHER_TEAM = { id: '00000000-0000-4000-8000-000000000077', name: 'McLaren' }
+  const teams = [{ id: member.teamId, name: 'Ferrari' }, OTHER_TEAM]
 
   it('carga datos existentes, permite editar y envía', async () => {
     const onSubmit = vi.fn().mockResolvedValue(undefined)
@@ -19,14 +20,20 @@ describe('TeamStaffEditForm', () => {
     expect(screen.getByDisplayValue(member.fileNumber)).toBeDisabled()
 
     fireEvent.change(screen.getByLabelText('Nombre'), { target: { value: 'Carlos' } })
+    fireEvent.change(screen.getByLabelText('Apellido'), { target: { value: 'Sainz' } })
+    fireEvent.change(screen.getByLabelText('Escudería'), { target: { value: OTHER_TEAM.id } })
+    fireEvent.change(screen.getByLabelText('Cargo en la escudería'), {
+      target: { value: 'Director Deportivo' },
+    })
+    fireEvent.change(screen.getByLabelText('Teléfono'), { target: { value: '+54 9 11 5555555' } })
     fireEvent.click(screen.getByRole('button', { name: 'Guardar cambios' }))
 
     expect(onSubmit).toHaveBeenCalledWith(member.id, {
       firstName: 'Carlos',
-      lastName: member.lastName,
-      teamId: member.teamId,
-      roleInTeam: member.roleInTeam,
-      phoneNumber: member.phoneNumber,
+      lastName: 'Sainz',
+      teamId: OTHER_TEAM.id,
+      roleInTeam: 'Director Deportivo',
+      phoneNumber: '+54 9 11 5555555',
       version: member.version,
     })
   })

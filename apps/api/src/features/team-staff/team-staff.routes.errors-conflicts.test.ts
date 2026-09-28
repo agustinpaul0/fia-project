@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest'
+import { readError } from '../../testing/http'
 import { createInMemoryTeamStaffRepository } from '../../testing/in-memory-team-staff.repository'
 import { createInMemoryTeamStaffUnitOfWork } from '../../testing/in-memory-team-staff-unit-of-work'
 import { FIA_ADMIN } from '../../testing/session-users'
 import { buildCreateTeamStaffBody, buildTeamStaffDto } from '../../testing/team-staff-builders'
 import { createTestApp } from '../../testing/test-app'
 
-type ErrorResponse = { error: { code: string } }
 const TEAM_ID = '00000000-0000-4000-8000-000000000001'
 const TEAMS = [{ id: TEAM_ID, name: 'Ferrari' }]
 
@@ -31,8 +31,7 @@ describe('Errores 409 de rutas de personal de escudería', () => {
       body: JSON.stringify(body),
     })
     expect(res.status).toBe(409)
-    const json = (await res.json()) as ErrorResponse
-    expect(json.error.code).toBe('USER_ALREADY_EXISTS')
+    expect((await readError(res)).code).toBe('USER_ALREADY_EXISTS')
   })
 
   it('409 STAFF_FILE_NUMBER_ALREADY_EXISTS si el legajo ya existe', async () => {
@@ -48,8 +47,7 @@ describe('Errores 409 de rutas de personal de escudería', () => {
       body: JSON.stringify(body),
     })
     expect(res.status).toBe(409)
-    const json = (await res.json()) as ErrorResponse
-    expect(json.error.code).toBe('STAFF_FILE_NUMBER_ALREADY_EXISTS')
+    expect((await readError(res)).code).toBe('STAFF_FILE_NUMBER_ALREADY_EXISTS')
   })
 
   it('409 STAFF_MEMBER_INACTIVE al intentar editar una cuenta dada de baja', async () => {
@@ -68,8 +66,7 @@ describe('Errores 409 de rutas de personal de escudería', () => {
       }),
     })
     expect(res.status).toBe(409)
-    const json = (await res.json()) as ErrorResponse
-    expect(json.error.code).toBe('STAFF_MEMBER_INACTIVE')
+    expect((await readError(res)).code).toBe('STAFF_MEMBER_INACTIVE')
   })
 
   it('409 STALE_VERSION si se da de baja con versión vieja', async () => {
@@ -77,7 +74,6 @@ describe('Errores 409 de rutas de personal de escudería', () => {
     const { app } = createTestApp({ teams: TEAMS, staff: [existing], sessionUser: FIA_ADMIN })
     const res = await app.request(`/team-staff/${existing.id}?version=1`, { method: 'DELETE' })
     expect(res.status).toBe(409)
-    const json = (await res.json()) as ErrorResponse
-    expect(json.error.code).toBe('STALE_VERSION')
+    expect((await readError(res)).code).toBe('STALE_VERSION')
   })
 })

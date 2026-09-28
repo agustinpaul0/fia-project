@@ -22,7 +22,7 @@ export const createDrizzleTeamStaffUnitOfWork = (
       db.transaction(async (tx) => {
         const txStaff = createDrizzleTeamStaffRepository(tx)
         const txAuth = createBetterAuth({
-          db: tx as unknown as Database,
+          db: tx,
           secret: authConfig.secret,
           baseURL: authConfig.baseURL,
           trustedOrigins: authConfig.trustedOrigins,

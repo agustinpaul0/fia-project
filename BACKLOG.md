@@ -26,7 +26,7 @@ cual; lo agregado por el equipo implementador está marcado como **[equipo]**.
 | T-0 | Setup del repositorio y convenciones **[equipo]** | — | — | — | — | Hecho | Agustín | — | — |
 | T-1 | Autenticación mínima con roles **[equipo]** | — | — | — | 3 h | Hecho | Agustín | T-0 | |
 | T-2 | Modelo de datos base y seed **[equipo]** | — | — | — | 3 h | Hecho | Agustín | T-0 | |
-| US-23 | Gestión de cuentas del personal de escuderías | 5 | 13 | 17 h | 17 h | En revisión | Joaquín | T-1 | |
+| US-23 | Gestión de cuentas del personal de escuderías | 5 | 13 | 17 h | 17 h | Hecho | Joaquín | T-1 | #2 |
 | US-20 | Carga y modificación del puntaje de una carrera | 1 | 21 | 12 h | | Pendiente | | T-1, T-2 | |
 | US-9 | Confirmar notificación del puntaje recibido | 1 | 13 | 10 h | | Pendiente | | US-20, US-23 | |
 | US-5 | Ver resultados de carreras de los últimos años | 2 | 13 | 14 h | | Pendiente | | T-2 | |
@@ -119,7 +119,15 @@ años anteriores para poder mostrarse en la demo.
 5. ¿El listado administrativo incluye siempre las cuentas dadas de baja?
 6. ¿Se ratifica que la contraseña inicial se entrega fuera del sistema hasta que exista US-26?
 
-**Falta para cerrar**: ninguno. En revisión para PR. Plan técnico: [docs/plans/US-23-team-staff-accounts.md](docs/plans/US-23-team-staff-accounts.md).
+**Revisión (Agustín, 2026-09-28)**
+- Tests de integración del repositorio corregidos: usaban un cargo de 1 carácter y el mismo usuario para probar
+  el legajo duplicado, así que chocaban con otras restricciones.
+- Nuevos tests de integración del adaptador de Better Auth (alta, email repetido, edición y baja que cierra
+  sesiones), que no tenía ninguno.
+- Sin casteos `as unknown as` en producción: `auth.$context` tipado y `TransactionalDatabase` para Better Auth.
+- Tests de formularios reforzados (payload exacto, reseteo, estado de guardado) para superar el umbral de mutación.
+
+**Falta para cerrar**: ninguno. Plan técnico: [docs/plans/US-23-team-staff-accounts.md](docs/plans/US-23-team-staff-accounts.md).
 
 ### US-20 — Carga y modificación del puntaje de una carrera
 
@@ -203,6 +211,7 @@ años anteriores para poder mostrarse en la demo.
 | ID | Ítem | Motivo | Estado |
 |---|---|---|---|
 | T-3 | Tests e2e con Playwright de los flujos principales **[equipo]** | Se dejan para el final del proyecto (decisión del equipo). | Pendiente |
+| T-4 | Migrar los formularios de US-23 a `react-hook-form` + resolver Zod del contrato **[equipo]** | Hoy usan `useState` y validan sólo en el servidor; la convención (`docs/conventions/react.md`) pide validación en el cliente con el mismo schema. | Pendiente |
 
 ## Product backlog (no seleccionado para el Sprint 1)
 

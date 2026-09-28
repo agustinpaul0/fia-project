@@ -4,6 +4,7 @@ import { connectDatabase, type DatabaseConnection } from '../../core/db/client'
 import type { DbExecutor } from '../../core/db/executor'
 import { testDatabaseUrl } from '../../testing/integration/test-database-url'
 import { withRollback } from '../../testing/integration/with-rollback'
+import { buildCreateTeamStaffBody } from '../../testing/team-staff-builders'
 import { createDrizzleTeamStaffRepository } from './team-staff.repository'
 
 describe('DrizzleTeamStaffRepository escrituras (Postgres real)', () => {
@@ -11,6 +12,8 @@ describe('DrizzleTeamStaffRepository escrituras (Postgres real)', () => {
   const catId = '00000000-0000-4000-8000-000000000001'
   const teamId = '00000000-0000-4000-8000-000000000010'
   const userId = 'usr-test-1'
+  const otherUserId = 'usr-test-2'
+  const { roleInTeam, phoneNumber } = buildCreateTeamStaffBody()
 
   beforeAll(() => {
     connection = connectDatabase(testDatabaseUrl())
@@ -25,15 +28,13 @@ describe('DrizzleTeamStaffRepository escrituras (Postgres real)', () => {
       .insert(teams)
       .values({ id: teamId, name: 'Ferrari', country: 'Italia', categoryId: catId })
       .onConflictDoNothing()
+    const now = new Date()
     await tx
       .insert(user)
-      .values({
-        id: userId,
-        name: 'Admin',
-        email: 'admin@fia.com',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      })
+      .values([
+        { id: userId, name: 'Admin', email: 'admin@fia.com', createdAt: now, updatedAt: now },
+        { id: otherUserId, name: 'Otro', email: 'otro@fia.com', createdAt: now, updatedAt: now },
+      ])
       .onConflictDoNothing()
   }
 
@@ -44,12 +45,13 @@ describe('DrizzleTeamStaffRepository escrituras (Postgres real)', () => {
       const base = {
         userId,
         teamId,
-        roleInTeam: 'C',
-        phoneNumber: '+54 9 291 1234567',
+        roleInTeam,
+        phoneNumber,
         fileNumber: 'LEG-DUP',
       }
       await repo.create({ ...base, firstName: 'A', lastName: 'B' })
-      await expect(repo.create({ ...base, firstName: 'X', lastName: 'Y' })).rejects.toMatchObject({
+      const duplicate = { ...base, userId: otherUserId, firstName: 'X', lastName: 'Y' }
+      await expect(repo.create(duplicate)).rejects.toMatchObject({
         code: 'STAFF_FILE_NUMBER_ALREADY_EXISTS',
       })
     }))
@@ -63,16 +65,16 @@ describe('DrizzleTeamStaffRepository escrituras (Postgres real)', () => {
         teamId,
         firstName: 'A',
         lastName: 'B',
-        roleInTeam: 'C',
-        phoneNumber: '+54 9 291 1234567',
+        roleInTeam,
+        phoneNumber,
         fileNumber: 'LEG-V',
       })
       const upd = {
         teamId,
         firstName: 'A2',
         lastName: 'B2',
-        roleInTeam: 'C2',
-        phoneNumber: '+54 9 291 1234567',
+        roleInTeam: 'Director Deportivo',
+        phoneNumber,
       }
       const updated = await repo.update(created.id, { ...upd, version: 1 })
       expect(updated?.version).toBe(2)

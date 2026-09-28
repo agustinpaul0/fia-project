@@ -11,13 +11,9 @@ type InternalAdapter = {
   readonly deleteUserSessions: (id: string) => Promise<unknown>
 }
 
-type AuthWithContext = {
-  readonly $context: Promise<{ readonly internalAdapter: InternalAdapter }>
-}
-
 export const createDrizzleStaffAccountsAdapter = (auth: BetterAuthInstance): StaffAccountsPort => {
   const getInternalAdapter = async (): Promise<InternalAdapter> => {
-    const ctx = await (auth as unknown as AuthWithContext)['$context']
+    const ctx = await auth.$context
     return ctx.internalAdapter
   }
 

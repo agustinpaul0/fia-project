@@ -3,12 +3,12 @@ import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { admin } from 'better-auth/plugins/admin'
 import { bearer } from 'better-auth/plugins/bearer'
-import type { Database } from '../db/client'
+import type { TransactionalDatabase } from '../db/client'
 
 import { ADMIN_ROLES, authRoles } from './better-auth-roles'
 
 export type BetterAuthConfig = {
-  readonly db: Database
+  readonly db: TransactionalDatabase
   readonly secret: string
   readonly baseURL: string
   readonly trustedOrigins: readonly string[]
