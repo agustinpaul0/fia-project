@@ -14,6 +14,9 @@ cual; lo agregado por el equipo implementador está marcado como **[equipo]**.
   por tarea y link al PR.
 - **Horas reales**: la cátedra pide comparar estimado vs. real por US en el Sprint 1 para estimar el Sprint 2.
   Cargarlas con honestidad (incluye tiempo de tests, docs y review).
+- Sesión de trabajo del 2026-09-28 (09:15–11:45, ~2,5 h en total): revisión y cierre de US-23 (0,5 h), US-20,
+  US-9 y US-5 (1 h) y CI, integración y merges (1 h). Las horas por US salen de los horarios de los commits.
+- Dudas para el PO: [`docs/preguntas-po.md`](docs/preguntas-po.md).
 - Escala de Naranja: story points y business value en Fibonacci. SP ↔ horas: 1 = ≤ 12 h · 2 = 12–14 h ·
   3 = 14–16 h · 5 = 16–18 h.
 
@@ -27,9 +30,9 @@ cual; lo agregado por el equipo implementador está marcado como **[equipo]**.
 | T-1 | Autenticación mínima con roles **[equipo]** | — | — | — | 3 h | Hecho | Agustín | T-0 | |
 | T-2 | Modelo de datos base y seed **[equipo]** | — | — | — | 3 h | Hecho | Agustín | T-0 | |
 | US-23 | Gestión de cuentas del personal de escuderías | 5 | 13 | 17 h | 17 h | Hecho | Joaquín | T-1 | #2 |
-| US-20 | Carga y modificación del puntaje de una carrera | 1 | 21 | 12 h | | Hecho | Agustín | T-1, T-2 | #3 |
-| US-9 | Confirmar notificación del puntaje recibido | 1 | 13 | 10 h | | Hecho | Agustín | US-20, US-23 | #4 |
-| US-5 | Ver resultados de carreras de los últimos años | 2 | 13 | 14 h | | Hecho | Agustín | T-2 | #5 |
+| US-20 | Carga y modificación del puntaje de una carrera | 1 | 21 | 12 h | 0,5 h | Hecho | Agustín | T-1, T-2 | #3 |
+| US-9 | Confirmar notificación del puntaje recibido | 1 | 13 | 10 h | 0,25 h | Hecho | Agustín | US-20, US-23 | #4 |
+| US-5 | Ver resultados de carreras de los últimos años | 2 | 13 | 14 h | 0,25 h | Hecho | Agustín | T-2 | #5 |
 
 **Orden sugerido [equipo]**: T-1 y T-2 en paralelo → US-23 → US-20 → US-9. US-5 en paralelo apenas esté T-2.
 Las estimaciones de los habilitadores las hace el equipo **sin IA** (pauta de la cátedra para el Sprint 1).
@@ -163,7 +166,7 @@ años anteriores para poder mostrarse en la demo.
 **Preguntas abiertas para el PO**
 1. ¿F2, F3 y F1 Academy usan la misma escala de puntos que F1?
 
-**Horas reales**: a completar por el equipo (implementación asistida por IA en una sesión).
+**Horas reales**: 0,5 h (sesión del 2026-09-28, 09:42–10:15, implementación asistida por IA).
 
 **Falta para cerrar**: ninguno. Plan: [docs/plans/US-20-race-points.md](docs/plans/US-20-race-points.md) ·
 Feature: [docs/features/race-results](docs/features/race-results/README.md).
@@ -195,7 +198,7 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 - Reciben notificación las escuderías con resultados en la carrera; una por escudería y revisión (ADR 0008).
 - Sólo la revisión vigente se muestra y se puede confirmar; los resultados del seed no notifican.
 
-**Horas reales**: a completar por el equipo (implementación asistida por IA en una sesión).
+**Horas reales**: 0,25 h (sesión del 2026-09-28, 10:15–10:28, implementación asistida por IA).
 
 **Falta para cerrar**: ninguno. Plan: [docs/plans/US-9-score-notifications.md](docs/plans/US-9-score-notifications.md) ·
 Feature: [docs/features/notifications](docs/features/notifications/README.md).
@@ -223,7 +226,7 @@ Feature: [docs/features/notifications](docs/features/notifications/README.md).
 - Origen de datos: provistos por el equipo implementador mediante seed demo.
 - Tiempo de respuesta: menos de 10 minutos (en la web es inmediato).
 
-**Horas reales**: a completar por el equipo (implementación asistida por IA en una sesión).
+**Horas reales**: 0,25 h (sesión del 2026-09-28, 10:28–10:35 más documentación, implementación asistida por IA).
 
 **Falta para cerrar**: ninguno. Plan: [docs/plans/US-5-race-results-history.md](docs/plans/US-5-race-results-history.md) ·
 Feature: [docs/features/race-results](docs/features/race-results/README.md).
