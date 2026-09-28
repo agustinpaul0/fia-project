@@ -81,7 +81,7 @@ Ciclo por comportamiento: test que falla → código mínimo → refactor. Detal
 | Mensaje de commit | commitlint (Conventional Commits) | lefthook |
 | `git push` | unit + contrato + fuzz + cobertura | lefthook |
 | Antes de abrir el PR | `pnpm verify` (todo + integración + mutación + build) | manual, **obligatorio** |
-| PR / push a `develop` o `main` | `pnpm verify` | GitHub Actions |
+| PR / push a `develop` o `main` | lo mismo que `pnpm verify`, en jobs paralelos | GitHub Actions |
 
 Nunca `--no-verify`. Si un gate falla, se arregla la causa.
 
