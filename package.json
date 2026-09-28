@@ -7,7 +7,7 @@
     "node": ">=24"
   },
   "scripts": {
-    "prepare": "lefthook install",
+    "prepare": "node scripts/install-git-hooks.mjs",
     "dev": "pnpm --parallel --filter @fia/api --filter @fia/web dev",
     "build": "pnpm --filter @fia/api --filter @fia/web build",
     "lint": "biome check .",
@@ -23,7 +23,7 @@
     "db:seed": "pnpm --filter @fia/api db:seed",
     "db:studio": "pnpm --filter @fia/shared db:studio",
     "verify": "pnpm lint && pnpm typecheck && pnpm test:coverage && pnpm test:int && pnpm test:mutation && pnpm build",
-    "docker:up": "docker compose up --build",
+    "docker:up": "docker compose up --build --renew-anon-volumes",
     "docker:down": "docker compose down",
     "docker:reset": "docker compose down -v",
     "skills:sync": "node scripts/skills.mjs sync",
