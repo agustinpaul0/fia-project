@@ -13,3 +13,7 @@ export const connectDatabase = (url: string): DatabaseConnection => {
   const pool = new Pool({ connectionString: url })
   return { db: drizzle(pool, { schema, casing: 'snake_case' }), close: () => pool.end() }
 }
+
+export type DatabaseTransaction = Parameters<Parameters<Database['transaction']>[0]>[0]
+
+export type TransactionalDatabase = Database | DatabaseTransaction

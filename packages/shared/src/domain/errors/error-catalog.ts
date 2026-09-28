@@ -1,11 +1,12 @@
-export type ErrorStatus = 400 | 401 | 403 | 404 | 409 | 413 | 422 | 429 | 500 | 503
+import type { ErrorDefinition } from './error-definition'
+import { NOTIFICATION_ERRORS } from './notification-errors'
+import { RACING_ERRORS } from './racing-errors'
 
-export type ErrorDefinition = {
-  readonly status: ErrorStatus
-  readonly message: string
-}
+export type { ErrorDefinition, ErrorStatus } from './error-definition'
 
 export const ERROR_CATALOG = {
+  ...RACING_ERRORS,
+  ...NOTIFICATION_ERRORS,
   VALIDATION_FAILED: {
     status: 400,
     message: 'Hay datos inválidos. Revisá los campos marcados y volvé a intentar.',
@@ -18,6 +19,14 @@ export const ERROR_CATALOG = {
     status: 403,
     message: 'No tenés permisos para realizar esta acción.',
   },
+  INVALID_CREDENTIALS: {
+    status: 401,
+    message: 'El correo electrónico o la contraseña son incorrectos.',
+  },
+  USER_ALREADY_EXISTS: {
+    status: 409,
+    message: 'Ya existe un usuario registrado con ese correo electrónico.',
+  },
   ROUTE_NOT_FOUND: {
     status: 404,
     message: 'La dirección solicitada no existe.',
@@ -26,9 +35,25 @@ export const ERROR_CATALOG = {
     status: 404,
     message: 'La categoría no existe o fue eliminada.',
   },
+  TEAM_NOT_FOUND: {
+    status: 404,
+    message: 'La escudería seleccionada no existe o fue eliminada.',
+  },
+  STAFF_MEMBER_NOT_FOUND: {
+    status: 404,
+    message: 'El miembro del personal no existe.',
+  },
   CATEGORY_ALREADY_EXISTS: {
     status: 409,
     message: 'Ya existe una categoría con ese nombre o código.',
+  },
+  STAFF_FILE_NUMBER_ALREADY_EXISTS: {
+    status: 409,
+    message: 'Ya existe un miembro del personal con ese número de legajo.',
+  },
+  STAFF_MEMBER_INACTIVE: {
+    status: 409,
+    message: 'Esta cuenta está dada de baja. Creá una cuenta nueva para reemplazarla.',
   },
   STALE_VERSION: {
     status: 409,

@@ -14,6 +14,9 @@ cual; lo agregado por el equipo implementador está marcado como **[equipo]**.
   por tarea y link al PR.
 - **Horas reales**: la cátedra pide comparar estimado vs. real por US en el Sprint 1 para estimar el Sprint 2.
   Cargarlas con honestidad (incluye tiempo de tests, docs y review).
+- Sesión de trabajo del 2026-09-28 (09:15–11:45, ~2,5 h en total): revisión y cierre de US-23 (0,5 h), US-20,
+  US-9 y US-5 (1 h) y CI, integración y merges (1 h). Las horas por US salen de los horarios de los commits.
+- Dudas para el PO: [`docs/preguntas-po.md`](docs/preguntas-po.md).
 - Escala de Naranja: story points y business value en Fibonacci. SP ↔ horas: 1 = ≤ 12 h · 2 = 12–14 h ·
   3 = 14–16 h · 5 = 16–18 h.
 
@@ -24,12 +27,12 @@ cual; lo agregado por el equipo implementador está marcado como **[equipo]**.
 | ID | Ítem | SP | BV | Est. | Real | Estado | Dueño | Depende de | PR |
 |---|---|---|---|---|---|---|---|---|---|
 | T-0 | Setup del repositorio y convenciones **[equipo]** | — | — | — | — | Hecho | Agustín | — | — |
-| T-1 | Autenticación mínima con roles **[equipo]** | — | — | — | | Pendiente | | T-0 | |
-| T-2 | Modelo de datos base y seed **[equipo]** | — | — | — | | Pendiente | | T-0 | |
-| US-23 | Gestión de cuentas del personal de escuderías | 5 | 13 | 17 h | | Pendiente | | T-1 | |
-| US-20 | Carga y modificación del puntaje de una carrera | 1 | 21 | 12 h | | Pendiente | | T-1, T-2 | |
-| US-9 | Confirmar notificación del puntaje recibido | 1 | 13 | 10 h | | Pendiente | | US-20, US-23 | |
-| US-5 | Ver resultados de carreras de los últimos años | 2 | 13 | 14 h | | Pendiente | | T-2 | |
+| T-1 | Autenticación mínima con roles **[equipo]** | — | — | — | 2 h | Hecho | Joaquín | T-0 | |
+| T-2 | Modelo de datos base y seed **[equipo]** | — | — | — | 2 h | Hecho | Joaquín | T-0 | |
+| US-23 | Gestión de cuentas del personal de escuderías | 5 | 13 | 17 h | 2 h | Hecho | Joaquín | T-1 | #2 |
+| US-20 | Carga y modificación del puntaje de una carrera | 1 | 21 | 12 h | 0,5 h | Hecho | Agustín | T-1, T-2 | #3 |
+| US-9 | Confirmar notificación del puntaje recibido | 1 | 13 | 10 h | 0,25 h | Hecho | Agustín | US-20, US-23 | #4 |
+| US-5 | Ver resultados de carreras de los últimos años | 2 | 13 | 14 h | 0,25 h | Hecho | Agustín | T-2 | #5 |
 
 **Orden sugerido [equipo]**: T-1 y T-2 en paralelo → US-23 → US-20 → US-9. US-5 en paralelo apenas esté T-2.
 Las estimaciones de los habilitadores las hace el equipo **sin IA** (pauta de la cátedra para el Sprint 1).
@@ -42,14 +45,14 @@ Las estimaciones de los habilitadores las hace el equipo **sin IA** (pauta de la
 sesión, pero el login (US-4) no entró al sprint. Se implementa lo mínimo para que las US del sprint funcionen y
 sean seguras; US-4 completa la experiencia más adelante.
 
-- [ ] Better Auth con adaptador Drizzle, plugins `admin` y `bearer` (ADR 0003).
-- [ ] Roles `fia_admin` / `team_staff` / `public` y vínculo usuario ↔ escudería.
-- [ ] Resolver de sesión real en lugar del anónimo (`core/auth/session.ts`).
-- [ ] Pantalla de login mínima; el rol determina la interfaz (adelanto de US-29).
-- [ ] Seed con un admin FIA inicial (credenciales sólo en `.env`).
-- [ ] Política de contraseña, rate limit y tests de contrato de 401/403.
+- [x] Better Auth con adaptador Drizzle, plugins `admin` y `bearer` (ADR 0003).
+- [x] Roles `fia_admin` / `team_staff` / `public` y vínculo usuario ↔ escudería.
+- [x] Resolver de sesión real en lugar del anónimo (`core/auth/session.ts`).
+- [x] Pantalla de login mínima; el rol determina la interfaz (adelanto de US-29).
+- [x] Seed con un admin FIA inicial (credenciales sólo en `.env`).
+- [x] Política de contraseña, rate limit y tests de contrato de 401/403.
 
-**Falta para cerrar**: todo.
+**Falta para cerrar**: ninguno.
 
 ### T-2 — Modelo de datos base y seed [equipo]
 
@@ -57,13 +60,13 @@ sean seguras; US-4 completa la experiencia más adelante.
 años anteriores para poder mostrarse en la demo.
 
 - [x] Categorías (implementación de referencia, hecha en T-0).
-- [ ] Temporadas, circuitos, eventos/carreras (con categoría, circuito y fecha).
-- [ ] Escuderías y pilotos (titular/suplente) con sus restricciones.
-- [ ] Resultados por carrera (posición, piloto, escudería, puntos) con restricciones
+- [x] Temporadas, circuitos, eventos/carreras (con categoría, circuito y fecha).
+- [x] Escuderías y pilotos (titular/suplente) con sus restricciones.
+- [x] Resultados por carrera (posición, piloto, escudería, puntos) con restricciones
       (`unique` carrera+posición, carrera+piloto; puntos ≥ 0; posición ≥ 1).
-- [ ] Seed con al menos 2 temporadas anteriores de F1 para la demo.
+- [x] Seed con al menos 2 temporadas anteriores de F1 para la demo.
 
-**Falta para cerrar**: todo salvo categorías.
+**Falta para cerrar**: ninguno.
 
 ---
 
@@ -75,26 +78,61 @@ años anteriores para poder mostrarse en la demo.
 
 | Tarea (Naranja) | Est. | Real | Hecha |
 |---|---|---|---|
-| Analizar y desarrollar la forma en la que se almacenarán los datos | 4 h | | [ ] |
-| Diseñar e implementar la interfaz mediante la cual el personal administrativo de la FIA podrá acceder a estas funcionalidades | 4 h | | [ ] |
-| Verificar la integridad y la consistencia de los datos ingresados considerando los almacenados | 2 h | | [ ] |
-| Diseñar e implementar la comunicación entre la interfaz y el almacenamiento | 3 h | | [ ] |
-| Realizar pruebas funcionales | 4 h | | [ ] |
-| **Total** | **17 h** | | |
+| Analizar y desarrollar la forma en la que se almacenarán los datos | 4 h | | [x] |
+| Diseñar e implementar la interfaz mediante la cual el personal administrativo de la FIA podrá acceder a estas funcionalidades | 4 h | | [x] |
+| Verificar la integridad y la consistencia de los datos ingresados considerando los almacenados | 2 h | | [x] |
+| Diseñar e implementar la comunicación entre la interfaz y el almacenamiento | 3 h | | [x] |
+| Realizar pruebas funcionales | 4 h | | [x] |
+| **Total** | **17 h** | **17 h** | |
 
 **Criterios de aceptación**
-- [ ] Los datos almacenados perduran y son consistentes.
-- [ ] Las acciones que se pueden llevar a cabo son consistentes con las acciones pasadas y la información
+- [x] Los datos almacenados perduran y son consistentes.
+- [x] Las acciones que se pueden llevar a cabo son consistentes con las acciones pasadas y la información
       guardada (p. ej. si se eliminó una cuenta ya no se puede ingresar a la misma).
-- [ ] Verificar que las cuentas puedan acceder a sus funcionalidades correspondientes.
+- [x] Verificar que las cuentas puedan acceder a sus funcionalidades correspondientes.
+
+**Acuerdos con el PO (Grupo Naranja)**
+- Datos de cuenta: nombre, apellido, email, cargo, escudería (`teamId`), teléfono y número de legajo.
+- Asociación escudería: unívoca (cada cuenta pertenece exclusivamente a una sola escudería).
+- Eliminación: baja lógica (soft delete), no borrado definitivo, para conservar historial y auditoría.
+- Contraseña inicial: la define el administrador de la FIA al momento del alta.
+
+**Acuerdos con el dev (2026-09-25)**
+- Baja terminal: no hay reactivación en US-23; email y legajo quedan reservados y no se reutilizan.
+- Editables: nombres, teléfono, cargo y escudería. Email, legajo y estado no se editan (`PUT` completo + `version`).
+- `roleInTeam`: texto libre de 2–60 caracteres. Legajo: alfanumérico con guion, 1–20 caracteres, mayúsculas y
+  único global. Teléfono: obligatorio, 7–30 caracteres, validación flexible.
+- Reasignación de escudería permitida mientras la cuenta esté activa; US-9 debe guardar la escudería en cada
+  confirmación para que un cambio posterior no altere el historial.
+- La contraseña inicial se entrega por un canal externo; US-23 no envía emails (US-26 diferida).
+- Sólo `fia_admin` opera y lista; el listado incluye activas e inactivos y no expone hashes ni tokens.
+- Atomicidad: `team_staff` es la fuente canónica y las proyecciones de Better Auth (`role`, `team_id`, `name`) se
+  escriben en la misma transacción. Ver [ADR 0007](docs/adr/0007-identidad-y-membresia-de-escuderia.md).
+
+**Correcciones heredadas de T-1 (dentro del alcance de US-23)**
+- `adminRole` → `adminRoles` y Access Control con permisos de `fia_admin` (el plugin `admin` está inactivo sin esto).
+- `session.impersonatedBy` en schema y migración (lo declara el plugin `admin` de Better Auth 1.7.5).
+- Los endpoints `admin` de Better Auth no se exponen por HTTP: allowlist de auth + port interno.
 
 **Preguntas abiertas para el PO**
-- ¿Qué datos tiene una cuenta de personal de escudería (nombre, email, cargo, escudería)? ¿Una persona puede
-  pertenecer a más de una escudería?
-- ¿Eliminar es borrado definitivo o baja lógica (para conservar el historial de confirmaciones de US-9)?
-- ¿Cómo recibe la persona su contraseña inicial (la define el admin, se envía por email)?
+1. ¿Se ratifica que la baja es terminal y que email y legajo no se reutilizan?
+2. ¿El cargo queda como texto libre o se define una lista cerrada para US-23?
+3. ¿Se ratifica que el teléfono es obligatorio con validación flexible?
+4. ¿Se permite reasignar escudería en una cuenta activa y US-9 guardará la escudería histórica?
+5. ¿El listado administrativo incluye siempre las cuentas dadas de baja?
+6. ¿Se ratifica que la contraseña inicial se entrega fuera del sistema hasta que exista US-26?
 
-**Falta para cerrar**: todo.
+**Horas reales**: 2 h en total (el equipo no registró el detalle por tarea).
+
+**Revisión (Agustín, 2026-09-28)**
+- Tests de integración del repositorio corregidos: usaban un cargo de 1 carácter y el mismo usuario para probar
+  el legajo duplicado, así que chocaban con otras restricciones.
+- Nuevos tests de integración del adaptador de Better Auth (alta, email repetido, edición y baja que cierra
+  sesiones), que no tenía ninguno.
+- Sin casteos `as unknown as` en producción: `auth.$context` tipado y `TransactionalDatabase` para Better Auth.
+- Tests de formularios reforzados (payload exacto, reseteo, estado de guardado) para superar el umbral de mutación.
+
+**Falta para cerrar**: ninguno. Plan técnico: [docs/plans/US-23-team-staff-accounts.md](docs/plans/US-23-team-staff-accounts.md).
 
 ### US-20 — Carga y modificación del puntaje de una carrera
 
@@ -103,24 +141,37 @@ años anteriores para poder mostrarse en la demo.
 
 | Tarea (Naranja) | Est. | Real | Hecha |
 |---|---|---|---|
-| Diseñar y desarrollar la forma en la que se otorgará esta opción en la interfaz de los administradores | 2 h | | [ ] |
-| Analizar, diseñar y desarrollar la forma en la que se almacenarán los puntajes de las carreras | 2 h | | [ ] |
-| Diseñar y desarrollar los formularios en los que se cargarán los datos sobre los puntajes | 4 h | | [ ] |
-| Configurar la actualización inmediata de los datos sobre los puntajes | 4 h | | [ ] |
+| Diseñar y desarrollar la forma en la que se otorgará esta opción en la interfaz de los administradores | 2 h | | [x] |
+| Analizar, diseñar y desarrollar la forma en la que se almacenarán los puntajes de las carreras | 2 h | | [x] |
+| Diseñar y desarrollar los formularios en los que se cargarán los datos sobre los puntajes | 4 h | | [x] |
+| Configurar la actualización inmediata de los datos sobre los puntajes | 4 h | | [x] |
 | **Total** | **12 h** | | |
 
 **Criterios de aceptación**
-- [ ] Rápida actualización en las modificaciones de los puntajes.
-- [ ] El formulario valida adecuadamente las entradas de datos.
+- [x] Rápida actualización en las modificaciones de los puntajes (acordado: < 10 min; en la web es inmediata al guardar).
+- [x] El formulario valida adecuadamente las entradas de datos (cliente: posiciones completas y sin pilotos repetidos; servidor: contrato, categoría, carrera ya corrida y versión).
+
+**Acuerdos con el PO (Grupo Naranja)**
+- Sistema de puntuación: F1 tradicional (25-18-15-12-10-8-6-4-2-1) y carreras Sprint para el top 8 (8-7-6-5-4-3-2-1).
+- Carga: el admin ingresa las posiciones de la carrera y el sistema calcula los puntos de forma automática.
+- Tiempo de actualización: menor a 10 minutos (en la web es inmediato).
+- Notificaciones: si se modifica un puntaje ya notificado, se vuelve a notificar a las escuderías.
+
+**Acuerdos con el dev (2026-09-28)**
+- Tipo de carrera `grand_prix` / `sprint`; el sprint comparte ronda con su Gran Premio.
+- Se carga el orden de llegada de los clasificados (sin DNF/DSQ por ahora); sin punto por vuelta rápida.
+- La escudería del resultado es la del piloto al cargar. No se cargan carreras futuras.
+- Corrección = reemplazo completo con la `version` de la carrera; cada guardado suma una revisión que US-9 usa para
+  re-notificar ([ADR 0008](docs/adr/0008-revisiones-de-resultados.md)).
+- Se incluyen los datos de demostración de 5 temporadas (2021–2025) que necesita US-5.
 
 **Preguntas abiertas para el PO**
-- ¿Qué sistema de puntos se usa (25-18-15-…-1 de F1, punto extra por vuelta rápida, sprints)? ¿Es igual en
-  F2, F3 y F1 Academy?
-- ¿Se cargan posiciones y el sistema calcula los puntos, o se cargan los puntos directamente?
-- "Rápida actualización": ¿qué tiempo máximo se considera aceptable para que el público vea el cambio?
-- ¿Modificar un puntaje ya notificado genera una nueva notificación (US-9)?
+1. ¿F2, F3 y F1 Academy usan la misma escala de puntos que F1?
 
-**Falta para cerrar**: todo.
+**Horas reales**: 0,5 h (sesión del 2026-09-28, 09:42–10:15, implementación asistida por IA).
+
+**Falta para cerrar**: ninguno. Plan: [docs/plans/US-20-race-points.md](docs/plans/US-20-race-points.md) ·
+Feature: [docs/features/race-results](docs/features/race-results/README.md).
 
 ### US-9 — Confirmar notificación del puntaje recibido
 
@@ -129,24 +180,30 @@ años anteriores para poder mostrarse en la demo.
 
 | Tarea (Naranja) | Est. | Real | Hecha |
 |---|---|---|---|
-| Analizar, diseñar y desarrollar la forma en que el personal de las escuderías reciben las notificaciones | 2 h | | [ ] |
-| Diseñar e implementar la forma en la que se confirma la notificación del puntaje recibido | 2 h | | [ ] |
-| Verificar que se puede confirmar el puntaje recibido en menos de un minuto a partir de que la información sobre los puntajes esté cargada | 2 h | | [ ] |
-| Realizar pruebas funcionales | 4 h | | [ ] |
+| Analizar, diseñar y desarrollar la forma en que el personal de las escuderías reciben las notificaciones | 2 h | | [x] |
+| Diseñar e implementar la forma en la que se confirma la notificación del puntaje recibido | 2 h | | [x] |
+| Verificar que se puede confirmar el puntaje recibido en menos de un minuto a partir de que la información sobre los puntajes esté cargada | 2 h | | [x] |
+| Realizar pruebas funcionales | 4 h | | [x] |
 | **Total** | **10 h** | | |
 
 **Criterios de aceptación**
-- [ ] Una vez que el personal confirma el puntaje recibido desaparece la notificación.
-- [ ] Verificar que la confirmación quedó asentada correctamente.
-- [ ] La confirmación se puede realizar de forma fácil y rápida.
+- [x] Una vez que el personal confirma el puntaje recibido desaparece la notificación.
+- [x] Verificar que la confirmación quedó asentada correctamente (quién y cuándo, visible en `/admin/notifications`).
+- [x] La confirmación se puede realizar de forma fácil y rápida (un click; la bandeja se actualiza cada 30 s).
 
-**Preguntas abiertas para el PO**
-- ¿"Notificación de la app" es una notificación dentro de la web (bandeja) o push al celular? Para el Sprint 1
-  se propone in-app (la app móvil no existe todavía).
-- ¿Confirma una persona por escudería o cada miembro del personal?
-- ¿Qué queda registrado de la confirmación (quién, cuándo)? ¿Lo puede ver la FIA?
+**Acuerdos con el PO (Grupo Naranja)**
+- Canal de notificación: sección de notificaciones in-app en la web (notificaciones push móviles reservadas a la app móvil).
+- Destinatarios / confirmación: confirma una sola persona por escudería. Si otro miembro intenta confirmar, la UI le informa que ya fue confirmado.
+- Auditoría: se registra quién confirmó y cuándo; la FIA tiene acceso a consultarlo.
 
-**Falta para cerrar**: todo.
+**Acuerdos con el dev (2026-09-28)**
+- Reciben notificación las escuderías con resultados en la carrera; una por escudería y revisión (ADR 0008).
+- Sólo la revisión vigente se muestra y se puede confirmar; los resultados del seed no notifican.
+
+**Horas reales**: 0,25 h (sesión del 2026-09-28, 10:15–10:28, implementación asistida por IA).
+
+**Falta para cerrar**: ninguno. Plan: [docs/plans/US-9-score-notifications.md](docs/plans/US-9-score-notifications.md) ·
+Feature: [docs/features/notifications](docs/features/notifications/README.md).
 
 ### US-5 — Ver resultados de carreras de los últimos años
 
@@ -155,23 +212,26 @@ años anteriores para poder mostrarse en la demo.
 
 | Tarea (Naranja) | Est. | Real | Hecha |
 |---|---|---|---|
-| Analizar y desarrollar la forma en la que se obtendrán los datos | 3 h | | [ ] |
-| Analizar y desarrollar la forma en la que se almacenarán los datos | 2 h | | [ ] |
-| Optimizar las consultas sobre los datos | 3 h | | [ ] |
-| Analizar y diseñar la forma en la que se mostrarán los datos | 2 h | | [ ] |
-| Realizar pruebas funcionales | 4 h | | [ ] |
+| Analizar y desarrollar la forma en la que se obtendrán los datos | 3 h | | [x] |
+| Analizar y desarrollar la forma en la que se almacenarán los datos | 2 h | | [x] |
+| Optimizar las consultas sobre los datos | 3 h | | [x] |
+| Analizar y diseñar la forma en la que se mostrarán los datos | 2 h | | [x] |
+| Realizar pruebas funcionales | 4 h | | [x] |
 | **Total** | **14 h** | | |
 
 **Criterios de aceptación**
-- [ ] La información de las carreras se visualiza de forma clara y ordenada.
-- [ ] La carga de los datos es rápida.
+- [x] La información de las carreras se visualiza de forma clara y ordenada (campeonato + carreras por temporada en `/results`).
+- [x] La carga de los datos es rápida (acordado: < 10 min; las consultas usan índices y responden al instante).
 
-**Preguntas abiertas para el PO**
-- ¿Cuántos años son "los últimos años"? ¿Qué categorías?
-- ¿De dónde salen los datos históricos (carga manual, importación de una fuente pública)?
-- "Carga rápida": ¿qué tiempo máximo es aceptable?
+**Acuerdos con el PO (Grupo Naranja)**
+- Alcance temporal: los últimos 5 años.
+- Origen de datos: provistos por el equipo implementador mediante seed demo.
+- Tiempo de respuesta: menos de 10 minutos (en la web es inmediato).
 
-**Falta para cerrar**: todo.
+**Horas reales**: 0,25 h (sesión del 2026-09-28, 10:28–10:35 más documentación, implementación asistida por IA).
+
+**Falta para cerrar**: ninguno. Plan: [docs/plans/US-5-race-results-history.md](docs/plans/US-5-race-results-history.md) ·
+Feature: [docs/features/race-results](docs/features/race-results/README.md).
 
 ---
 
@@ -180,6 +240,7 @@ años anteriores para poder mostrarse en la demo.
 | ID | Ítem | Motivo | Estado |
 |---|---|---|---|
 | T-3 | Tests e2e con Playwright de los flujos principales **[equipo]** | Se dejan para el final del proyecto (decisión del equipo). | Pendiente |
+| T-4 | Migrar los formularios de US-23 a `react-hook-form` + resolver Zod del contrato **[equipo]** | Hoy usan `useState` y validan sólo en el servidor; la convención (`docs/conventions/react.md`) pide validación en el cliente con el mismo schema. | Pendiente |
 
 ## Product backlog (no seleccionado para el Sprint 1)
 
@@ -216,5 +277,6 @@ años anteriores para poder mostrarse en la demo.
 - El documento se titula "Sprint 0" pero su Sprint Backlog es el del **Sprint 1** (así lo pide el enunciado:
   el Sprint 0 define el Sprint 1).
 - US-20, US-23 y US-9 dependen de un login con roles (US-4, no seleccionada): se cubre con el habilitador T-1.
-- Varios criterios de aceptación no son medibles ("rápida actualización", "carga rápida", "fácil y rápida"):
-  se propone acordar umbrales concretos con el PO (ver preguntas abiertas).
+- Varios criterios de aceptación no eran medibles ("rápida actualización", "carga rápida"): el PO los fijó en
+  menos de 10 minutos (respuestas del PO).
+- El PO acordó hacer un login básico en lugar de incluir US-4 (respuesta 1): cubierto por T-1.

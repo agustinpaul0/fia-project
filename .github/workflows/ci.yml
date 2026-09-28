@@ -10,26 +10,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  verify:
+  quality:
+    name: Calidad (lint, tipos, build)
     runs-on: ubuntu-latest
-    timeout-minutes: 30
-    services:
-      db-test:
-        image: postgres:17-alpine
-        env:
-          POSTGRES_USER: fia
-          POSTGRES_PASSWORD: fia
-          POSTGRES_DB: fia_test
-        ports:
-          - 5443:5432
-        options: >-
-          --health-cmd "pg_isready -U fia -d fia_test"
-          --health-interval 3s
-          --health-timeout 3s
-          --health-retries 20
-    env:
-      TEST_DATABASE_URL: postgres://fia:fia@localhost:5443/fia_test
-      VITE_API_URL: http://localhost:3000
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v5
         with:
@@ -49,12 +33,81 @@ jobs:
             echo "Se encontró un archivo .env versionado" && exit 1
           fi
       - run: pnpm skills:check
-      - run: pnpm verify
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm build
+
+  tests:
+    name: Tests (unit, contrato, fuzz, cobertura, integración)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      db-test:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: fia
+          POSTGRES_PASSWORD: fia
+          POSTGRES_DB: fia_test
+        ports:
+          - 5443:5432
+        options: >-
+          --health-cmd "pg_isready -U fia -d fia_test"
+          --health-interval 3s
+          --health-timeout 3s
+          --health-retries 20
+    env:
+      TEST_DATABASE_URL: postgres://fia:fia@localhost:5443/fia_test
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test:coverage
+      - run: pnpm test:int
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: reportes
-          path: |
-            coverage/
-            **/reports/mutation/
+          name: cobertura
+          path: coverage/
+          retention-days: 7
+
+  mutation:
+    name: Mutación (${{ matrix.package }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - package: '@fia/shared'
+            dir: packages/shared
+          - package: '@fia/api'
+            dir: apps/api
+          - package: '@fia/web'
+            dir: apps/web
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Restaurar resultados incrementales de Stryker
+        uses: actions/cache@v4
+        with:
+          path: ${{ matrix.dir }}/reports/stryker-incremental.json
+          key: stryker-${{ matrix.dir }}-${{ github.head_ref || github.ref_name }}-${{ github.sha }}
+          restore-keys: |
+            stryker-${{ matrix.dir }}-${{ github.head_ref || github.ref_name }}-
+            stryker-${{ matrix.dir }}-develop-
+      - run: pnpm --filter ${{ matrix.package }} test:mutation
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mutacion-${{ strategy.job-index }}
+          path: ${{ matrix.dir }}/reports/mutation/
           retention-days: 7

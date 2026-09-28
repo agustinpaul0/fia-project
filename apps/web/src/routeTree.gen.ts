@@ -10,33 +10,141 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as NotificationsRouteImport } from './routes/notifications'
+import { Route as ResultsRouteImport } from './routes/results'
+import { Route as AdminNotificationsRouteImport } from './routes/admin.notifications'
+import { Route as AdminTeamStaffRouteImport } from './routes/admin.team-staff'
+import { Route as RacesRaceIdRouteImport } from './routes/races.$raceId'
+import { Route as AdminResultsIndexRouteImport } from './routes/admin.results.index'
+import { Route as AdminResultsRaceIdRouteImport } from './routes/admin.results.$raceId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResultsRoute = ResultsRouteImport.update({
+  id: '/results',
+  path: '/results',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminNotificationsRoute = AdminNotificationsRouteImport.update({
+  id: '/admin/notifications',
+  path: '/admin/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminTeamStaffRoute = AdminTeamStaffRouteImport.update({
+  id: '/admin/team-staff',
+  path: '/admin/team-staff',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RacesRaceIdRoute = RacesRaceIdRouteImport.update({
+  id: '/races/$raceId',
+  path: '/races/$raceId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminResultsIndexRoute = AdminResultsIndexRouteImport.update({
+  id: '/admin/results/',
+  path: '/admin/results/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminResultsRaceIdRoute = AdminResultsRaceIdRouteImport.update({
+  id: '/admin/results/$raceId',
+  path: '/admin/results/$raceId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/notifications': typeof NotificationsRoute
+  '/results': typeof ResultsRoute
+  '/admin/notifications': typeof AdminNotificationsRoute
+  '/admin/team-staff': typeof AdminTeamStaffRoute
+  '/races/$raceId': typeof RacesRaceIdRoute
+  '/admin/results/$raceId': typeof AdminResultsRaceIdRoute
+  '/admin/results/': typeof AdminResultsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/notifications': typeof NotificationsRoute
+  '/results': typeof ResultsRoute
+  '/admin/notifications': typeof AdminNotificationsRoute
+  '/admin/team-staff': typeof AdminTeamStaffRoute
+  '/races/$raceId': typeof RacesRaceIdRoute
+  '/admin/results/$raceId': typeof AdminResultsRaceIdRoute
+  '/admin/results': typeof AdminResultsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/notifications': typeof NotificationsRoute
+  '/results': typeof ResultsRoute
+  '/admin/notifications': typeof AdminNotificationsRoute
+  '/admin/team-staff': typeof AdminTeamStaffRoute
+  '/races/$raceId': typeof RacesRaceIdRoute
+  '/admin/results/$raceId': typeof AdminResultsRaceIdRoute
+  '/admin/results/': typeof AdminResultsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/notifications'
+    | '/results'
+    | '/admin/notifications'
+    | '/admin/team-staff'
+    | '/races/$raceId'
+    | '/admin/results/$raceId'
+    | '/admin/results/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/login'
+    | '/notifications'
+    | '/results'
+    | '/admin/notifications'
+    | '/admin/team-staff'
+    | '/races/$raceId'
+    | '/admin/results/$raceId'
+    | '/admin/results'
+  id:
+    | '__root__'
+    | '/'
+    | '/login'
+    | '/notifications'
+    | '/results'
+    | '/admin/notifications'
+    | '/admin/team-staff'
+    | '/races/$raceId'
+    | '/admin/results/$raceId'
+    | '/admin/results/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LoginRoute: typeof LoginRoute
+  NotificationsRoute: typeof NotificationsRoute
+  ResultsRoute: typeof ResultsRoute
+  AdminNotificationsRoute: typeof AdminNotificationsRoute
+  AdminTeamStaffRoute: typeof AdminTeamStaffRoute
+  RacesRaceIdRoute: typeof RacesRaceIdRoute
+  AdminResultsRaceIdRoute: typeof AdminResultsRaceIdRoute
+  AdminResultsIndexRoute: typeof AdminResultsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +156,75 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/results': {
+      id: '/results'
+      path: '/results'
+      fullPath: '/results'
+      preLoaderRoute: typeof ResultsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/notifications': {
+      id: '/admin/notifications'
+      path: '/admin/notifications'
+      fullPath: '/admin/notifications'
+      preLoaderRoute: typeof AdminNotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/team-staff': {
+      id: '/admin/team-staff'
+      path: '/admin/team-staff'
+      fullPath: '/admin/team-staff'
+      preLoaderRoute: typeof AdminTeamStaffRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/races/$raceId': {
+      id: '/races/$raceId'
+      path: '/races/$raceId'
+      fullPath: '/races/$raceId'
+      preLoaderRoute: typeof RacesRaceIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/results/': {
+      id: '/admin/results/'
+      path: '/admin/results'
+      fullPath: '/admin/results/'
+      preLoaderRoute: typeof AdminResultsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/results/$raceId': {
+      id: '/admin/results/$raceId'
+      path: '/admin/results/$raceId'
+      fullPath: '/admin/results/$raceId'
+      preLoaderRoute: typeof AdminResultsRaceIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LoginRoute: LoginRoute,
+  NotificationsRoute: NotificationsRoute,
+  ResultsRoute: ResultsRoute,
+  AdminNotificationsRoute: AdminNotificationsRoute,
+  AdminTeamStaffRoute: AdminTeamStaffRoute,
+  RacesRaceIdRoute: RacesRaceIdRoute,
+  AdminResultsRaceIdRoute: AdminResultsRaceIdRoute,
+  AdminResultsIndexRoute: AdminResultsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

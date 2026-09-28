@@ -22,4 +22,17 @@ describe('Política de acceso deny-by-default', () => {
     expect(isAccessPolicy(() => null)).toBe(false)
     expect(isAccessPolicy('texto')).toBe(false)
   })
+
+  it('las rutas de auth también declaran access policy', () => {
+    const { app } = createTestApp({ auth: async () => new Response() })
+    const endpoints = app.routes.filter((route) => route.method !== MIDDLEWARE_METHOD)
+    const keys = new Set(endpoints.map((route) => `${route.method} ${route.path}`))
+    const unprotected = [...keys].filter(
+      (key) =>
+        !endpoints.some(
+          (route) => `${route.method} ${route.path}` === key && isAccessPolicy(route.handler),
+        ),
+    )
+    expect(unprotected).toEqual([])
+  })
 })
