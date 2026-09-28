@@ -29,7 +29,7 @@ cual; lo agregado por el equipo implementador está marcado como **[equipo]**.
 | US-23 | Gestión de cuentas del personal de escuderías | 5 | 13 | 17 h | 17 h | Hecho | Joaquín | T-1 | #2 |
 | US-20 | Carga y modificación del puntaje de una carrera | 1 | 21 | 12 h | | Hecho | Agustín | T-1, T-2 | #3 |
 | US-9 | Confirmar notificación del puntaje recibido | 1 | 13 | 10 h | | Hecho | Agustín | US-20, US-23 | #4 |
-| US-5 | Ver resultados de carreras de los últimos años | 2 | 13 | 14 h | | Pendiente | | T-2 | |
+| US-5 | Ver resultados de carreras de los últimos años | 2 | 13 | 14 h | | Hecho | Agustín | T-2 | #5 |
 
 **Orden sugerido [equipo]**: T-1 y T-2 en paralelo → US-23 → US-20 → US-9. US-5 en paralelo apenas esté T-2.
 Las estimaciones de los habilitadores las hace el equipo **sin IA** (pauta de la cátedra para el Sprint 1).
@@ -207,23 +207,26 @@ Feature: [docs/features/notifications](docs/features/notifications/README.md).
 
 | Tarea (Naranja) | Est. | Real | Hecha |
 |---|---|---|---|
-| Analizar y desarrollar la forma en la que se obtendrán los datos | 3 h | | [ ] |
-| Analizar y desarrollar la forma en la que se almacenarán los datos | 2 h | | [ ] |
-| Optimizar las consultas sobre los datos | 3 h | | [ ] |
-| Analizar y diseñar la forma en la que se mostrarán los datos | 2 h | | [ ] |
-| Realizar pruebas funcionales | 4 h | | [ ] |
+| Analizar y desarrollar la forma en la que se obtendrán los datos | 3 h | | [x] |
+| Analizar y desarrollar la forma en la que se almacenarán los datos | 2 h | | [x] |
+| Optimizar las consultas sobre los datos | 3 h | | [x] |
+| Analizar y diseñar la forma en la que se mostrarán los datos | 2 h | | [x] |
+| Realizar pruebas funcionales | 4 h | | [x] |
 | **Total** | **14 h** | | |
 
 **Criterios de aceptación**
-- [ ] La información de las carreras se visualiza de forma clara y ordenada.
-- [ ] La carga de los datos es rápida.
+- [x] La información de las carreras se visualiza de forma clara y ordenada (campeonato + carreras por temporada en `/results`).
+- [x] La carga de los datos es rápida (acordado: < 10 min; las consultas usan índices y responden al instante).
 
 **Acuerdos con el PO (Grupo Naranja)**
 - Alcance temporal: los últimos 5 años.
 - Origen de datos: provistos por el equipo implementador mediante seed demo.
 - Tiempo de respuesta: menos de 10 minutos (en la web es inmediato).
 
-**Falta para cerrar**: todo.
+**Horas reales**: a completar por el equipo (implementación asistida por IA en una sesión).
+
+**Falta para cerrar**: ninguno. Plan: [docs/plans/US-5-race-results-history.md](docs/plans/US-5-race-results-history.md) ·
+Feature: [docs/features/race-results](docs/features/race-results/README.md).
 
 ---
 
@@ -269,5 +272,6 @@ Feature: [docs/features/notifications](docs/features/notifications/README.md).
 - El documento se titula "Sprint 0" pero su Sprint Backlog es el del **Sprint 1** (así lo pide el enunciado:
   el Sprint 0 define el Sprint 1).
 - US-20, US-23 y US-9 dependen de un login con roles (US-4, no seleccionada): se cubre con el habilitador T-1.
-- Varios criterios de aceptación no son medibles ("rápida actualización", "carga rápida", "fácil y rápida"):
-  se propone acordar umbrales concretos con el PO (ver preguntas abiertas).
+- Varios criterios de aceptación no eran medibles ("rápida actualización", "carga rápida"): el PO los fijó en
+  menos de 10 minutos (respuestas del PO).
+- El PO acordó hacer un login básico en lugar de incluir US-4 (respuesta 1): cubierto por T-1.

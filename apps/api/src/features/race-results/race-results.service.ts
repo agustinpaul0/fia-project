@@ -1,4 +1,5 @@
 import type {
+  DriverStanding,
   EligibleDriver,
   RaceClassification,
   RaceClassificationBody,
@@ -8,9 +9,11 @@ import { AppError } from '@fia/shared/domain'
 import { toRaceClassification, toRaceSummary } from './race-results.mapper'
 import type { RaceHeader, RaceResultsRepository } from './race-results.port'
 import { scoreEntries } from './race-results.scoring'
+import { buildStandings } from './race-results.standings'
 
 export type RaceResultsService = {
   readonly listSeason: (year: number) => Promise<readonly RaceSummary[]>
+  readonly seasonStandings: (year: number) => Promise<readonly DriverStanding[]>
   readonly getClassification: (raceId: string) => Promise<RaceClassification>
   readonly listEligibleDrivers: (raceId: string) => Promise<readonly EligibleDriver[]>
   readonly saveClassification: (
@@ -42,6 +45,7 @@ export const createRaceResultsService = ({
   }
   return {
     listSeason: async (year) => (await repository.listSeason(year)).map(toRaceSummary),
+    seasonStandings: async (year) => buildStandings(await repository.listSeasonResults(year)),
     getClassification,
     listEligibleDrivers: async (raceId) =>
       repository.listCategoryDrivers((await findOrFail(repository, raceId)).categoryId),

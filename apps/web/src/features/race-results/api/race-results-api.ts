@@ -1,4 +1,6 @@
 import {
+  type DriverStanding,
+  driverStandingListSchema,
   type EligibleDriver,
   eligibleDriverListSchema,
   type RaceClassification,
@@ -9,6 +11,7 @@ import {
   raceDriversPath,
   raceSummaryListSchema,
   racesOfSeasonPath,
+  seasonStandingsPath,
 } from '@fia/shared/contracts'
 import { apiRequest } from '@/lib/api/http-client'
 
@@ -19,6 +22,9 @@ export type SaveClassificationInput = {
 
 export const fetchSeasonRaces = (year: number): Promise<readonly RaceSummary[]> =>
   apiRequest({ path: racesOfSeasonPath(year), schema: raceSummaryListSchema })
+
+export const fetchSeasonStandings = (year: number): Promise<readonly DriverStanding[]> =>
+  apiRequest({ path: seasonStandingsPath(year), schema: driverStandingListSchema })
 
 export const fetchRaceClassification = (raceId: string): Promise<RaceClassification> =>
   apiRequest({ path: raceClassificationPath(raceId), schema: raceClassificationSchema })

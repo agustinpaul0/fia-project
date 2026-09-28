@@ -1,7 +1,7 @@
 # Feature: resultados y puntajes de carreras
 
-- **US relacionadas**: US-20 (carga y modificación del puntaje), base para US-9 (notificaciones) y US-5
-  (resultados de los últimos años).
+- **US relacionadas**: US-20 (carga y modificación del puntaje), US-5 (resultados de los últimos años) y base
+  para US-9 (notificaciones).
 - **Código**: `packages/shared/src/domain/scoring.ts`, `packages/shared/src/contracts/race-classification.ts`,
   `apps/api/src/features/race-results/`, `apps/web/src/features/race-results/`
 - **Plan**: [`docs/plans/US-20-race-points.md`](../../plans/US-20-race-points.md) · **ADR**: 0008
@@ -27,6 +27,8 @@ usa para volver a notificar.
 | Los pilotos deben pertenecer a una escudería de la categoría de la carrera | dev |
 | La misma escala para F1, F2, F3 y F1 Academy | dev (pregunta abierta al PO) |
 | Actualización visible en menos de 10 minutos (en la web es inmediata) | PO |
+| El campeonato suma los puntos de Grandes Premios y sprints; desempata por victorias y luego por nombre | dev |
+| Se muestran las últimas 5 temporadas y la actual | PO (US-5) |
 
 ## Roles y permisos
 
@@ -41,6 +43,7 @@ usa para volver a notificar.
 | Método | Ruta | Acceso | Body / query | Respuesta |
 |---|---|---|---|---|
 | GET | `/races?season=YYYY` | público | — | `RaceSummary[]` con tipo, revisión y ganador |
+| GET | `/races/standings?season=YYYY` | público | — | campeonato de pilotos: posición, puntos y victorias |
 | GET | `/races/:id/classification` | público | — | `{ race, results[] }` ordenado por posición |
 | GET | `/races/:id/drivers` | fia_admin | — | pilotos de la categoría de la carrera |
 | PUT | `/races/:id/classification` | fia_admin | `{ version, entries: [{ driverId }] }` en orden de llegada | clasificación guardada (versión + 1, revisión + 1) |
@@ -66,6 +69,10 @@ usa para volver a notificar.
 | Otra persona guardó antes | `STALE_VERSION` | 409 | Otra persona modificó este registro… (la web recarga la clasificación vigente) |
 
 ## Pantallas
+
+- `/results` (público, US-5): temporada (actual y 5 anteriores; por defecto la última completa), campeonato de
+  pilotos con puntos y victorias, y lista de carreras con su ganador que enlaza al detalle. El encabezado tiene el
+  acceso **Resultados** para todos.
 
 - `/races/$raceId` (público): encabezado con tipo, categoría, circuito y fecha en hora argentina, y tabla de
   posiciones con piloto, escudería y puntos. Si no hay resultado: "Todavía no se cargó el resultado de esta carrera."

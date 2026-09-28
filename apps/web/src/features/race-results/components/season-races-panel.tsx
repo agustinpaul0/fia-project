@@ -1,9 +1,27 @@
-import { type ReactNode, useState } from 'react'
+import type { ReactNode } from 'react'
 import { QueryView } from '@/components/common/query-view'
-import { recentSeasons } from '@/lib/recent-seasons'
 import { useSeasonRaces } from '../hooks/use-race-queries'
+import { useSeasonSelection } from '../hooks/use-season-selection'
 import { type RaceLinkTarget, SeasonRaceList } from './season-race-list'
 import { SeasonSelect } from './season-select'
+
+export const NO_RACES_MESSAGE = 'No hay carreras registradas para esta temporada.'
+
+export const SeasonRaces = ({
+  season,
+  target,
+}: {
+  readonly season: number
+  readonly target: RaceLinkTarget
+}): ReactNode => (
+  <QueryView
+    query={useSeasonRaces(season)}
+    isEmpty={(races) => races.length === 0}
+    emptyMessage={NO_RACES_MESSAGE}
+  >
+    {(races) => <SeasonRaceList races={races} target={target} />}
+  </QueryView>
+)
 
 type Props = {
   readonly target: RaceLinkTarget
@@ -11,18 +29,11 @@ type Props = {
 }
 
 export const SeasonRacesPanel = ({ target, now = new Date() }: Props): ReactNode => {
-  const seasons = recentSeasons(now)
-  const [season, setSeason] = useState(seasons[1] ?? now.getFullYear())
+  const { seasons, season, setSeason } = useSeasonSelection(now)
   return (
     <section className="flex flex-col gap-3">
       <SeasonSelect seasons={seasons} value={season} onChange={setSeason} />
-      <QueryView
-        query={useSeasonRaces(season)}
-        isEmpty={(races) => races.length === 0}
-        emptyMessage="No hay carreras registradas para esta temporada."
-      >
-        {(races) => <SeasonRaceList races={races} target={target} />}
-      </QueryView>
+      <SeasonRaces season={season} target={target} />
     </section>
   )
 }

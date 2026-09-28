@@ -35,4 +35,31 @@ describe('DrizzleRaceResultsRepository lecturas (Postgres real)', () => {
       expect(list[0]).toMatchObject({ name: 'Lando Norris', teamName: 'Escudería test' })
       expect(await repo.listCategoryDrivers('00000000-0000-4000-8000-0000000000ff')).toEqual([])
     }))
+
+  it('trae los resultados de la temporada para armar el campeonato', () =>
+    withRollback(connection, async (tx) => {
+      const f = await seedRacingFixture(tx)
+      const repo = createDrizzleRaceResultsRepository(tx)
+      const entries = f.driverIds.map((driverId, i) => ({
+        driverId,
+        teamId: f.teamId,
+        position: i + 1,
+        points: 25 - i,
+      }))
+      await repo.replaceClassification({
+        raceId: f.raceId,
+        expectedVersion: 1,
+        nextRevision: 1,
+        entries,
+      })
+      const rows = await repo.listSeasonResults(2099)
+      expect(rows.map((r) => [r.driverCode, r.position, r.points])).toEqual(
+        expect.arrayContaining([
+          ['NOR', 1, 25],
+          ['PIA', 2, 24],
+          ['VER', 3, 23],
+        ]),
+      )
+      expect(await repo.listSeasonResults(1950)).toEqual([])
+    }))
 })
