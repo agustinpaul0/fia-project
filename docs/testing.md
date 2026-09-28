@@ -67,7 +67,7 @@ Reglas:
 | Desarrollo | `pnpm test:watch` | unit + contrato + fuzz (re-ejecuta al guardar) |
 | `git push` (hook) | `pnpm test:coverage` | unit + contrato + fuzz + tipos, con umbral de cobertura |
 | Antes del PR | `pnpm verify` | lo anterior + integración + mutación + build |
-| CI | `pnpm verify` | ídem, con Postgres de servicio |
+| CI | los mismos pasos que `pnpm verify`, en 5 jobs paralelos | calidad (lint, tipos, build), tests con Postgres de servicio y mutación por paquete con caché incremental de Stryker |
 
 **La suite completa se corre siempre antes de abrir un PR**, aunque el cambio parezca chico.
 
