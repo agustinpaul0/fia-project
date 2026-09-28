@@ -27,9 +27,9 @@ cual; lo agregado por el equipo implementador está marcado como **[equipo]**.
 | ID | Ítem | SP | BV | Est. | Real | Estado | Dueño | Depende de | PR |
 |---|---|---|---|---|---|---|---|---|---|
 | T-0 | Setup del repositorio y convenciones **[equipo]** | — | — | — | — | Hecho | Agustín | — | — |
-| T-1 | Autenticación mínima con roles **[equipo]** | — | — | — | 3 h | Hecho | Agustín | T-0 | |
-| T-2 | Modelo de datos base y seed **[equipo]** | — | — | — | 3 h | Hecho | Agustín | T-0 | |
-| US-23 | Gestión de cuentas del personal de escuderías | 5 | 13 | 17 h | 17 h | Hecho | Joaquín | T-1 | #2 |
+| T-1 | Autenticación mínima con roles **[equipo]** | — | — | — | 2 h | Hecho | Joaquín | T-0 | |
+| T-2 | Modelo de datos base y seed **[equipo]** | — | — | — | 2 h | Hecho | Joaquín | T-0 | |
+| US-23 | Gestión de cuentas del personal de escuderías | 5 | 13 | 17 h | 2 h | Hecho | Joaquín | T-1 | #2 |
 | US-20 | Carga y modificación del puntaje de una carrera | 1 | 21 | 12 h | 0,5 h | Hecho | Agustín | T-1, T-2 | #3 |
 | US-9 | Confirmar notificación del puntaje recibido | 1 | 13 | 10 h | 0,25 h | Hecho | Agustín | US-20, US-23 | #4 |
 | US-5 | Ver resultados de carreras de los últimos años | 2 | 13 | 14 h | 0,25 h | Hecho | Agustín | T-2 | #5 |
@@ -78,11 +78,11 @@ años anteriores para poder mostrarse en la demo.
 
 | Tarea (Naranja) | Est. | Real | Hecha |
 |---|---|---|---|
-| Analizar y desarrollar la forma en la que se almacenarán los datos | 4 h | 4 h | [x] |
-| Diseñar e implementar la interfaz mediante la cual el personal administrativo de la FIA podrá acceder a estas funcionalidades | 4 h | 4 h | [x] |
-| Verificar la integridad y la consistencia de los datos ingresados considerando los almacenados | 2 h | 2 h | [x] |
-| Diseñar e implementar la comunicación entre la interfaz y el almacenamiento | 3 h | 3 h | [x] |
-| Realizar pruebas funcionales | 4 h | 4 h | [x] |
+| Analizar y desarrollar la forma en la que se almacenarán los datos | 4 h | | [x] |
+| Diseñar e implementar la interfaz mediante la cual el personal administrativo de la FIA podrá acceder a estas funcionalidades | 4 h | | [x] |
+| Verificar la integridad y la consistencia de los datos ingresados considerando los almacenados | 2 h | | [x] |
+| Diseñar e implementar la comunicación entre la interfaz y el almacenamiento | 3 h | | [x] |
+| Realizar pruebas funcionales | 4 h | | [x] |
 | **Total** | **17 h** | **17 h** | |
 
 **Criterios de aceptación**
@@ -121,6 +121,8 @@ años anteriores para poder mostrarse en la demo.
 4. ¿Se permite reasignar escudería en una cuenta activa y US-9 guardará la escudería histórica?
 5. ¿El listado administrativo incluye siempre las cuentas dadas de baja?
 6. ¿Se ratifica que la contraseña inicial se entrega fuera del sistema hasta que exista US-26?
+
+**Horas reales**: 2 h en total (el equipo no registró el detalle por tarea).
 
 **Revisión (Agustín, 2026-09-28)**
 - Tests de integración del repositorio corregidos: usaban un cargo de 1 carácter y el mismo usuario para probar
