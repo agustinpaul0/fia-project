@@ -28,7 +28,7 @@ cual; lo agregado por el equipo implementador está marcado como **[equipo]**.
 | T-2 | Modelo de datos base y seed **[equipo]** | — | — | — | 3 h | Hecho | Agustín | T-0 | |
 | US-23 | Gestión de cuentas del personal de escuderías | 5 | 13 | 17 h | 17 h | Hecho | Joaquín | T-1 | #2 |
 | US-20 | Carga y modificación del puntaje de una carrera | 1 | 21 | 12 h | | Hecho | Agustín | T-1, T-2 | #3 |
-| US-9 | Confirmar notificación del puntaje recibido | 1 | 13 | 10 h | | Pendiente | | US-20, US-23 | |
+| US-9 | Confirmar notificación del puntaje recibido | 1 | 13 | 10 h | | Hecho | Agustín | US-20, US-23 | #4 |
 | US-5 | Ver resultados de carreras de los últimos años | 2 | 13 | 14 h | | Pendiente | | T-2 | |
 
 **Orden sugerido [equipo]**: T-1 y T-2 en paralelo → US-23 → US-20 → US-9. US-5 en paralelo apenas esté T-2.
@@ -175,23 +175,30 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 
 | Tarea (Naranja) | Est. | Real | Hecha |
 |---|---|---|---|
-| Analizar, diseñar y desarrollar la forma en que el personal de las escuderías reciben las notificaciones | 2 h | | [ ] |
-| Diseñar e implementar la forma en la que se confirma la notificación del puntaje recibido | 2 h | | [ ] |
-| Verificar que se puede confirmar el puntaje recibido en menos de un minuto a partir de que la información sobre los puntajes esté cargada | 2 h | | [ ] |
-| Realizar pruebas funcionales | 4 h | | [ ] |
+| Analizar, diseñar y desarrollar la forma en que el personal de las escuderías reciben las notificaciones | 2 h | | [x] |
+| Diseñar e implementar la forma en la que se confirma la notificación del puntaje recibido | 2 h | | [x] |
+| Verificar que se puede confirmar el puntaje recibido en menos de un minuto a partir de que la información sobre los puntajes esté cargada | 2 h | | [x] |
+| Realizar pruebas funcionales | 4 h | | [x] |
 | **Total** | **10 h** | | |
 
 **Criterios de aceptación**
-- [ ] Una vez que el personal confirma el puntaje recibido desaparece la notificación.
-- [ ] Verificar que la confirmación quedó asentada correctamente.
-- [ ] La confirmación se puede realizar de forma fácil y rápida.
+- [x] Una vez que el personal confirma el puntaje recibido desaparece la notificación.
+- [x] Verificar que la confirmación quedó asentada correctamente (quién y cuándo, visible en `/admin/notifications`).
+- [x] La confirmación se puede realizar de forma fácil y rápida (un click; la bandeja se actualiza cada 30 s).
 
 **Acuerdos con el PO (Grupo Naranja)**
 - Canal de notificación: sección de notificaciones in-app en la web (notificaciones push móviles reservadas a la app móvil).
 - Destinatarios / confirmación: confirma una sola persona por escudería. Si otro miembro intenta confirmar, la UI le informa que ya fue confirmado.
 - Auditoría: se registra quién confirmó y cuándo; la FIA tiene acceso a consultarlo.
 
-**Falta para cerrar**: todo.
+**Acuerdos con el dev (2026-09-28)**
+- Reciben notificación las escuderías con resultados en la carrera; una por escudería y revisión (ADR 0008).
+- Sólo la revisión vigente se muestra y se puede confirmar; los resultados del seed no notifican.
+
+**Horas reales**: a completar por el equipo (implementación asistida por IA en una sesión).
+
+**Falta para cerrar**: ninguno. Plan: [docs/plans/US-9-score-notifications.md](docs/plans/US-9-score-notifications.md) ·
+Feature: [docs/features/notifications](docs/features/notifications/README.md).
 
 ### US-5 — Ver resultados de carreras de los últimos años
 
