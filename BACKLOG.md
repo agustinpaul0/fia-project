@@ -14,8 +14,8 @@ cual; lo agregado por el equipo implementador está marcado como **[equipo]**.
   por tarea y link al PR.
 - **Horas reales**: la cátedra pide comparar estimado vs. real por US en el Sprint 1 para estimar el Sprint 2.
   Cargarlas con honestidad (incluye tiempo de tests, docs y review).
-- Sesión de trabajo del 2026-09-28 (09:15–11:45, ~2,5 h en total): revisión y cierre de US-23 (0,5 h), US-20,
-  US-9 y US-5 (1 h) y CI, integración y merges (1 h). Las horas por US salen de los horarios de los commits.
+- Horas reales del Sprint 1 informadas por el equipo: **10 h** en total. T-0 (setup, planificación y
+  convenciones) 5,5 h · T-1 + T-2 + US-23 2 h · US-20 + US-9 + US-5 1 h · revisión, CI, integración y release 1,5 h.
 - Dudas para el PO: [`docs/preguntas-po.md`](docs/preguntas-po.md).
 - Escala de Naranja: story points y business value en Fibonacci. SP ↔ horas: 1 = ≤ 12 h · 2 = 12–14 h ·
   3 = 14–16 h · 5 = 16–18 h.
@@ -26,13 +26,16 @@ cual; lo agregado por el equipo implementador está marcado como **[equipo]**.
 
 | ID | Ítem | SP | BV | Est. | Real | Estado | Dueño | Depende de | PR |
 |---|---|---|---|---|---|---|---|---|---|
-| T-0 | Setup del repositorio y convenciones **[equipo]** | — | — | — | — | Hecho | Agustín | — | — |
-| T-1 | Autenticación mínima con roles **[equipo]** | — | — | — | 2 h | Hecho | Joaquín | T-0 | |
-| T-2 | Modelo de datos base y seed **[equipo]** | — | — | — | 2 h | Hecho | Joaquín | T-0 | |
-| US-23 | Gestión de cuentas del personal de escuderías | 5 | 13 | 17 h | 2 h | Hecho | Joaquín | T-1 | #2 |
+| T-0 | Setup del repositorio y convenciones **[equipo]** | — | — | — | 5,5 h | Hecho | Agustín | — | — |
+| T-1 | Autenticación mínima con roles **[equipo]** | — | — | — | ver US-23 | Hecho | Joaquín | T-0 | |
+| T-2 | Modelo de datos base y seed **[equipo]** | — | — | — | ver US-23 | Hecho | Joaquín | T-0 | |
+| US-23 | Gestión de cuentas del personal de escuderías | 5 | 13 | 17 h | 2 h (con T-1 y T-2) | Hecho | Joaquín | T-1 | #2 |
 | US-20 | Carga y modificación del puntaje de una carrera | 1 | 21 | 12 h | 0,5 h | Hecho | Agustín | T-1, T-2 | #3 |
 | US-9 | Confirmar notificación del puntaje recibido | 1 | 13 | 10 h | 0,25 h | Hecho | Agustín | US-20, US-23 | #4 |
 | US-5 | Ver resultados de carreras de los últimos años | 2 | 13 | 14 h | 0,25 h | Hecho | Agustín | T-2 | #5 |
+| T-5 | Revisión de US-23, CI, integración y release **[equipo]** | — | — | — | 1,5 h | Hecho | Agustín | — | #6, #7 |
+
+**Horas reales del sprint: 10 h** (informadas por el equipo, incluyen el setup del proyecto).
 
 **Orden sugerido [equipo]**: T-1 y T-2 en paralelo → US-23 → US-20 → US-9. US-5 en paralelo apenas esté T-2.
 Las estimaciones de los habilitadores las hace el equipo **sin IA** (pauta de la cátedra para el Sprint 1).
@@ -122,7 +125,7 @@ años anteriores para poder mostrarse en la demo.
 5. ¿El listado administrativo incluye siempre las cuentas dadas de baja?
 6. ¿Se ratifica que la contraseña inicial se entrega fuera del sistema hasta que exista US-26?
 
-**Horas reales**: 2 h en total (el equipo no registró el detalle por tarea).
+**Horas reales**: 2 h en total entre T-1, T-2 y US-23 (el equipo no registró el detalle por tarea).
 
 **Revisión (Agustín, 2026-09-28)**
 - Tests de integración del repositorio corregidos: usaban un cargo de 1 carácter y el mismo usuario para probar
