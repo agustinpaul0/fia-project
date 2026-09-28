@@ -51,7 +51,7 @@ pnpm install                    # instala dependencias y los hooks de git (lefth
 ### Opción A — todo en Docker (un solo comando)
 
 ```bash
-docker compose up --build       # o: pnpm docker:up
+pnpm docker:up                  # = docker compose up --build --renew-anon-volumes
 ```
 
 Levanta la base (`db`), la base de tests (`db-test`), aplica migraciones y datos de ejemplo (`migrate`) y corre
@@ -59,7 +59,8 @@ la API y la web con recarga en caliente. Abrí **http://localhost:5173**. La API
 **http://localhost:3000** (`/health` para verificar).
 
 Cortar con `Ctrl+C`; `pnpm docker:down` para bajar los contenedores; `pnpm docker:reset` para borrar también
-los datos. Si cambiaron las dependencias (`pnpm-lock.yaml`), volvé a correr con `--build`.
+los datos. `--renew-anon-volumes` recrea los `node_modules` de los contenedores, así nunca quedan
+desactualizados cuando cambian las dependencias.
 
 ### Opción B — base en Docker, app en tu máquina
 
@@ -122,3 +123,4 @@ terminan en las mismas reglas de `AGENTS.md` y usan las mismas skills (`start-ta
 | El commit se rechaza | Leé el mensaje del hook: formato del commit, lint, tipos, archivo de más de 100 líneas o un `.env` en stage. Nunca uses `--no-verify`. |
 | Cambié el schema y la API falla | `pnpm db:generate --name <cambio>` y `pnpm db:migrate`. |
 | Quiero empezar con la base limpia | `pnpm docker:reset` y volver a levantar. |
+| `migrate` falla con `lefthook install` o dependencias desactualizadas | Levantá con `pnpm docker:up` (renueva los `node_modules` de los contenedores). |
