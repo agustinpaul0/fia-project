@@ -41,8 +41,8 @@ la US, en `docs/features/` o en `docs/specs/` **se pregunta, no se inventa**.
 - ¿Depende de otra US o habilitador? ¿Rompe algo existente?
 
 **Qué se escala al PO (Grupo Naranja)**: ambigüedades de negocio, criterios de aceptación no medibles, reglas
-que contradicen otra US, cambios de alcance. Se anotan en la sección "Preguntas abiertas" del ítem en
-`BACKLOG.md` y se consultan en la daily o por el canal acordado. **Lo técnico lo decide el equipo** (y si es una
+que contradicen otra US, cambios de alcance. Se anotan en [`docs/preguntas-po.md`](preguntas-po.md) (y en
+"Preguntas abiertas" del ítem en `BACKLOG.md`) y se consultan en la daily o por el canal acordado. **Lo técnico lo decide el equipo** (y si es una
 decisión de arquitectura, va en un ADR).
 
 ## 3. Plan

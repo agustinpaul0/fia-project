@@ -17,3 +17,5 @@ export const raceDriversPath = (id: string): string => `${API_PATHS.races}/${id}
 export const confirmNotificationPath = (id: string): string =>
   `${API_PATHS.notifications}/${id}/confirm`
 export const NOTIFICATIONS_AUDIT_PATH = `${API_PATHS.notifications}/audit`
+export const seasonStandingsPath = (season: number): string =>
+  `${API_PATHS.races}/standings?season=${season}`

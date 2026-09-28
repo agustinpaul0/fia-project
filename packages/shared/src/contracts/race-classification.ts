@@ -60,6 +60,18 @@ export const eligibleDriverSchema = z.strictObject({
 
 export const eligibleDriverListSchema = z.array(eligibleDriverSchema).readonly()
 
+export const driverStandingSchema = z.strictObject({
+  position: z.int().positive(),
+  driverId: z.uuid(),
+  driverCode: z.string(),
+  driverName: z.string(),
+  teamName: z.string(),
+  points: z.int().nonnegative(),
+  wins: z.int().nonnegative(),
+})
+
+export const driverStandingListSchema = z.array(driverStandingSchema).readonly()
+
 export const raceSummaryListSchema = z.array(raceSummarySchema).readonly()
 
 export const raceListQuerySchema = z.strictObject({
@@ -71,4 +83,5 @@ export type RaceSummary = z.infer<typeof raceSummarySchema>
 export type ClassifiedResult = z.infer<typeof classifiedResultSchema>
 export type RaceClassification = z.infer<typeof raceClassificationSchema>
 export type EligibleDriver = z.infer<typeof eligibleDriverSchema>
+export type DriverStanding = z.infer<typeof driverStandingSchema>
 export type RaceListQuery = z.infer<typeof raceListQuerySchema>

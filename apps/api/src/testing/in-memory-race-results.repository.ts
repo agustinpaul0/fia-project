@@ -40,6 +40,10 @@ export const createInMemoryRaceResults = (
       driverList
         .filter((driver) => driver.categoryId === categoryId)
         .map(({ id, code, name, teamName }) => ({ id, code, name, teamName })),
+    listSeasonResults: async (year) =>
+      [...races.values()]
+        .filter((race) => race.seasonYear === year)
+        .flatMap((race) => classifications.get(race.id) ?? []),
     replaceClassification: async ({ raceId, expectedVersion, nextRevision, entries }) => {
       const race = races.get(raceId)
       if (race === undefined || race.version !== expectedVersion) {

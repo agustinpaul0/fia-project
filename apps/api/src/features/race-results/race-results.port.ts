@@ -52,11 +52,21 @@ export type EligibleDriverRow = {
   readonly teamName: string
 }
 
+export type SeasonResultRow = {
+  readonly driverId: string
+  readonly driverCode: string
+  readonly driverName: string
+  readonly teamName: string
+  readonly position: number
+  readonly points: number
+}
+
 export type RaceResultsRepository = {
   readonly listSeason: (year: number) => Promise<readonly RaceHeader[]>
   readonly findRace: (id: string) => Promise<RaceHeader | null>
   readonly findClassification: (raceId: string) => Promise<readonly ClassificationRow[]>
   readonly findDrivers: (ids: readonly string[]) => Promise<readonly DriverEligibility[]>
   readonly listCategoryDrivers: (categoryId: string) => Promise<readonly EligibleDriverRow[]>
+  readonly listSeasonResults: (year: number) => Promise<readonly SeasonResultRow[]>
   readonly replaceClassification: (input: ReplaceClassificationInput) => Promise<boolean>
 }

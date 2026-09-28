@@ -15,6 +15,7 @@ Si el código y la doc se contradicen, el PR no está terminado.
 | Una decisión de arquitectura | `docs/adr/NNNN-titulo.md` (+ fila en `docs/adr/README.md`) | `templates/adr.md` |
 | El plan de una tarea | `docs/plans/<ID>-<slug>.md` | `templates/plan.md` |
 | Estado de las tareas | `BACKLOG.md` | — |
+| Dudas para el PO y sus respuestas | `docs/preguntas-po.md` | — |
 | Specs del PO | `docs/specs/` (PDFs originales, no se editan) | — |
 
 ## Crear la documentación de un feature nuevo

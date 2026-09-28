@@ -1,4 +1,5 @@
 import {
+  driverStandingListSchema,
   eligibleDriverListSchema,
   idParamsSchema,
   raceClassificationBodySchema,
@@ -17,6 +18,9 @@ export const createRaceResultsRoutes = (service: RaceResultsService): Hono<AppEn
   new Hono<AppEnv>()
     .get('/', publicAccess, validate('query', raceListQuerySchema), async (c) =>
       ok(c, raceSummaryListSchema, await service.listSeason(c.req.valid('query').season)),
+    )
+    .get('/standings', publicAccess, validate('query', raceListQuerySchema), async (c) =>
+      ok(c, driverStandingListSchema, await service.seasonStandings(c.req.valid('query').season)),
     )
     .get('/:id/classification', publicAccess, validate('param', idParamsSchema), async (c) =>
       ok(c, raceClassificationSchema, await service.getClassification(c.req.valid('param').id)),
