@@ -5,6 +5,7 @@ export const API_PATHS = {
   teams: '/teams',
   teamStaff: '/team-staff',
   races: '/races',
+  notifications: '/notifications',
 } as const
 
 export const categoryPath = (id: string): string => `${API_PATHS.categories}/${id}`
@@ -13,3 +14,6 @@ export const racesOfSeasonPath = (season: number): string => `${API_PATHS.races}
 export const raceClassificationPath = (id: string): string =>
   `${API_PATHS.races}/${id}/classification`
 export const raceDriversPath = (id: string): string => `${API_PATHS.races}/${id}/drivers`
+export const confirmNotificationPath = (id: string): string =>
+  `${API_PATHS.notifications}/${id}/confirm`
+export const NOTIFICATIONS_AUDIT_PATH = `${API_PATHS.notifications}/audit`

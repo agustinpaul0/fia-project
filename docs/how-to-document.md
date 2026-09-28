@@ -39,3 +39,4 @@ Si el código y la doc se contradicen, el PR no está terminado.
 | Salud del sistema | [`features/health`](features/health/README.md) | — |
 | Categorías | [`features/categories`](features/categories/README.md) | T-2 (referencia) |
 | Resultados y puntajes de carreras | [`features/race-results`](features/race-results/README.md) | US-20 |
+| Notificaciones de puntaje | [`features/notifications`](features/notifications/README.md) | US-9 |

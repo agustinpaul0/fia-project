@@ -1,10 +1,12 @@
 import type { ErrorDefinition } from './error-definition'
+import { NOTIFICATION_ERRORS } from './notification-errors'
 import { RACING_ERRORS } from './racing-errors'
 
 export type { ErrorDefinition, ErrorStatus } from './error-definition'
 
 export const ERROR_CATALOG = {
   ...RACING_ERRORS,
+  ...NOTIFICATION_ERRORS,
   VALIDATION_FAILED: {
     status: 400,
     message: 'Hay datos inválidos. Revisá los campos marcados y volvé a intentar.',

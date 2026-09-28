@@ -9,6 +9,8 @@ import { createAuthRoutes } from '../features/auth/auth.routes'
 import { createCategoriesRoutes } from '../features/categories/categories.routes'
 import { createCategoriesService } from '../features/categories/categories.service'
 import { createHealthRoutes } from '../features/health/health.routes'
+import { createNotificationsRoutes } from '../features/notifications/notifications.routes'
+import { createNotificationsService } from '../features/notifications/notifications.service'
 import { createRaceResultsRoutes } from '../features/race-results/race-results.routes'
 import { createRaceResultsService } from '../features/race-results/race-results.service'
 import { createTeamStaffRoutes } from '../features/team-staff/team-staff.routes'
@@ -43,12 +45,17 @@ export const createApp = (deps: AppDependencies): Hono<AppEnv> => {
       ),
     )
   }
+  const clock = deps.clock ?? (() => new Date())
   if (deps.repositories.raceResults) {
-    const service = createRaceResultsService({
-      repository: deps.repositories.raceResults,
-      clock: deps.clock ?? (() => new Date()),
-    })
+    const service = createRaceResultsService({ repository: deps.repositories.raceResults, clock })
     app.route(API_PATHS.races, createRaceResultsRoutes(service))
+  }
+  if (deps.repositories.notifications) {
+    const service = createNotificationsService({
+      repository: deps.repositories.notifications,
+      clock,
+    })
+    app.route(API_PATHS.notifications, createNotificationsRoutes(service))
   }
   app.notFound((c) => c.json(toErrorBody(new AppError('ROUTE_NOT_FOUND')), { status: 404 }))
   app.onError(createErrorHandler(deps.logger))

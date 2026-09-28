@@ -2,6 +2,7 @@ import { Link } from '@tanstack/react-router'
 import type { ReactNode } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { NotificationsNavLink } from '@/features/notifications/components/notifications-nav-link'
 import { signOut, useSession } from '@/lib/auth-client'
 
 export const UserNav = (): ReactNode => {
@@ -32,8 +33,14 @@ export const UserNav = (): ReactNode => {
               Carga de resultados
             </Button>
           </Link>
+          <Link to="/admin/notifications">
+            <Button variant="ghost" size="sm">
+              Confirmaciones
+            </Button>
+          </Link>
         </>
       )}
+      {role === 'team_staff' && <NotificationsNavLink />}
       <span className="text-sm font-medium">{session.user.name}</span>
       <Badge variant="outline">{role}</Badge>
       <Button
