@@ -36,6 +36,9 @@ cual; lo agregado por el equipo implementador está marcado como **[equipo]**.
 | US-5 | Ver resultados de carreras de los últimos años | 2 | 13 | 14 h | 0,25 h | Hecho | Agustín | T-2 | #5 |
 | T-5 | Revisión de US-23, CI, integración y release **[equipo]** | — | — | — | 1,5 h | Hecho | Agustín | — | #6, #7 |
 | T-6 | Diseño visual del Sprint 1 (mocks de Stitch) **[equipo]** | — | — | — | 4 h | Hecho | Agustín | US-5, US-9, US-20, US-23 | — |
+| T-4 | Formularios de US-23 con `react-hook-form` y el schema del contrato (errores por campo) **[equipo]** | — | — | — | sin registrar | Hecho | Agustín | US-23 | — |
+| T-7 | Seed con datos para la demo (`pnpm db:seed:demo`) **[equipo]** | — | — | — | sin registrar | Hecho | Agustín | US-9, US-20, US-23 | — |
+| T-8 | Velocidad de la suite de tests y de la mutación en CI **[equipo]** | — | — | — | sin registrar | Hecho | Agustín | — | — |
 
 **Horas reales del sprint: 14 h** (informadas por el equipo, incluyen el setup del proyecto): 10 h de T-0 a T-5 y
 4 h de T-6 (diseño visual).
@@ -66,6 +69,36 @@ agregar datos falsos ([ADR 0009](docs/adr/0009-sistema-visual.md)).
 **Horas reales**: 4 h (informadas por el equipo; sesión del 2026-10-03, implementación asistida por IA).
 
 **Falta para cerrar**: ninguno. Plan: [docs/plans/T-6-visual-design.md](docs/plans/T-6-visual-design.md).
+
+### T-4 — Errores por campo en los formularios de personal [equipo]
+
+**Por qué**: un integrante del equipo reportó que al dar de alta una cuenta con datos inválidos sólo veía "Hay datos
+inválidos…" sin saber qué campo fallaba: los formularios usaban `useState`, validaban sólo en el servidor y
+descartaban los `fields` del error. Estaba diferido desde el Sprint 1.
+
+- [x] Alta y edición con `react-hook-form` + `zodResolver` con el schema del contrato (mismos mensajes que la API).
+- [x] Cada campo muestra su error (`aria-invalid` + mensaje) y las reglas de contraseña, teléfono y legajo.
+- [x] Los `fields` de `VALIDATION_FAILED` y los códigos de email o legajo repetido se marcan en su campo
+      (`lib/form-errors.ts`).
+- [x] Mensaje de escudería sin elegir: "Elegí una escudería." (antes hablaba de UUID).
+
+### T-7 — Seed para la demo [equipo]
+
+- [x] `pnpm db:seed:demo` deja datos en todos los paneles: seed base (F1 2021–2025) + F2, F3 y F1 Academy con 3
+      escuderías, 6 pilotos y temporadas 2021–2025 (4 rondas y un sprint, resultados determinísticos de
+      demostración), 5 cuentas de escudería (contraseña `DEMO_STAFF_PASSWORD`, en `.env.example`), 2 carreras de la
+      última temporada publicadas desde el sistema (notificaciones pendientes) y una confirmación de McLaren para la
+      auditoría. Usa los servicios de la API para cuentas, publicación y confirmación, y es idempotente.
+
+### T-8 — Velocidad de la suite [equipo]
+
+**Por qué**: la mutación de la web llegó al límite de 30 min del CI y se canceló; localmente `pnpm verify` tardaba
+~25 min.
+
+- [x] Web sobre `happy-dom` en lugar de `jsdom` (tests de 9 s a 5 s).
+- [x] Stryker ignora mutantes de `className`/`style` y adapta la concurrencia a los núcleos.
+- [x] CI: mutación de la web en 4 shards paralelos y caché incremental que se guarda siempre.
+- [x] Detalle en [`docs/testing.md`](docs/testing.md#velocidad-de-la-suite).
 
 ### T-1 — Autenticación mínima con roles [equipo]
 
@@ -265,7 +298,6 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 | ID | Ítem | Motivo | Estado |
 |---|---|---|---|
 | T-3 | Tests e2e con Playwright de los flujos principales **[equipo]** | Se dejan para el final del proyecto (decisión del equipo). | Pendiente |
-| T-4 | Migrar los formularios de US-23 a `react-hook-form` + resolver Zod del contrato **[equipo]** | Hoy usan `useState` y validan sólo en el servidor; la convención (`docs/conventions/react.md`) pide validación en el cliente con el mismo schema. | Pendiente |
 
 ## Product backlog (no seleccionado para el Sprint 1)
 
