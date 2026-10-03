@@ -84,8 +84,10 @@ Restricciones: `team_staff_first_name_not_blank`, `team_staff_last_name_not_blan
     botón **Limpiar**.
   - Listado completo en tabla con iniciales, nombre y legajo, email, teléfono, escudería (con su color), cargo y
     estado (activo/inactivo). Las acciones se deshabilitan en cuentas dadas de baja.
-  - Diálogo de alta con validación inline y aviso de entrega de credenciales.
-  - Diálogo de edición precargado con bloqueo de email y legajo.
+  - Diálogo de alta con `react-hook-form` y el schema del contrato: cada campo inválido se marca con su mensaje
+    antes de enviar, se muestran las reglas de contraseña, teléfono y legajo, y los errores que devuelve la API
+    (`fields` de `VALIDATION_FAILED`, email o legajo repetido) se pintan en el campo que corresponde.
+  - Diálogo de edición precargado con bloqueo de email y legajo, con la misma validación por campo.
   - Diálogo de confirmación de baja con advertencia de irreversibilidad.
   - Protegido por el guard `RequireFiaAdmin`.
   - Estilo según [ADR 0009](../../adr/0009-sistema-visual.md).

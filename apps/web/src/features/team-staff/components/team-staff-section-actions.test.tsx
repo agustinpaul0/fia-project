@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { jsonResponse } from '@/testing/mock-fetch'
 import { renderWithQuery } from '@/testing/render-with-query'
 import { aTeamStaffMember } from '@/testing/team-staff-builders'
+import { aCreateBody, fillCreateForm } from '@/testing/team-staff-form'
 import { TeamStaffSection } from './team-staff-section'
 
 const mockApi = (members = [aTeamStaffMember()]) => {
@@ -38,6 +39,8 @@ describe('TeamStaffSection acciones de mutación', () => {
     renderWithQuery(<TeamStaffSection />)
     const newBtn = await screen.findByRole('button', { name: 'Nuevo integrante' })
     fireEvent.click(newBtn)
+    await screen.findByRole('option', { name: 'Ferrari' })
+    fillCreateForm(aCreateBody('00000000-0000-4000-8000-000000000010'))
 
     const form = screen.getByRole('button', { name: 'Crear cuenta' }).closest('form')
     if (form) {

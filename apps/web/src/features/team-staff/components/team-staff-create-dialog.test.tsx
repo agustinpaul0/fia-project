@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
+import { aCreateBody, fillCreateForm } from '@/testing/team-staff-form'
 import { TeamStaffCreateDialog } from './team-staff-create-dialog'
 
 describe('TeamStaffCreateDialog', () => {
@@ -17,13 +18,13 @@ describe('TeamStaffCreateDialog', () => {
       />,
     )
 
-    fireEvent.change(screen.getByLabelText('Nombre'), { target: { value: 'Charles' } })
+    fillCreateForm(aCreateBody(teams[0]?.id ?? ''))
     const form = screen.getByRole('button', { name: 'Crear cuenta' }).closest('form')
     if (form) {
       fireEvent.submit(form)
     }
 
-    expect(onSubmit).toHaveBeenCalled()
+    await vi.waitFor(() => expect(onSubmit).toHaveBeenCalledWith(aCreateBody(teams[0]?.id ?? '')))
     await vi.waitFor(() => expect(onOpenChange).toHaveBeenCalledWith(false))
   })
 })

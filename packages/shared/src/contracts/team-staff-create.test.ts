@@ -41,7 +41,7 @@ describe('contratos de alta de personal de escudería', () => {
       { ...VALID, password: 'solominusculas' },
       'La contraseña debe incluir mayúscula, minúscula y número.',
     ],
-    [{ ...VALID, teamId: 'no-uuid' }, 'El identificador de escudería debe ser un UUID válido.'],
+    [{ ...VALID, teamId: 'no-uuid' }, 'Elegí una escudería.'],
     [{ ...VALID, roleInTeam: 'A' }, 'El cargo debe tener al menos 2 caracteres.'],
     [{ ...VALID, roleInTeam: 'A'.repeat(61) }, 'El cargo no puede superar los 60 caracteres.'],
     [

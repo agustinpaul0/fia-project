@@ -37,7 +37,7 @@ export const staffFileNumberSchema = z
     'El legajo debe contener entre 1 y 20 caracteres alfanuméricos o guiones.',
   )
 
-export const staffTeamIdSchema = z.uuid('El identificador de escudería debe ser un UUID válido.')
+export const staffTeamIdSchema = z.uuid('Elegí una escudería.')
 
 export const createTeamStaffBodySchema = z.strictObject({
   firstName: staffFirstNameSchema,

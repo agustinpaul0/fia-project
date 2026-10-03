@@ -1,6 +1,8 @@
 import type { CreateTeamStaffBody } from '@fia/shared/contracts'
 import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
+import { aCreateBody, fillCreateForm } from '@/testing/team-staff-form'
+import { PASSWORD_HINT } from './team-staff-create-fields'
 import { TeamStaffCreateForm } from './team-staff-create-form'
 
 const TEAMS = [
@@ -8,34 +10,7 @@ const TEAMS = [
   { id: '00000000-0000-4000-8000-000000000002', name: 'McLaren' },
 ]
 
-const BODY: CreateTeamStaffBody = {
-  firstName: 'Charles',
-  lastName: 'Leclerc',
-  email: 'charles@ferrari.com',
-  password: 'Password123!',
-  teamId: '00000000-0000-4000-8000-000000000002',
-  roleInTeam: 'Jefe de Mecánicos',
-  phoneNumber: '+54 9 291 1234567',
-  fileNumber: 'LEG-1234',
-}
-
-const LABELS: Readonly<Record<keyof CreateTeamStaffBody, string>> = {
-  firstName: 'Nombre',
-  lastName: 'Apellido',
-  email: 'Correo electrónico',
-  password: 'Contraseña inicial',
-  teamId: 'Escudería',
-  roleInTeam: 'Cargo en la escudería',
-  phoneNumber: 'Teléfono',
-  fileNumber: 'Legajo',
-}
-
-const fillForm = (): void => {
-  for (const [field, label] of Object.entries(LABELS)) {
-    const value = BODY[field as keyof CreateTeamStaffBody]
-    fireEvent.change(screen.getByLabelText(label), { target: { value } })
-  }
-}
+const BODY = aCreateBody('00000000-0000-4000-8000-000000000002')
 
 const submit = (): void => {
   fireEvent.click(screen.getByRole('button', { name: 'Crear cuenta' }))
@@ -45,36 +20,41 @@ const renderForm = (onSubmit: (data: CreateTeamStaffBody) => Promise<void>) =>
   render(<TeamStaffCreateForm teams={TEAMS} onCancel={vi.fn()} onSubmit={onSubmit} />)
 
 describe('TeamStaffCreateForm', () => {
-  it('envía exactamente los datos cargados en cada campo', async () => {
+  it('envía exactamente los datos cargados y limpia el formulario', async () => {
     const onSubmit = vi.fn().mockResolvedValue(undefined)
     renderForm(onSubmit)
-    fillForm()
+    fillCreateForm(BODY)
     submit()
-    expect(onSubmit).toHaveBeenCalledWith(BODY)
-    expect(await screen.findByLabelText('Nombre')).toHaveValue('')
+    await vi.waitFor(() => expect(onSubmit).toHaveBeenCalledWith(BODY))
+    await vi.waitFor(() => expect(screen.getByLabelText('Nombre')).toHaveValue(''))
   })
 
-  it('muestra "Guardando..." y deshabilita el envío mientras espera', () => {
+  it('muestra "Guardando..." y deshabilita el envío mientras espera', async () => {
     renderForm(() => new Promise(() => null))
-    fillForm()
+    fillCreateForm(BODY)
     submit()
-    expect(screen.getByRole('button', { name: 'Guardando...' })).toBeDisabled()
+    expect(await screen.findByRole('button', { name: 'Guardando...' })).toBeDisabled()
   })
 
-  it('conserva los datos y muestra el mensaje del error', async () => {
-    renderForm(vi.fn().mockRejectedValue(new Error('Email duplicado')))
-    fillForm()
+  it('marca en cada campo lo que no cumple las reglas, sin enviar', async () => {
+    const onSubmit = vi.fn()
+    renderForm(onSubmit)
+    fillCreateForm({ ...BODY, password: 'corta', teamId: '', fileNumber: 'LEG 12' })
     submit()
-    expect(await screen.findByText('Email duplicado')).toBeInTheDocument()
-    expect(screen.getByLabelText('Nombre')).toHaveValue(BODY.firstName)
-    expect(screen.getByRole('button', { name: 'Crear cuenta' })).toBeEnabled()
+    expect(
+      await screen.findByText('La contraseña debe tener al menos 12 caracteres.'),
+    ).toBeInTheDocument()
+    expect(screen.getByLabelText('Contraseña inicial')).toHaveAttribute('aria-invalid', 'true')
+    expect(screen.getByText('Elegí una escudería.')).toBeInTheDocument()
+    expect(screen.getByLabelText('Escudería')).toHaveAttribute('aria-invalid', 'true')
+    expect(screen.getByText(/El legajo debe contener/)).toBeInTheDocument()
+    expect(screen.getByLabelText('Nombre')).toHaveAttribute('aria-invalid', 'false')
+    expect(onSubmit).not.toHaveBeenCalled()
   })
 
-  it('usa un mensaje genérico si el error no es un Error', async () => {
-    renderForm(vi.fn().mockRejectedValue('fallo'))
-    fillForm()
-    submit()
-    expect(await screen.findByText('Error al crear el personal')).toBeInTheDocument()
+  it('explica las reglas de la contraseña antes de enviar', () => {
+    renderForm(vi.fn())
+    expect(screen.getByLabelText('Contraseña inicial')).toHaveAccessibleDescription(PASSWORD_HINT)
   })
 
   it('cancelar invoca onCancel sin enviar', () => {

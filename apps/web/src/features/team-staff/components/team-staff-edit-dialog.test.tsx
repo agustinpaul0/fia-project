@@ -38,7 +38,7 @@ describe('TeamStaffEditDialog', () => {
       fireEvent.submit(form)
     }
 
-    expect(onSubmit).toHaveBeenCalled()
+    await vi.waitFor(() => expect(onSubmit).toHaveBeenCalled())
     await vi.waitFor(() => expect(onOpenChange).toHaveBeenCalledWith(false))
   })
 })
