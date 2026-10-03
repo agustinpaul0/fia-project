@@ -21,6 +21,7 @@
     "db:generate": "pnpm --filter @fia/shared db:generate",
     "db:migrate": "pnpm --filter @fia/api db:migrate",
     "db:seed": "pnpm --filter @fia/api db:seed",
+    "db:seed:demo": "pnpm --filter @fia/api db:seed:demo",
     "db:studio": "pnpm --filter @fia/shared db:studio",
     "verify": "pnpm lint && pnpm typecheck && pnpm test:coverage && pnpm test:int && pnpm test:mutation && pnpm build",
     "docker:up": "docker compose up --build --renew-anon-volumes",

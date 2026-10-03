@@ -9,6 +9,7 @@
     "typecheck": "tsc -p tsconfig.json",
     "db:migrate": "tsx --env-file-if-exists=../../.env src/db/migrate.ts",
     "db:seed": "tsx --env-file-if-exists=../../.env src/seed/run-seed.ts",
+    "db:seed:demo": "tsx --env-file-if-exists=../../.env src/seed/demo/run-demo-seed.ts",
     "test:mutation": "stryker run"
   },
   "dependencies": {

@@ -59,24 +59,34 @@ const seedSingleRace = async (
   }
 }
 
-export const seedRacesAndResults = async (db: DbExecutor): Promise<void> => {
-  const [f1Category] = await db.select().from(categories).where(eq(categories.code, 'F1')).limit(1)
-  if (!f1Category) {
+export const seedCategoryRaces = async (
+  db: DbExecutor,
+  {
+    categoryCode,
+    definitions,
+  }: { categoryCode: string; definitions: readonly SeedRaceDefinition[] },
+): Promise<void> => {
+  const [category] = await db
+    .select()
+    .from(categories)
+    .where(eq(categories.code, categoryCode))
+    .limit(1)
+  if (!category) {
     return
   }
-
   const allSeasons = await db.select().from(seasons)
   const allCircuits = await db.select().from(circuits)
   const allDrivers = await db.select().from(drivers)
-
   const ctx: RaceContext = {
-    categoryId: f1Category.id,
+    categoryId: category.id,
     seasonMap: new Map(allSeasons.map((s) => [s.year, s.id])),
     circuitMap: new Map(allCircuits.map((c) => [c.name, c.id])),
     driverMap: new Map(allDrivers.map((d) => [d.code, { id: d.id, teamId: d.teamId }])),
   }
-
-  for (const def of SEED_RACES) {
+  for (const def of definitions) {
     await seedSingleRace(db, def, ctx)
   }
 }
+
+export const seedRacesAndResults = (db: DbExecutor): Promise<void> =>
+  seedCategoryRaces(db, { categoryCode: 'F1', definitions: SEED_RACES })

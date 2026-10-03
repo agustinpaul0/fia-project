@@ -84,6 +84,7 @@ pnpm dev                        # API en :3000 y web en :5173
 | `pnpm verify` | **todo lo anterior + build**. Obligatorio antes de abrir un PR |
 | `pnpm db:generate --name <x>` | genera una migración desde el schema de Drizzle |
 | `pnpm db:migrate` / `pnpm db:seed` | aplica migraciones / carga datos de ejemplo |
+| `pnpm db:seed:demo` | seed + datos para la demo en **todos los paneles**: F2, F3 y F1 Academy con escuderías, pilotos y temporadas 2021–2025 (además de F1), 5 cuentas de escudería (contraseña `DEMO_STAFF_PASSWORD`), 2 carreras publicadas con notificaciones pendientes y una confirmación para la auditoría. Idempotente; los datos de F2/F3/F1A son de demostración |
 | `pnpm db:studio` | explorador visual de la base (Drizzle Studio) |
 | `pnpm skills:check` / `pnpm skills:sync` | verifica / sincroniza las skills de los agentes |
 

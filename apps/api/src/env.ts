@@ -12,6 +12,7 @@ const envSchema = z.object({
   BETTER_AUTH_URL: z.string().default('http://localhost:3000'),
   FIA_ADMIN_EMAIL: z.string().email().default('admin@fia.com'),
   FIA_ADMIN_PASSWORD: z.string().default('AdminPassword123!'),
+  DEMO_STAFF_PASSWORD: z.string().default('Escuderia2026Demo'),
 })
 
 export type Env = z.infer<typeof envSchema>
