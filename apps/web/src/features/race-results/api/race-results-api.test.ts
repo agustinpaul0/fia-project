@@ -17,7 +17,7 @@ describe('API de resultados de carreras', () => {
 
   it('consulta las carreras de una temporada', async () => {
     mockFetchRoutes({ 'GET /races?season=2025': () => jsonResponse([aRaceSummary()]) })
-    expect(await fetchSeasonRaces(2025)).toEqual([aRaceSummary()])
+    expect(await fetchSeasonRaces({ season: 2025, category: null })).toEqual([aRaceSummary()])
   })
 
   it('consulta la clasificación y los pilotos habilitados', async () => {
@@ -39,7 +39,18 @@ describe('API de resultados de carreras', () => {
   })
 
   it('arma claves de caché distintas por consulta', () => {
-    expect(raceQueryKeys.season(2025)).toEqual(['races', 'season', 2025])
+    expect(raceQueryKeys.season({ season: 2025, category: 'F1' })).toEqual([
+      'races',
+      'season',
+      2025,
+      'F1',
+    ])
+    expect(raceQueryKeys.standings({ season: 2025, category: null })).toEqual([
+      'races',
+      'standings',
+      2025,
+      null,
+    ])
     expect(raceQueryKeys.classification('x')).toEqual(['races', 'x', 'classification'])
     expect(raceQueryKeys.drivers('x')).toEqual(['races', 'x', 'drivers'])
   })

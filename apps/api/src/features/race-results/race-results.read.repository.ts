@@ -1,3 +1,4 @@
+import type { RaceListQuery } from '@fia/shared/contracts'
 import { categories, circuits, drivers, raceResults, races, seasons, teams } from '@fia/shared/db'
 import { and, asc, eq, type SQL } from 'drizzle-orm'
 import type { DbExecutor } from '../../core/db/executor'
@@ -5,7 +6,13 @@ import type { ClassificationRow, RaceHeader } from './race-results.port'
 
 const winner = { first: drivers.firstName, last: drivers.lastName }
 
-const selectRaceHeaders = (db: DbExecutor, where: SQL) =>
+export const seasonWhere = (query: RaceListQuery): SQL | undefined =>
+  and(
+    eq(seasons.year, query.season),
+    query.category === undefined ? undefined : eq(categories.code, query.category),
+  )
+
+const selectRaceHeaders = (db: DbExecutor, where: SQL | undefined) =>
   db
     .select({
       id: races.id,
@@ -38,8 +45,8 @@ const toHeader = ({ winner: w, ...race }: HeaderRecord): RaceHeader => ({
 })
 
 export const createRaceResultsReader = (db: DbExecutor) => ({
-  listSeason: async (year: number): Promise<readonly RaceHeader[]> =>
-    (await selectRaceHeaders(db, eq(seasons.year, year))).map(toHeader),
+  listSeason: async (query: RaceListQuery): Promise<readonly RaceHeader[]> =>
+    (await selectRaceHeaders(db, seasonWhere(query))).map(toHeader),
   findRace: async (id: string): Promise<RaceHeader | null> => {
     const [row] = await selectRaceHeaders(db, eq(races.id, id))
     return row === undefined ? null : toHeader(row)

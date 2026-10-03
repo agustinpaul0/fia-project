@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { jsonResponse } from '@/testing/mock-fetch'
 import { mockFetchRoutes } from '@/testing/mock-fetch-routes'
 import { aClassification, anEligibleDriver, aRaceSummary, RACE_ID } from '@/testing/race-builders'
-import { renderWithQuery } from '@/testing/render-with-query'
+import { renderWithRouter } from '@/testing/render-with-router'
 import { AdminRaceEditor, RACE_NOT_RUN_MESSAGE } from './admin-race-editor'
 
 const NOW = new Date('2026-09-28T12:00:00.000Z')
@@ -19,7 +19,7 @@ describe('AdminRaceEditor', () => {
   it('no permite cargar una carrera que todavía no se corrió', async () => {
     const future = aClassification({ race: aRaceSummary({ date: '2026-12-06T15:00:00.000Z' }) })
     mockFetchRoutes({ [GET]: () => jsonResponse(future), [DRIVERS]: () => jsonResponse([]) })
-    renderWithQuery(<AdminRaceEditor raceId={RACE_ID} now={NOW} />)
+    renderWithRouter(<AdminRaceEditor raceId={RACE_ID} now={NOW} />)
     expect(await screen.findByText(RACE_NOT_RUN_MESSAGE)).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Guardar resultado' })).not.toBeInTheDocument()
   })
@@ -29,7 +29,7 @@ describe('AdminRaceEditor', () => {
       [GET]: () => jsonResponse(aClassification()),
       [DRIVERS]: () => jsonResponse([]),
     })
-    renderWithQuery(<AdminRaceEditor raceId={RACE_ID} now={NOW} />)
+    renderWithRouter(<AdminRaceEditor raceId={RACE_ID} now={NOW} />)
     const message = 'No hay pilotos inscriptos en la categoría de esta carrera.'
     expect(await screen.findByText(message)).toBeInTheDocument()
   })
@@ -41,7 +41,7 @@ describe('AdminRaceEditor', () => {
       [DRIVERS]: () => jsonResponse([1, 2].map(anEligibleDriver)),
       [PUT]: () => jsonResponse({ error }, 409),
     })
-    renderWithQuery(<AdminRaceEditor raceId={RACE_ID} now={NOW} />)
+    renderWithRouter(<AdminRaceEditor raceId={RACE_ID} now={NOW} />)
     fireEvent.click(await screen.findByRole('button', { name: 'Guardar resultado' }))
     await waitFor(() => expect(calls.filter((c) => c.key === GET)).toHaveLength(2))
   })

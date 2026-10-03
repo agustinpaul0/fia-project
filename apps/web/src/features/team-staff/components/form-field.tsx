@@ -7,12 +7,12 @@ type Props = ComponentProps<'input'> & {
 
 export const FormField = ({ label, id, ...props }: Props): ReactNode => (
   <div className="flex flex-col gap-1">
-    <label htmlFor={id} className="text-xs font-medium text-foreground">
+    <label htmlFor={id} className="font-bold font-mono text-on-surface text-xs uppercase">
       {label}
     </label>
     <input
       id={id}
-      className="rounded-md border bg-background px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-ring disabled:bg-muted"
+      className="w-full border-2 border-outline bg-surface-container-lowest px-3 py-2 font-medium text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary-container disabled:bg-surface-container disabled:text-on-surface-variant"
       {...props}
     />
   </div>

@@ -17,10 +17,10 @@ import type { RaceResultsService } from './race-results.service'
 export const createRaceResultsRoutes = (service: RaceResultsService): Hono<AppEnv> =>
   new Hono<AppEnv>()
     .get('/', publicAccess, validate('query', raceListQuerySchema), async (c) =>
-      ok(c, raceSummaryListSchema, await service.listSeason(c.req.valid('query').season)),
+      ok(c, raceSummaryListSchema, await service.listSeason(c.req.valid('query'))),
     )
     .get('/standings', publicAccess, validate('query', raceListQuerySchema), async (c) =>
-      ok(c, driverStandingListSchema, await service.seasonStandings(c.req.valid('query').season)),
+      ok(c, driverStandingListSchema, await service.seasonStandings(c.req.valid('query'))),
     )
     .get('/:id/classification', publicAccess, validate('param', idParamsSchema), async (c) =>
       ok(c, raceClassificationSchema, await service.getClassification(c.req.valid('param').id)),

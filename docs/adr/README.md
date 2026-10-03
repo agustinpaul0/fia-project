@@ -20,3 +20,4 @@ sin rediscutirlo.
 | [0006](0006-manejo-de-errores.md) | Catálogo único de errores compartido | Aceptado |
 | [0007](0007-identidad-y-membresia-de-escuderia.md) | Identidad de autenticación (Better Auth) y membresía de escudería (`team_staff`) | Aceptado |
 | [0008](0008-revisiones-de-resultados.md) | Revisiones de resultados como base de las notificaciones | Aceptado |
+| [0009](0009-sistema-visual.md) | Sistema visual Bauhaus neo-brutalista y regla de "sólo datos reales" | Aceptado |

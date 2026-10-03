@@ -42,8 +42,8 @@ usa para volver a notificar.
 
 | Método | Ruta | Acceso | Body / query | Respuesta |
 |---|---|---|---|---|
-| GET | `/races?season=YYYY` | público | — | `RaceSummary[]` con tipo, revisión y ganador |
-| GET | `/races/standings?season=YYYY` | público | — | campeonato de pilotos: posición, puntos y victorias |
+| GET | `/races?season=YYYY[&category=CODE]` | público | — | `RaceSummary[]` con tipo, revisión y ganador; `category` (código, p. ej. `F1`) filtra por categoría |
+| GET | `/races/standings?season=YYYY[&category=CODE]` | público | — | campeonato de pilotos: posición, puntos y victorias; con `category` sólo suma las carreras de esa categoría |
 | GET | `/races/:id/classification` | público | — | `{ race, results[] }` ordenado por posición |
 | GET | `/races/:id/drivers` | fia_admin | — | pilotos de la categoría de la carrera |
 | PUT | `/races/:id/classification` | fia_admin | `{ version, entries: [{ driverId }] }` en orden de llegada | clasificación guardada (versión + 1, revisión + 1) |
@@ -70,13 +70,20 @@ usa para volver a notificar.
 
 ## Pantallas
 
-- `/results` (público, US-5): temporada (actual y 5 anteriores; por defecto la última completa), campeonato de
-  pilotos con puntos y victorias, y lista de carreras con su ganador que enlaza al detalle. El encabezado tiene el
-  acceso **Resultados** para todos.
+Estilo según [ADR 0009](../../adr/0009-sistema-visual.md); los mocks de referencia son los de Google Stitch del
+Sprint 1.
 
-- `/races/$raceId` (público): encabezado con tipo, categoría, circuito y fecha en hora argentina, y tabla de
-  posiciones con piloto, escudería y puntos. Si no hay resultado: "Todavía no se cargó el resultado de esta carrera."
-- `/admin/results` (admin FIA): temporada (actual y 5 anteriores) y lista de carreras con su ganador.
-- `/admin/results/$raceId` (admin FIA): editor de clasificación con una fila por posición, vista previa de los
-  puntos, reordenamiento, pilotos ya elegidos ocultos en las demás filas y guardado deshabilitado mientras falte
-  elegir un piloto. Si la carrera no se corrió, lo informa y no muestra el editor.
+- `/results?category=CODE` (público, US-5): por defecto `F1`; las cards de la portada llevan a cada categoría.
+  Selector de temporada (actual y 5 anteriores; por defecto la última completa), franja con último ganador, líder
+  del campeonato, escudería con más puntos y carreras con resultado, chips de categoría, campeonato de pilotos
+  (primeros 8 con "Ver tabla completa") y calendario de carreras con su ganador. Al cambiar de temporada se
+  mantienen los datos anteriores atenuados hasta que llegan los nuevos (sin parpadeo).
+- `/races/$raceId` (público): encabezado oscuro con categoría, tipo, estado del resultado ("Oficial final",
+  "Corregido (revisión N)" o "Resultado pendiente"), circuito, fecha en hora argentina y revisión; tabla de
+  posiciones y distribución de puntos por escudería. Si no hay resultado: "Todavía no se cargó el resultado de
+  esta carrera."
+- `/admin/results` (admin FIA): temporada y lista de carreras de todas las categorías con su ganador.
+- `/admin/results/$raceId` (admin FIA): editor con una fila por posición (ganador, segundo, tercero…), puntos
+  calculados, reordenamiento, pilotos ya elegidos ocultos en las demás filas, totales (pilotos clasificados y
+  puntos asignados), "Cancelar cambios" que vuelve a la clasificación guardada y guardado deshabilitado mientras
+  falte elegir un piloto. Si la carrera no se corrió, lo informa y no muestra el editor.

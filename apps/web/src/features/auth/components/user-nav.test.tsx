@@ -20,7 +20,7 @@ describe('UserNav', () => {
     expect(screen.getByText('Iniciar sesión')).toBeInTheDocument()
   })
 
-  it('muestra nombre, rol y acceso a Personal cuando es fia_admin', async () => {
+  it('muestra nombre y rol cuando es fia_admin', async () => {
     const { useSession } = await import('@/lib/auth-client')
     vi.mocked(useSession).mockReturnValue({
       data: { user: { name: 'Admin FIA', role: 'fia_admin' } },
@@ -30,7 +30,6 @@ describe('UserNav', () => {
     render(<UserNav />)
     expect(screen.getByText('Admin FIA')).toBeInTheDocument()
     expect(screen.getByText('fia_admin')).toBeInTheDocument()
-    expect(screen.getByText('Personal')).toBeInTheDocument()
     expect(screen.getByText('Salir')).toBeInTheDocument()
   })
 

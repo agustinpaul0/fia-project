@@ -20,6 +20,14 @@ describe('Lectura pública de carreras y clasificaciones', () => {
     expect(raceSummaryListSchema.parse(await response.json())).toHaveLength(1)
   })
 
+  it('filtra las carreras por categoría', async () => {
+    const { app } = createTestApp({ races: [RACE] })
+    const f1 = await app.request('/races?season=2025&category=F1')
+    const f2 = await app.request('/races?season=2025&category=F2')
+    expect(raceSummaryListSchema.parse(await f1.json())).toHaveLength(1)
+    expect(raceSummaryListSchema.parse(await f2.json())).toEqual([])
+  })
+
   it('exige una temporada válida', async () => {
     const response = await createTestApp().app.request('/races?season=abc')
     expect(response.status).toBe(400)

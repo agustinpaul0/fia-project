@@ -1,12 +1,13 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { aTeamStaffMember } from '@/testing/team-staff-builders'
-import { TeamStaffTable } from './team-staff-table'
+import { NO_MATCHES_MESSAGE, TeamStaffTable } from './team-staff-table'
 
 describe('TeamStaffTable', () => {
-  it('muestra estado vacío si no hay miembros', () => {
-    render(<TeamStaffTable members={[]} onEdit={vi.fn()} onDeactivate={vi.fn()} />)
-    expect(screen.getByText('Todavía no hay personal de escuderías cargado.')).toBeInTheDocument()
+  it('avisa si la búsqueda no encontró integrantes', () => {
+    render(<TeamStaffTable members={[]} total={3} onEdit={vi.fn()} onDeactivate={vi.fn()} />)
+    expect(screen.getByText(NO_MATCHES_MESSAGE)).toBeInTheDocument()
+    expect(screen.getByText('Mostrando 0 de 3 cuentas registradas')).toBeInTheDocument()
   })
 
   it('muestra datos del personal y maneja clicks de edición y baja', () => {
@@ -21,11 +22,18 @@ describe('TeamStaffTable', () => {
     })
 
     render(
-      <TeamStaffTable members={[active, inactive]} onEdit={onEdit} onDeactivate={onDeactivate} />,
+      <TeamStaffTable
+        members={[active, inactive]}
+        total={2}
+        onEdit={onEdit}
+        onDeactivate={onDeactivate}
+      />,
     )
 
-    expect(screen.getByText('Sainz, Carlos')).toBeInTheDocument()
-    expect(screen.getByText('Norris, Lando')).toBeInTheDocument()
+    expect(screen.getByText('Carlos Sainz')).toBeInTheDocument()
+    expect(screen.getByText('Lando Norris')).toBeInTheDocument()
+    expect(screen.getByText('CS')).toBeInTheDocument()
+    expect(screen.getAllByText('Legajo LEG-1234')).toHaveLength(2)
     expect(screen.getByText('Activo')).toBeInTheDocument()
     expect(screen.getByText('Inactivo')).toBeInTheDocument()
 

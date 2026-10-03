@@ -1,5 +1,6 @@
 import type {
   ClassifiedResult,
+  DriverStanding,
   EligibleDriver,
   RaceClassification,
   RaceSummary,
@@ -47,5 +48,19 @@ export const aClassification = (
 ): RaceClassification => ({
   race: aRaceSummary(),
   results: [aResult(1, 25), aResult(2, 18)],
+  ...overrides,
+})
+
+export const aDriverStanding = (
+  n: number,
+  overrides: Partial<DriverStanding> = {},
+): DriverStanding => ({
+  position: n,
+  driverId: `00000000-0000-4000-8000-${String(300 + n).padStart(12, '0')}`,
+  driverCode: `P${String(n).padStart(2, '0')}`,
+  driverName: `Piloto ${n}`,
+  teamName: `Escudería ${Math.ceil(n / 2)}`,
+  points: Math.max(0, 100 - n * 5),
+  wins: n === 1 ? 2 : 0,
   ...overrides,
 })

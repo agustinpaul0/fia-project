@@ -5,17 +5,7 @@ Registro único de las consultas al Grupo Naranja. Las respuestas se copian al �
 
 ## Pendientes
 
-| # | US | Pregunta | Propuesta del equipo (lo implementado hoy) |
-|---|---|---|---|
-| 1 | US-20 | ¿F2, F3 y F1 Academy usan la misma escala de puntos que F1? | Misma escala para todas las categorías. |
-| 2 | US-20 | ¿Hace falta registrar abandonos y descalificaciones (DNF/DSQ) o alcanza con los clasificados? | Sólo clasificados en el Sprint 1. |
-| 3 | US-23 | ¿La baja de una cuenta es definitiva? ¿Se pueden reutilizar su email y su legajo? | Baja definitiva; email y legajo no se reutilizan. |
-| 4 | US-23 | ¿El cargo es texto libre o una lista cerrada? | Texto libre (2 a 60 caracteres). |
-| 5 | US-23 | ¿El teléfono es obligatorio? | Obligatorio, con validación flexible. |
-| 6 | US-23 | ¿Se puede cambiar de escudería a una cuenta activa? | Sí; las confirmaciones pasadas conservan la escudería original. |
-| 7 | US-23 | ¿El listado de la FIA muestra también las cuentas dadas de baja? | Sí, marcadas como inactivas. |
-| 8 | US-23 | ¿La contraseña inicial se entrega por fuera del sistema hasta que exista la recuperación por email (US-26)? | Sí, la entrega la FIA por un canal externo. |
-| 9 | US-9 | ¿Notificamos sólo a las escuderías con resultados en esa carrera, o a todas las de la categoría? | Sólo a las que tienen resultados. |
+Ninguna. El 2026-10-03 el Grupo Naranja ratificó todas las decisiones de implementación que estaban abiertas.
 
 ## Respondidas
 
@@ -35,3 +25,12 @@ Registro único de las consultas al Grupo Naranja. Las respuestas se copian al �
 | R12 | US-5 | "Últimos años" | Los últimos 5. |
 | R13 | US-5 | Origen de los datos históricos | Los carga el equipo implementador. |
 | R14 | US-5 | "Carga rápida" | Menos de 10 minutos. |
+| R15 | US-20 | ¿F2, F3 y F1 Academy usan la misma escala de puntos que F1? | Ratificado (2026-10-03): Misma escala para todas las categorías. |
+| R16 | US-20 | ¿Hace falta registrar abandonos y descalificaciones (DNF/DSQ) o alcanza con los clasificados? | Ratificado (2026-10-03): Sólo clasificados en el Sprint 1. |
+| R17 | US-23 | ¿La baja de una cuenta es definitiva? ¿Se pueden reutilizar su email y su legajo? | Ratificado (2026-10-03): Baja definitiva; email y legajo no se reutilizan. |
+| R18 | US-23 | ¿El cargo es texto libre o una lista cerrada? | Ratificado (2026-10-03): Texto libre (2 a 60 caracteres). |
+| R19 | US-23 | ¿El teléfono es obligatorio? | Ratificado (2026-10-03): Obligatorio, con validación flexible. |
+| R20 | US-23 | ¿Se puede cambiar de escudería a una cuenta activa? | Ratificado (2026-10-03): Sí; las confirmaciones pasadas conservan la escudería original. |
+| R21 | US-23 | ¿El listado de la FIA muestra también las cuentas dadas de baja? | Ratificado (2026-10-03): Sí, marcadas como inactivas. |
+| R22 | US-23 | ¿La contraseña inicial se entrega por fuera del sistema hasta que exista la recuperación por email (US-26)? | Ratificado (2026-10-03): Sí, la entrega la FIA por un canal externo. |
+| R23 | US-9 | ¿Notificamos sólo a las escuderías con resultados en esa carrera, o a todas las de la categoría? | Ratificado (2026-10-03): Sólo a las que tienen resultados. |

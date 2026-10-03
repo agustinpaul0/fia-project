@@ -13,8 +13,9 @@ describe('TeamStaffSection', () => {
   it('lista los miembros devueltos por la API', async () => {
     mockFetchOnce(jsonResponse([aTeamStaffMember({ firstName: 'Carlos', lastName: 'Sainz' })]))
     renderWithQuery(<TeamStaffSection />)
-    expect(await screen.findByText('Sainz, Carlos')).toBeInTheDocument()
+    expect(await screen.findByText('Carlos Sainz')).toBeInTheDocument()
     expect(screen.getByText('Personal de escuderías')).toBeInTheDocument()
+    expect(screen.getByText('Integrantes activos:').nextElementSibling).toHaveTextContent('1')
   })
 
   it('muestra estado vacío cuando no hay miembros', async () => {

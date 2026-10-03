@@ -1,57 +1,42 @@
 import { Link } from '@tanstack/react-router'
+import { LogOut, UserRound } from 'lucide-react'
 import type { ReactNode } from 'react'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { NotificationsNavLink } from '@/features/notifications/components/notifications-nav-link'
 import { signOut, useSession } from '@/lib/auth-client'
+
+const LIGHT_BUTTON =
+  'flex items-center gap-2 border-2 border-surface-variant px-3 py-1 font-bold font-label text-[11px] text-on-primary uppercase tracking-wider transition-colors'
+
+const LoginLink = (): ReactNode => (
+  <Link to="/login" className={`${LIGHT_BUTTON} hover:bg-primary-container hover:text-primary`}>
+    <UserRound className="size-4" aria-hidden />
+    Iniciar sesión
+  </Link>
+)
 
 export const UserNav = (): ReactNode => {
   const { data: session } = useSession()
-
   if (!session) {
-    return (
-      <Link to="/login">
-        <Button variant="outline" size="sm">
-          Iniciar sesión
-        </Button>
-      </Link>
-    )
+    return <LoginLink />
   }
-
   const role = session.user.role ?? 'public'
   return (
     <div className="flex items-center gap-3">
-      {role === 'fia_admin' && (
-        <>
-          <Link to="/admin/team-staff">
-            <Button variant="ghost" size="sm">
-              Personal
-            </Button>
-          </Link>
-          <Link to="/admin/results">
-            <Button variant="ghost" size="sm">
-              Carga de resultados
-            </Button>
-          </Link>
-          <Link to="/admin/notifications">
-            <Button variant="ghost" size="sm">
-              Confirmaciones
-            </Button>
-          </Link>
-        </>
-      )}
-      {role === 'team_staff' && <NotificationsNavLink />}
-      <span className="text-sm font-medium">{session.user.name}</span>
-      <Badge variant="outline">{role}</Badge>
-      <Button
-        variant="ghost"
-        size="sm"
+      <div className="flex items-center gap-1.5 border-2 border-outline bg-primary-container px-3 py-1 font-bold font-label text-[11px] text-primary uppercase tracking-wider">
+        <span className="hidden whitespace-nowrap 2xl:inline">{session.user.name}</span>
+        <span className="whitespace-nowrap">
+          [ <span className="normal-case">{role}</span> ]
+        </span>
+      </div>
+      <button
+        type="button"
+        className={`${LIGHT_BUTTON} hover:border-secondary hover:bg-secondary`}
         onClick={() => {
           void signOut({ fetchOptions: { onSuccess: () => window.location.reload() } })
         }}
       >
+        <LogOut className="size-3.5" aria-hidden />
         Salir
-      </Button>
+      </button>
     </div>
   )
 }

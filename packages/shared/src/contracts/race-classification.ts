@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { RACE_TYPES } from '../domain/scoring'
+import { CATEGORY_CODE_PATTERN } from './categories'
 import { versionSchema } from './common'
 
 export const MAX_CLASSIFIED_DRIVERS = 30
@@ -76,6 +77,7 @@ export const raceSummaryListSchema = z.array(raceSummarySchema).readonly()
 
 export const raceListQuerySchema = z.strictObject({
   season: z.coerce.number().pipe(z.int().min(1950, 'La temporada no es válida.').max(2100)),
+  category: z.string().regex(CATEGORY_CODE_PATTERN, 'La categoría no es válida.').optional(),
 })
 
 export type RaceClassificationBody = z.infer<typeof raceClassificationBodySchema>

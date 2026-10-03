@@ -1,3 +1,4 @@
+import type { RaceListQuery } from '@fia/shared/contracts'
 import type {
   ClassificationRow,
   RaceHeader,
@@ -5,6 +6,12 @@ import type {
   ScoredEntry,
 } from '../features/race-results/race-results.port'
 import type { TestDriver } from './race-builders'
+
+const inSeason =
+  (query: RaceListQuery) =>
+  (race: RaceHeader): boolean =>
+    race.seasonYear === query.season &&
+    (query.category === undefined || race.categoryCode === query.category)
 
 export type InMemoryRaceResults = RaceResultsRepository & {
   readonly races: Map<string, RaceHeader>
@@ -28,7 +35,7 @@ export const createInMemoryRaceResults = (
   return {
     races,
     classifications,
-    listSeason: async (year) => [...races.values()].filter((race) => race.seasonYear === year),
+    listSeason: async (query) => [...races.values()].filter(inSeason(query)),
     findRace: async (id) => races.get(id) ?? null,
     findClassification: async (raceId) => classifications.get(raceId) ?? [],
     findDrivers: async (ids) =>
@@ -40,9 +47,9 @@ export const createInMemoryRaceResults = (
       driverList
         .filter((driver) => driver.categoryId === categoryId)
         .map(({ id, code, name, teamName }) => ({ id, code, name, teamName })),
-    listSeasonResults: async (year) =>
+    listSeasonResults: async (query) =>
       [...races.values()]
-        .filter((race) => race.seasonYear === year)
+        .filter(inSeason(query))
         .flatMap((race) => classifications.get(race.id) ?? []),
     replaceClassification: async ({ raceId, expectedVersion, nextRevision, entries }) => {
       const race = races.get(raceId)

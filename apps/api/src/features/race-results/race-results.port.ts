@@ -1,3 +1,4 @@
+import type { RaceListQuery } from '@fia/shared/contracts'
 import type { RaceType } from '@fia/shared/domain'
 
 export type RaceHeader = {
@@ -62,11 +63,11 @@ export type SeasonResultRow = {
 }
 
 export type RaceResultsRepository = {
-  readonly listSeason: (year: number) => Promise<readonly RaceHeader[]>
+  readonly listSeason: (query: RaceListQuery) => Promise<readonly RaceHeader[]>
   readonly findRace: (id: string) => Promise<RaceHeader | null>
   readonly findClassification: (raceId: string) => Promise<readonly ClassificationRow[]>
   readonly findDrivers: (ids: readonly string[]) => Promise<readonly DriverEligibility[]>
   readonly listCategoryDrivers: (categoryId: string) => Promise<readonly EligibleDriverRow[]>
-  readonly listSeasonResults: (year: number) => Promise<readonly SeasonResultRow[]>
+  readonly listSeasonResults: (query: RaceListQuery) => Promise<readonly SeasonResultRow[]>
   readonly replaceClassification: (input: ReplaceClassificationInput) => Promise<boolean>
 }

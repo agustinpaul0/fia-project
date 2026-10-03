@@ -54,7 +54,7 @@ export const TeamStaffEditForm = ({ member, teams, onCancel, onSubmit }: Props):
         <Button type="button" variant="outline" onClick={onCancel}>
           Cancelar
         </Button>
-        <Button type="submit" disabled={loading}>
+        <Button type="submit" variant="accent" className="shadow-brutal-sm" disabled={loading}>
           {loading ? 'Guardando...' : 'Guardar cambios'}
         </Button>
       </DialogFooter>

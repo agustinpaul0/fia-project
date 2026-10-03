@@ -14,7 +14,7 @@ describe('NotificationsNavLink', () => {
   it('muestra la cantidad de pendientes y enlaza a la bandeja', async () => {
     mockFetchRoutes({ 'GET /notifications': () => jsonResponse([aScoreNotification()]) })
     renderWithRouter(<NotificationsNavLink />)
-    expect(await screen.findByLabelText('1 pendientes')).toBeInTheDocument()
+    expect(await screen.findByText('1 pendientes')).toBeInTheDocument()
     expect(screen.getByRole('link')).toHaveAttribute('href', '/notifications')
   })
 
@@ -22,6 +22,6 @@ describe('NotificationsNavLink', () => {
     mockFetchRoutes({ 'GET /notifications': () => jsonResponse([]) })
     renderWithRouter(<NotificationsNavLink />)
     expect(await screen.findByRole('link')).toHaveTextContent('Notificaciones')
-    expect(screen.queryByLabelText(/pendientes/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/pendientes/)).not.toBeInTheDocument()
   })
 })

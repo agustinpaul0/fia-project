@@ -14,8 +14,9 @@ cual; lo agregado por el equipo implementador está marcado como **[equipo]**.
   por tarea y link al PR.
 - **Horas reales**: la cátedra pide comparar estimado vs. real por US en el Sprint 1 para estimar el Sprint 2.
   Cargarlas con honestidad (incluye tiempo de tests, docs y review).
-- Horas reales del Sprint 1 informadas por el equipo: **10 h** en total. T-0 (setup, planificación y
-  convenciones) 5,5 h · T-1 + T-2 + US-23 2 h · US-20 + US-9 + US-5 1 h · revisión, CI, integración y release 1,5 h.
+- Horas reales del Sprint 1 informadas por el equipo: **14 h** en total. T-0 (setup, planificación y
+  convenciones) 5,5 h · T-1 + T-2 + US-23 2 h · US-20 + US-9 + US-5 1 h · revisión, CI, integración y release 1,5 h ·
+  T-6 (diseño visual) 4 h.
 - Dudas para el PO: [`docs/preguntas-po.md`](docs/preguntas-po.md).
 - Escala de Naranja: story points y business value en Fibonacci. SP ↔ horas: 1 = ≤ 12 h · 2 = 12–14 h ·
   3 = 14–16 h · 5 = 16–18 h.
@@ -34,13 +35,37 @@ cual; lo agregado por el equipo implementador está marcado como **[equipo]**.
 | US-9 | Confirmar notificación del puntaje recibido | 1 | 13 | 10 h | 0,25 h | Hecho | Agustín | US-20, US-23 | #4 |
 | US-5 | Ver resultados de carreras de los últimos años | 2 | 13 | 14 h | 0,25 h | Hecho | Agustín | T-2 | #5 |
 | T-5 | Revisión de US-23, CI, integración y release **[equipo]** | — | — | — | 1,5 h | Hecho | Agustín | — | #6, #7 |
+| T-6 | Diseño visual del Sprint 1 (mocks de Stitch) **[equipo]** | — | — | — | 4 h | Hecho | Agustín | US-5, US-9, US-20, US-23 | — |
 
-**Horas reales del sprint: 10 h** (informadas por el equipo, incluyen el setup del proyecto).
+**Horas reales del sprint: 14 h** (informadas por el equipo, incluyen el setup del proyecto): 10 h de T-0 a T-5 y
+4 h de T-6 (diseño visual).
 
 **Orden sugerido [equipo]**: T-1 y T-2 en paralelo → US-23 → US-20 → US-9. US-5 en paralelo apenas esté T-2.
 Las estimaciones de los habilitadores las hace el equipo **sin IA** (pauta de la cátedra para el Sprint 1).
 
 ---
+
+### T-6 — Diseño visual del Sprint 1 [equipo]
+
+**Por qué**: la funcionalidad del sprint estaba terminada con el estilo por defecto de shadcn. Para la demo del
+06/10 se replican los mocks de Google Stitch (estilo Bauhaus neo-brutalista) en las 9 pantallas del sprint, sin
+agregar datos falsos ([ADR 0009](docs/adr/0009-sistema-visual.md)).
+
+- [x] Tokens, fuentes self-hosted y primitivas de marca (encabezado único por rol, pie, logo, estados de carga,
+      error y vacío) — [`docs/conventions/ui.md`](docs/conventions/ui.md).
+- [x] Portada con categorías clickeables que llevan a sus resultados (`/results?category=…`).
+- [x] Login centrado con mostrar/ocultar contraseña.
+- [x] Resultados (US-5): métricas calculadas, filtro por categoría, tabla completa desplegable y cambio de temporada
+      sin parpadeo; clasificación de carrera con distribución de puntos por escudería.
+- [x] Carga de resultados (US-20): editor con totales y "Cancelar cambios".
+- [x] Personal (US-23): totales, búsqueda y filtro por escudería; diálogos restyleados.
+- [x] Notificaciones y auditoría (US-9): bandeja con pendientes; auditoría con totales, búsqueda y filtro por estado.
+- [x] Corrección encontrada en el camino: el campeonato y el calendario no filtraban por categoría (se habrían
+      mezclado F1 y F2). La API acepta `category` opcional en `/races` y `/races/standings`.
+
+**Horas reales**: 4 h (informadas por el equipo; sesión del 2026-10-03, implementación asistida por IA).
+
+**Falta para cerrar**: ninguno. Plan: [docs/plans/T-6-visual-design.md](docs/plans/T-6-visual-design.md).
 
 ### T-1 — Autenticación mínima con roles [equipo]
 
@@ -117,13 +142,10 @@ años anteriores para poder mostrarse en la demo.
 - `session.impersonatedBy` en schema y migración (lo declara el plugin `admin` de Better Auth 1.7.5).
 - Los endpoints `admin` de Better Auth no se exponen por HTTP: allowlist de auth + port interno.
 
-**Preguntas abiertas para el PO**
-1. ¿Se ratifica que la baja es terminal y que email y legajo no se reutilizan?
-2. ¿El cargo queda como texto libre o se define una lista cerrada para US-23?
-3. ¿Se ratifica que el teléfono es obligatorio con validación flexible?
-4. ¿Se permite reasignar escudería en una cuenta activa y US-9 guardará la escudería histórica?
-5. ¿El listado administrativo incluye siempre las cuentas dadas de baja?
-6. ¿Se ratifica que la contraseña inicial se entrega fuera del sistema hasta que exista US-26?
+**Preguntas al PO**: ratificadas por el Grupo Naranja el 2026-10-03 (baja terminal sin reutilizar email ni
+legajo, cargo de texto libre, teléfono obligatorio con validación flexible, reasignación de escudería con historial
+en US-9, listado con cuentas dadas de baja y contraseña inicial entregada fuera del sistema). Ver
+[`docs/preguntas-po.md`](docs/preguntas-po.md) R17–R22.
 
 **Horas reales**: 2 h en total entre T-1, T-2 y US-23 (el equipo no registró el detalle por tarea).
 
@@ -168,8 +190,8 @@ años anteriores para poder mostrarse en la demo.
   re-notificar ([ADR 0008](docs/adr/0008-revisiones-de-resultados.md)).
 - Se incluyen los datos de demostración de 5 temporadas (2021–2025) que necesita US-5.
 
-**Preguntas abiertas para el PO**
-1. ¿F2, F3 y F1 Academy usan la misma escala de puntos que F1?
+**Preguntas al PO**: ratificadas el 2026-10-03 (misma escala de puntos para todas las categorías y sólo
+clasificados, sin DNF/DSQ, en el Sprint 1). Ver [`docs/preguntas-po.md`](docs/preguntas-po.md) R15–R16.
 
 **Horas reales**: 0,5 h (sesión del 2026-09-28, 09:42–10:15, implementación asistida por IA).
 

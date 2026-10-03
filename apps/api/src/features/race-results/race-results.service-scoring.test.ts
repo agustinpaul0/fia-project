@@ -42,8 +42,8 @@ describe('RaceResultsService: puntos y revisiones', () => {
   })
 
   it('lista las carreras de una temporada y obtiene una clasificación vacía', async () => {
-    expect((await fixture.service.listSeason(2025)).map((r) => r.id)).toContain(RACE.id)
-    expect(await fixture.service.listSeason(1990)).toEqual([])
+    expect((await fixture.service.listSeason({ season: 2025 })).map((r) => r.id)).toContain(RACE.id)
+    expect(await fixture.service.listSeason({ season: 1990 })).toEqual([])
     expect((await fixture.service.getClassification(RACE.id)).results).toEqual([])
   })
 })

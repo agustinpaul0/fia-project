@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { raceClassificationPath, racesOfSeasonPath } from './api-paths'
+import { raceClassificationPath, racesOfSeasonPath, seasonStandingsPath } from './api-paths'
 import { raceClassificationBodySchema, raceListQuerySchema } from './race-classification'
 
 const driver = (n: number): { driverId: string } => ({
@@ -51,8 +51,21 @@ describe('query y rutas de carreras', () => {
     expect(raceListQuerySchema.safeParse({ season: '2101' }).success).toBe(false)
   })
 
+  it('acepta filtrar por el código de una categoría', () => {
+    expect(raceListQuerySchema.parse({ season: '2024', category: 'F2' })).toEqual({
+      season: 2024,
+      category: 'F2',
+    })
+    expect(
+      raceListQuerySchema.safeParse({ season: '2024', category: 'f2' }).error?.issues[0]?.message,
+    ).toBe('La categoría no es válida.')
+  })
+
   it('arma las rutas de la API', () => {
     expect(racesOfSeasonPath(2024)).toBe('/races?season=2024')
+    expect(racesOfSeasonPath(2024, 'F1A')).toBe('/races?season=2024&category=F1A')
+    expect(seasonStandingsPath(2024)).toBe('/races/standings?season=2024')
+    expect(seasonStandingsPath(2024, 'F2')).toBe('/races/standings?season=2024&category=F2')
     expect(raceClassificationPath('abc')).toBe('/races/abc/classification')
   })
 })

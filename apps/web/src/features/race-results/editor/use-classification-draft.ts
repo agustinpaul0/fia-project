@@ -14,6 +14,7 @@ export type ClassificationDraft = {
   readonly remove: (index: number) => void
   readonly choose: (index: number, driverId: string) => void
   readonly move: (index: number, offset: -1 | 1) => void
+  readonly reset: () => void
 }
 
 export const useClassificationDraft = (initial: readonly string[]): ClassificationDraft => {
@@ -29,5 +30,6 @@ export const useClassificationDraft = (initial: readonly string[]): Classificati
     remove: (index) => setRows((current) => removeRow(current, index)),
     choose: (index, driverId) => setRows((current) => setRow(current, { index, driverId })),
     move: (index, offset) => setRows((current) => moveRow(current, { index, offset })),
+    reset: () => setRows(toDraftRows(initial)),
   }
 }

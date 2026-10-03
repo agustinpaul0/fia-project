@@ -20,11 +20,22 @@ export type SaveClassificationInput = {
   readonly body: RaceClassificationBody
 }
 
-export const fetchSeasonRaces = (year: number): Promise<readonly RaceSummary[]> =>
-  apiRequest({ path: racesOfSeasonPath(year), schema: raceSummaryListSchema })
+export type SeasonScope = {
+  readonly season: number
+  readonly category: string | null
+}
 
-export const fetchSeasonStandings = (year: number): Promise<readonly DriverStanding[]> =>
-  apiRequest({ path: seasonStandingsPath(year), schema: driverStandingListSchema })
+export const fetchSeasonRaces = ({
+  season,
+  category,
+}: SeasonScope): Promise<readonly RaceSummary[]> =>
+  apiRequest({ path: racesOfSeasonPath(season, category), schema: raceSummaryListSchema })
+
+export const fetchSeasonStandings = ({
+  season,
+  category,
+}: SeasonScope): Promise<readonly DriverStanding[]> =>
+  apiRequest({ path: seasonStandingsPath(season, category), schema: driverStandingListSchema })
 
 export const fetchRaceClassification = (raceId: string): Promise<RaceClassification> =>
   apiRequest({ path: raceClassificationPath(raceId), schema: raceClassificationSchema })

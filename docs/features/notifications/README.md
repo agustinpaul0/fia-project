@@ -68,8 +68,11 @@ versión, así que dos confirmaciones simultáneas no se pisan.
 
 ## Pantallas
 
-- `/notifications` (personal de escudería): tarjetas con carrera, tipo, "Puntaje publicado" o "Puntaje corregido
-  (revisión N)", puntos sumados y botón **Confirmar recepción**. Al confirmar aparece un aviso y la tarjeta
-  desaparece. El encabezado muestra **Notificaciones** con la cantidad de pendientes.
-- `/admin/notifications` (FIA): tabla con carrera, escudería, revisión, estado y "nombre · fecha y hora" de quien
-  confirmó.
+- `/notifications` (personal de escudería): encabezado con la cantidad de pendientes y tarjetas con tipo de carrera,
+  carrera, hora de publicación, "Puntaje publicado" o "Puntaje corregido (revisión N)", puntos sumados por la
+  escudería y botón **Confirmar recepción**. Al confirmar aparece un aviso y la tarjeta desaparece. El encabezado
+  de la app muestra **Notificaciones (N)** con la cantidad de pendientes.
+- `/admin/notifications` (FIA): totales (registros, confirmadas y pendientes con porcentaje), búsqueda por carrera o
+  escudería, filtro Todas / Confirmadas / Pendientes y tabla numerada con carrera, escudería, revisión, estado y
+  nombre y fecha y hora (Argentina) de quien confirmó. Las pendientes se resaltan en amarillo.
+- Estilo según [ADR 0009](../../adr/0009-sistema-visual.md).

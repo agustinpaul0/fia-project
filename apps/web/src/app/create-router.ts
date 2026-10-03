@@ -11,6 +11,7 @@ export const createAppRouter = (queryClient: QueryClient) =>
     defaultErrorComponent: RouteErrorFallback,
     defaultNotFoundComponent: NotFoundPage,
     defaultPreload: 'intent',
+    defaultViewTransition: true,
   })
 
 export type AppRouter = ReturnType<typeof createAppRouter>

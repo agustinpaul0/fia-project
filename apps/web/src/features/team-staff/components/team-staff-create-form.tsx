@@ -56,7 +56,7 @@ export const TeamStaffCreateForm = ({ teams, onCancel, onSubmit }: Props): React
         <Button type="button" variant="outline" onClick={onCancel}>
           Cancelar
         </Button>
-        <Button type="submit" disabled={loading}>
+        <Button type="submit" variant="accent" className="shadow-brutal-sm" disabled={loading}>
           {loading ? 'Guardando...' : 'Crear cuenta'}
         </Button>
       </DialogFooter>

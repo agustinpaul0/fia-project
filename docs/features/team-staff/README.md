@@ -79,8 +79,13 @@ Restricciones: `team_staff_first_name_not_blank`, `team_staff_last_name_not_blan
 ## Pantallas
 
 - `/admin/team-staff` → `TeamStaffSection`:
-  - Listado completo en tabla con nombre, escudería, cargo, email, teléfono, legajo y estado (activo/inactivo con badge).
+  - Totales de integrantes activos y escuderías vinculadas (sólo cuentas activas).
+  - Búsqueda por nombre, email, escudería o legajo (sin distinguir tildes ni mayúsculas), filtro por escudería y
+    botón **Limpiar**.
+  - Listado completo en tabla con iniciales, nombre y legajo, email, teléfono, escudería (con su color), cargo y
+    estado (activo/inactivo). Las acciones se deshabilitan en cuentas dadas de baja.
   - Diálogo de alta con validación inline y aviso de entrega de credenciales.
   - Diálogo de edición precargado con bloqueo de email y legajo.
   - Diálogo de confirmación de baja con advertencia de irreversibilidad.
   - Protegido por el guard `RequireFiaAdmin`.
+  - Estilo según [ADR 0009](../../adr/0009-sistema-visual.md).

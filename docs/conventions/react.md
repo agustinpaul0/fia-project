@@ -23,5 +23,6 @@
 - Mutaciones que editan registros envían la `version` con la que se abrió el formulario; ante
   `STALE_VERSION` se ofrece recargar.
 - Accesibilidad: roles y labels en elementos interactivos; los tests buscan por rol/texto, no por clases.
-- Estilos con clases de Tailwind y tokens del tema; nada de CSS suelto por componente.
+- Estilos con clases de Tailwind y tokens del tema; nada de CSS suelto por componente. Sistema visual y primitivas
+  de marca: [`ui.md`](ui.md).
 - Skill de referencia: `vercel-react-best-practices`.

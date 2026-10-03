@@ -3,9 +3,24 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background font-body text-foreground antialiased;
   }
   html {
     @apply font-sans;
+  }
+  ::selection {
+    background: #ffcc00;
+    color: #1a1a1a;
+  }
+}
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  select:not(:disabled),
+  summary {
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: not-allowed;
   }
 }

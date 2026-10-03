@@ -1,25 +1,16 @@
 import { Outlet } from '@tanstack/react-router'
 import type { ReactNode } from 'react'
+import { AppFooter } from '@/components/brand/app-footer'
+import { AppHeader } from '@/components/brand/app-header'
 import { Toaster } from '@/components/ui/sonner'
-import { UserNav } from '@/features/auth/components/user-nav'
-import { HealthBadge } from '@/features/health/components/health-badge'
-import { MainNav } from './main-nav'
 
 export const RootLayout = (): ReactNode => (
-  <div className="min-h-screen bg-background text-foreground">
-    <header className="flex items-center justify-between border-b px-6 py-4">
-      <div className="flex items-center gap-6">
-        <h1 className="text-lg font-bold">FIA — Sistema de gestión</h1>
-        <MainNav />
-      </div>
-      <div className="flex items-center gap-4">
-        <UserNav />
-        <HealthBadge />
-      </div>
-    </header>
-    <main className="mx-auto max-w-4xl p-6">
+  <div className="flex min-h-screen flex-col bg-surface font-body text-on-surface">
+    <AppHeader />
+    <main className="flex w-full flex-1 flex-col bg-surface">
       <Outlet />
     </main>
+    <AppFooter />
     <Toaster richColors />
   </div>
 )

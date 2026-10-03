@@ -4,17 +4,22 @@ import type {
   RaceClassification,
   RaceSummary,
 } from '@fia/shared/contracts'
-import { type UseQueryResult, useQuery } from '@tanstack/react-query'
+import { keepPreviousData, type UseQueryResult, useQuery } from '@tanstack/react-query'
 import { raceQueryKeys } from '../api/race-query-keys'
 import {
   fetchRaceClassification,
   fetchRaceDrivers,
   fetchSeasonRaces,
   fetchSeasonStandings,
+  type SeasonScope,
 } from '../api/race-results-api'
 
-export const useSeasonRaces = (year: number): UseQueryResult<readonly RaceSummary[]> =>
-  useQuery({ queryKey: raceQueryKeys.season(year), queryFn: () => fetchSeasonRaces(year) })
+export const useSeasonRaces = (scope: SeasonScope): UseQueryResult<readonly RaceSummary[]> =>
+  useQuery({
+    queryKey: raceQueryKeys.season(scope),
+    queryFn: () => fetchSeasonRaces(scope),
+    placeholderData: keepPreviousData,
+  })
 
 export const useRaceClassification = (raceId: string): UseQueryResult<RaceClassification> =>
   useQuery({
@@ -25,5 +30,9 @@ export const useRaceClassification = (raceId: string): UseQueryResult<RaceClassi
 export const useRaceDrivers = (raceId: string): UseQueryResult<readonly EligibleDriver[]> =>
   useQuery({ queryKey: raceQueryKeys.drivers(raceId), queryFn: () => fetchRaceDrivers(raceId) })
 
-export const useSeasonStandings = (year: number): UseQueryResult<readonly DriverStanding[]> =>
-  useQuery({ queryKey: raceQueryKeys.standings(year), queryFn: () => fetchSeasonStandings(year) })
+export const useSeasonStandings = (scope: SeasonScope): UseQueryResult<readonly DriverStanding[]> =>
+  useQuery({
+    queryKey: raceQueryKeys.standings(scope),
+    queryFn: () => fetchSeasonStandings(scope),
+    placeholderData: keepPreviousData,
+  })

@@ -39,7 +39,7 @@ describe('ClassificationEditor', () => {
   it('agrega, reordena y guarda enviando la versión y el orden exacto', async () => {
     const calls = mockFetchRoutes({ [PUT]: () => jsonResponse(aClassification()) })
     renderEditor()
-    fireEvent.click(screen.getByRole('button', { name: 'Agregar piloto' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Agregar piloto a la clasificación' }))
     fireEvent.change(selectFor(3), { target: { value: idOf(3) } })
     fireEvent.click(screen.getByRole('button', { name: 'Subir la posición 3' }))
     fireEvent.click(screen.getByRole('button', { name: 'Guardar resultado' }))
@@ -50,15 +50,15 @@ describe('ClassificationEditor', () => {
 
   it('no ofrece pilotos que ya ocupan otra posición', () => {
     renderEditor()
-    fireEvent.click(screen.getByRole('button', { name: 'Agregar piloto' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Agregar piloto a la clasificación' }))
     const options = [...selectFor(3).querySelectorAll('option')].map((o) => o.value)
     expect(options).toEqual(['', idOf(3)])
-    expect(screen.getByRole('button', { name: 'Agregar piloto' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Agregar piloto a la clasificación' })).toBeDisabled()
   })
 
   it('bloquea el guardado mientras falte elegir un piloto', () => {
     renderEditor()
-    fireEvent.click(screen.getByRole('button', { name: 'Agregar piloto' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Agregar piloto a la clasificación' }))
     expect(screen.getByText(INCOMPLETE_MESSAGE)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Guardar resultado' })).toBeDisabled()
   })
@@ -70,5 +70,18 @@ describe('ClassificationEditor', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Quitar la posición 1' }))
     expect(selectFor(1)).toHaveValue(idOf(2))
     fireEvent.click(screen.getByRole('button', { name: 'Bajar la posición 1' }))
+  })
+
+  it('muestra los totales y descarta los cambios con Cancelar', () => {
+    renderEditor()
+    expect(screen.getByText('2 de 3 inscriptos')).toBeInTheDocument()
+    expect(screen.getByText('43 pts')).toBeInTheDocument()
+    expect(screen.getByText('Piloto ganador')).toBeInTheDocument()
+    expect(screen.getByText('Segundo lugar')).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Quitar la posición 1' }))
+    expect(screen.getByText('1 de 3 inscriptos')).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Cancelar cambios' }))
+    expect(selectFor(1)).toHaveValue(idOf(1))
+    expect(screen.getByText('2 de 3 inscriptos')).toBeInTheDocument()
   })
 })

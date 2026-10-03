@@ -31,6 +31,22 @@ describe('GET /races/standings (público)', () => {
     expect(driverStandingListSchema.parse(await response.json())).toEqual([])
   })
 
+  it('separa el campeonato de cada categoría', async () => {
+    const testApp = createTestApp({ races: [RACE], drivers: DRIVERS, sessionUser: FIA_ADMIN })
+    const put = { method: 'PUT', path: `/races/${RACE.id}/classification` } as const
+    await sendJson(testApp.app, { ...put, body: classificationBody(DRIVERS) })
+    const f1 = await testApp.app.request('/races/standings?season=2025&category=F1')
+    const f2 = await testApp.app.request('/races/standings?season=2025&category=F2')
+    expect(driverStandingListSchema.parse(await f1.json())).toHaveLength(3)
+    expect(driverStandingListSchema.parse(await f2.json())).toEqual([])
+  })
+
+  it('valida la categoría', async () => {
+    const response = await createTestApp().app.request('/races/standings?season=2025&category=x')
+    expect(response.status).toBe(400)
+    expect((await readError(response)).fields).toHaveProperty('category')
+  })
+
   it('valida la temporada', async () => {
     const response = await createTestApp().app.request('/races/standings')
     expect(response.status).toBe(400)

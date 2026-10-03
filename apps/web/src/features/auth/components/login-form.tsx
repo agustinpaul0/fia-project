@@ -1,77 +1,59 @@
-import { useNavigate } from '@tanstack/react-router'
-import { type FormEvent, type ReactNode, useState } from 'react'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { signIn } from '@/lib/auth-client'
+import { ArrowRight, KeyRound, Mail } from 'lucide-react'
+import type { ReactNode } from 'react'
+import { type LoginState, useLogin } from '../hooks/use-login'
+import { LoginCard } from './login-card'
+import { LoginField, PasswordField } from './login-field'
 
-export const LoginForm = (): ReactNode => {
-  const navigate = useNavigate()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
+const LoginFormFields = ({ login }: { readonly login: LoginState }): ReactNode => (
+  <form onSubmit={login.submit} className="flex flex-col gap-5">
+    {login.error !== null && (
+      <p
+        role="alert"
+        className="border-2 border-secondary bg-secondary/15 px-3 py-2 text-[#fecaca] text-sm"
+      >
+        {login.error}
+      </p>
+    )}
+    <LoginField
+      id="email"
+      label="Correo electrónico"
+      hint="ID oficial"
+      icon={<Mail className="size-4" aria-hidden />}
+      type="email"
+      required
+      value={login.email}
+      onChange={(e) => login.setEmail(e.target.value)}
+      disabled={login.loading}
+      placeholder="admin@fia.com"
+    />
+    <PasswordField
+      id="password"
+      label="Contraseña"
+      hint="Token secreto"
+      icon={<KeyRound className="size-4" aria-hidden />}
+      required
+      value={login.password}
+      onChange={(e) => login.setPassword(e.target.value)}
+      disabled={login.loading}
+      placeholder="••••••••••••"
+    />
+    <button
+      type="submit"
+      disabled={login.loading}
+      className="mt-2 flex w-full items-center justify-center gap-2 border-2 border-primary bg-[#facc15] py-3 font-bold font-headline text-primary text-sm uppercase tracking-wider shadow-[4px_4px_0px_0px_#ffffff] transition-all hover:bg-[#e6b800] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[2px_2px_0px_0px_#ffffff] disabled:opacity-60"
+    >
+      <span>{login.loading ? 'Iniciando sesión...' : '[ Iniciar sesión ]'}</span>
+      <ArrowRight className="size-4" aria-hidden />
+    </button>
+  </form>
+)
 
-  const handleSubmit = async (event: FormEvent): Promise<void> => {
-    event.preventDefault()
-    setError(null)
-    setLoading(true)
-    const { error: signInError } = await signIn.email({ email, password })
-    setLoading(false)
-    if (signInError) {
-      setError(signInError.message ?? 'Credenciales incorrectas.')
-      return
-    }
-    void navigate({ to: '/' })
-  }
-
-  return (
-    <Card className="mx-auto w-full max-w-md">
-      <CardHeader>
-        <CardTitle>Iniciar sesión</CardTitle>
-        <CardDescription>Ingresá tus credenciales para acceder al sistema.</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          {error !== null && (
-            <Alert variant="destructive">
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
-          <div className="flex flex-col gap-1">
-            <label htmlFor="email" className="text-sm font-medium">
-              Correo electrónico
-            </label>
-            <input
-              id="email"
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={loading}
-              className="rounded-md border bg-background px-3 py-2 text-sm"
-              placeholder="admin@fia.com"
-            />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="password" className="text-sm font-medium">
-              Contraseña
-            </label>
-            <input
-              id="password"
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              disabled={loading}
-              className="rounded-md border bg-background px-3 py-2 text-sm"
-            />
-          </div>
-          <Button type="submit" disabled={loading} className="w-full">
-            {loading ? 'Iniciando sesión...' : 'Ingresar'}
-          </Button>
-        </form>
-      </CardContent>
-    </Card>
-  )
-}
+export const LoginForm = (): ReactNode => (
+  <div className="flex w-full flex-1 items-center justify-center px-6 py-12">
+    <div className="w-full max-w-lg">
+      <LoginCard>
+        <LoginFormFields login={useLogin()} />
+      </LoginCard>
+    </div>
+  </div>
+)

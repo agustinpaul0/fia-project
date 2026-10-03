@@ -17,7 +17,18 @@ describe('LoginForm', () => {
     render(<LoginForm />)
     expect(screen.getByLabelText('Correo electrónico')).toBeInTheDocument()
     expect(screen.getByLabelText('Contraseña')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Ingresar' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '[ Iniciar sesión ]' })).toBeInTheDocument()
+  })
+
+  it('permite mostrar y volver a ocultar la contraseña', async () => {
+    const user = userEvent.setup()
+    render(<LoginForm />)
+    const password = screen.getByLabelText('Contraseña')
+    expect(password).toHaveAttribute('type', 'password')
+    await user.click(screen.getByRole('button', { name: 'Mostrar contraseña' }))
+    expect(password).toHaveAttribute('type', 'text')
+    await user.click(screen.getByRole('button', { name: 'Ocultar contraseña' }))
+    expect(password).toHaveAttribute('type', 'password')
   })
 
   it('muestra mensaje de error si las credenciales fallan', async () => {
@@ -30,7 +41,7 @@ describe('LoginForm', () => {
     render(<LoginForm />)
     await user.type(screen.getByLabelText('Correo electrónico'), 'admin@fia.com')
     await user.type(screen.getByLabelText('Contraseña'), 'AdminPassword123!')
-    await user.click(screen.getByRole('button', { name: 'Ingresar' }))
+    await user.click(screen.getByRole('button', { name: '[ Iniciar sesión ]' }))
 
     expect(
       await screen.findByText('El correo electrónico o la contraseña son incorrectos.'),
@@ -45,7 +56,7 @@ describe('LoginForm', () => {
     render(<LoginForm />)
     await user.type(screen.getByLabelText('Correo electrónico'), 'admin@fia.com')
     await user.type(screen.getByLabelText('Contraseña'), 'AdminPassword123!')
-    await user.click(screen.getByRole('button', { name: 'Ingresar' }))
+    await user.click(screen.getByRole('button', { name: '[ Iniciar sesión ]' }))
 
     expect(mockNavigate).toHaveBeenCalledWith({ to: '/' })
   })

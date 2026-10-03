@@ -20,7 +20,9 @@ describe('DrizzleRaceResultsRepository lecturas (Postgres real)', () => {
     withRollback(connection, async (tx) => {
       const f = await seedRacingFixture(tx)
       const repo = createDrizzleRaceResultsRepository(tx)
-      expect((await repo.listSeason(2099)).map((r) => r.id)).toEqual([f.raceId])
+      expect((await repo.listSeason({ season: 2099 })).map((r) => r.id)).toEqual([f.raceId])
+      expect(await repo.listSeason({ season: 2099, category: 'CT' })).toHaveLength(1)
+      expect(await repo.listSeason({ season: 2099, category: 'ZZ' })).toEqual([])
       expect(await repo.findRace('00000000-0000-4000-8000-0000000000ff')).toBeNull()
       const found = await repo.findDrivers(f.driverIds)
       expect(found.every((d) => d.categoryId === f.categoryId && d.teamId === f.teamId)).toBe(true)
@@ -52,7 +54,7 @@ describe('DrizzleRaceResultsRepository lecturas (Postgres real)', () => {
         nextRevision: 1,
         entries,
       })
-      const rows = await repo.listSeasonResults(2099)
+      const rows = await repo.listSeasonResults({ season: 2099 })
       expect(rows.map((r) => [r.driverCode, r.position, r.points])).toEqual(
         expect.arrayContaining([
           ['NOR', 1, 25],
@@ -60,6 +62,8 @@ describe('DrizzleRaceResultsRepository lecturas (Postgres real)', () => {
           ['VER', 3, 23],
         ]),
       )
-      expect(await repo.listSeasonResults(1950)).toEqual([])
+      expect(await repo.listSeasonResults({ season: 1950 })).toEqual([])
+      expect(await repo.listSeasonResults({ season: 2099, category: 'CT' })).toHaveLength(3)
+      expect(await repo.listSeasonResults({ season: 2099, category: 'ZZ' })).toEqual([])
     }))
 })
