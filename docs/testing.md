@@ -67,9 +67,25 @@ Reglas:
 | Desarrollo | `pnpm test:watch` | unit + contrato + fuzz (re-ejecuta al guardar) |
 | `git push` (hook) | `pnpm test:coverage` | unit + contrato + fuzz + tipos, con umbral de cobertura |
 | Antes del PR | `pnpm verify` | lo anterior + integración + mutación + build |
-| CI | los mismos pasos que `pnpm verify`, en 5 jobs paralelos | calidad (lint, tipos, build), tests con Postgres de servicio y mutación por paquete con caché incremental de Stryker |
+| CI | los mismos pasos que `pnpm verify`, en 8 jobs paralelos | calidad (lint, tipos, build), tests con Postgres de servicio y mutación en 6 shards (`shared`, `api` y 4 de `web`) con caché incremental de Stryker |
 
 **La suite completa se corre siempre antes de abrir un PR**, aunque el cambio parezca chico.
+
+## Velocidad de la suite
+
+- La web corre sobre `happy-dom` (no `jsdom`): mismo comportamiento en nuestros tests y la mitad del tiempo, algo
+  que en mutación se multiplica por cada mutante.
+- Stryker ignora los mutantes dentro de los atributos `className` y `style` (plugin
+  `stryker.ignore-styles.mjs`): cambiar una clase de Tailwind no es comportamiento y sólo agregaba tiempo y ruido.
+  Las reglas de negocio se siguen mutando completas.
+- La concurrencia de Stryker se adapta a los núcleos de la máquina (`availableParallelism() - 1`).
+- Mutación incremental: sólo se re-prueban los mutantes de archivos que cambiaron. En CI el archivo incremental se
+  restaura y se **guarda siempre** (aunque el job falle o se corte), con caché por rama y respaldo en `develop`.
+- `apps/web/stryker.config.mjs` acepta `STRYKER_SHARD` (`all` por defecto, `results`, `staff`, `notifications`,
+  `rest`) para repartir la mutación de la web en jobs paralelos; cada shard tiene su archivo incremental y su
+  reporte. Localmente se corre todo junto con `pnpm test:mutation`.
+- Referencia (2026-10-03, 16 núcleos): `pnpm test:coverage` ~10 s, `pnpm test:int` ~7 s y mutación completa de la
+  web desde cero ~4,5 min (antes >10 min; en CI se cortaba a los 30 min).
 
 ## Bases de datos
 
@@ -80,4 +96,5 @@ Reglas:
 ## Reportes
 
 - Cobertura HTML: `coverage/index.html`.
-- Mutación HTML: `<paquete>/reports/mutation/index.html` (mutantes sobrevivientes = tests a mejorar).
+- Mutación HTML: `<paquete>/reports/mutation/index.html` (en la web, un archivo por shard: `results.html`,
+  `staff.html`, …). Mutantes sobrevivientes = tests a mejorar.

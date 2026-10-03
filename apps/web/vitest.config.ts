@@ -8,7 +8,7 @@ export default defineProject({
   test: {
     name: 'web',
     include: ['src/**/*.test.{ts,tsx}'],
-    environment: 'jsdom',
+    environment: 'happy-dom',
     setupFiles: ['./vitest.setup.ts'],
   },
 })

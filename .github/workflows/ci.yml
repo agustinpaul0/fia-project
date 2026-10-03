@@ -75,19 +75,46 @@ jobs:
           retention-days: 7
 
   mutation:
-    name: Mutación (${{ matrix.package }})
+    name: Mutación (${{ matrix.name }})
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
         include:
-          - package: '@fia/shared'
+          - name: '@fia/shared'
+            package: '@fia/shared'
             dir: packages/shared
-          - package: '@fia/api'
+            shard: all
+            incremental: stryker-incremental.json
+          - name: '@fia/api'
+            package: '@fia/api'
             dir: apps/api
-          - package: '@fia/web'
+            shard: all
+            incremental: stryker-incremental.json
+          - name: '@fia/web resultados'
+            package: '@fia/web'
             dir: apps/web
+            shard: results
+            incremental: stryker-incremental-results.json
+          - name: '@fia/web personal'
+            package: '@fia/web'
+            dir: apps/web
+            shard: staff
+            incremental: stryker-incremental-staff.json
+          - name: '@fia/web notificaciones'
+            package: '@fia/web'
+            dir: apps/web
+            shard: notifications
+            incremental: stryker-incremental-notifications.json
+          - name: '@fia/web resto'
+            package: '@fia/web'
+            dir: apps/web
+            shard: rest
+            incremental: stryker-incremental-rest.json
+    env:
+      STRYKER_SHARD: ${{ matrix.shard }}
+      CACHE_PREFIX: stryker-v2-${{ matrix.dir }}-${{ matrix.shard }}
     steps:
       - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4
@@ -97,14 +124,21 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - name: Restaurar resultados incrementales de Stryker
-        uses: actions/cache@v4
+        uses: actions/cache/restore@v4
         with:
-          path: ${{ matrix.dir }}/reports/stryker-incremental.json
-          key: stryker-${{ matrix.dir }}-${{ github.head_ref || github.ref_name }}-${{ github.sha }}
+          path: ${{ matrix.dir }}/reports/${{ matrix.incremental }}
+          key: ${{ env.CACHE_PREFIX }}-${{ github.head_ref || github.ref_name }}-${{ github.sha }}
           restore-keys: |
-            stryker-${{ matrix.dir }}-${{ github.head_ref || github.ref_name }}-
-            stryker-${{ matrix.dir }}-develop-
+            ${{ env.CACHE_PREFIX }}-${{ github.head_ref || github.ref_name }}-
+            ${{ env.CACHE_PREFIX }}-develop-
+            ${{ env.CACHE_PREFIX }}-main-
       - run: pnpm --filter ${{ matrix.package }} test:mutation
+      - name: Guardar resultados incrementales aunque el job falle
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ matrix.dir }}/reports/${{ matrix.incremental }}
+          key: ${{ env.CACHE_PREFIX }}-${{ github.head_ref || github.ref_name }}-${{ github.sha }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
