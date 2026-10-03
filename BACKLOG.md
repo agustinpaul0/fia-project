@@ -16,7 +16,7 @@ cual; lo agregado por el equipo implementador está marcado como **[equipo]**.
   Cargarlas con honestidad (incluye tiempo de tests, docs y review).
 - Horas reales del Sprint 1 informadas por el equipo: **14 h** en total. T-0 (setup, planificación y
   convenciones) 5,5 h · T-1 + T-2 + US-23 2 h · US-20 + US-9 + US-5 1 h · revisión, CI, integración y release 1,5 h ·
-  T-6 (diseño visual) 4 h.
+  cierre del sprint (T-6, T-4, T-7 y T-8) 4 h.
 - Dudas para el PO: [`docs/preguntas-po.md`](docs/preguntas-po.md).
 - Escala de Naranja: story points y business value en Fibonacci. SP ↔ horas: 1 = ≤ 12 h · 2 = 12–14 h ·
   3 = 14–16 h · 5 = 16–18 h.
@@ -36,12 +36,12 @@ cual; lo agregado por el equipo implementador está marcado como **[equipo]**.
 | US-5 | Ver resultados de carreras de los últimos años | 2 | 13 | 14 h | 0,25 h | Hecho | Agustín | T-2 | #5 |
 | T-5 | Revisión de US-23, CI, integración y release **[equipo]** | — | — | — | 1,5 h | Hecho | Agustín | — | #6, #7 |
 | T-6 | Diseño visual del Sprint 1 (mocks de Stitch) **[equipo]** | — | — | — | 4 h | Hecho | Agustín | US-5, US-9, US-20, US-23 | — |
-| T-4 | Formularios de US-23 con `react-hook-form` y el schema del contrato (errores por campo) **[equipo]** | — | — | — | sin registrar | Hecho | Agustín | US-23 | — |
-| T-7 | Seed con datos para la demo (`pnpm db:seed:demo`) **[equipo]** | — | — | — | sin registrar | Hecho | Agustín | US-9, US-20, US-23 | — |
-| T-8 | Velocidad de la suite de tests y de la mutación en CI **[equipo]** | — | — | — | sin registrar | Hecho | Agustín | — | — |
+| T-4 | Formularios de US-23 con `react-hook-form` y el schema del contrato (errores por campo) **[equipo]** | — | — | — | ver T-6 | Hecho | Agustín | US-23 | — |
+| T-7 | Seed con datos para la demo (`pnpm db:seed:demo`) **[equipo]** | — | — | — | ver T-6 | Hecho | Agustín | US-9, US-20, US-23 | — |
+| T-8 | Velocidad de la suite de tests y de la mutación en CI **[equipo]** | — | — | — | ver T-6 | Hecho | Agustín | — | — |
 
 **Horas reales del sprint: 14 h** (informadas por el equipo, incluyen el setup del proyecto): 10 h de T-0 a T-5 y
-4 h de T-6 (diseño visual).
+4 h de cierre (T-6 diseño visual, T-4 errores por campo, T-7 seed de la demo y T-8 velocidad de la suite).
 
 **Orden sugerido [equipo]**: T-1 y T-2 en paralelo → US-23 → US-20 → US-9. US-5 en paralelo apenas esté T-2.
 Las estimaciones de los habilitadores las hace el equipo **sin IA** (pauta de la cátedra para el Sprint 1).
@@ -66,7 +66,8 @@ agregar datos falsos ([ADR 0009](docs/adr/0009-sistema-visual.md)).
 - [x] Corrección encontrada en el camino: el campeonato y el calendario no filtraban por categoría (se habrían
       mezclado F1 y F2). La API acepta `category` opcional en `/races` y `/races/standings`.
 
-**Horas reales**: 4 h (informadas por el equipo; sesión del 2026-10-03, implementación asistida por IA).
+**Horas reales**: 4 h junto con T-4, T-7 y T-8 (informadas por el equipo; sesión del 2026-10-03, implementación
+asistida por IA).
 
 **Falta para cerrar**: ninguno. Plan: [docs/plans/T-6-visual-design.md](docs/plans/T-6-visual-design.md).
 
