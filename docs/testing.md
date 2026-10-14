@@ -58,9 +58,9 @@ Reglas:
 - Integración: cada test dentro de `withRollback(connection, async (tx) => …)`; nunca quedan datos.
 - Cada test prueba **un** comportamiento y su nombre lo describe en español.
 - Los archivos de test también respetan el tope de 100 líneas: se dividen por aspecto
-  (`categories.routes.read.test.ts`, `…write…`, `…concurrency…`, `…fuzz…`).
+  (`*.routes.read.test.ts`, `*.routes.write.test.ts`, `*.routes.errors.test.ts`).
 
-## Cuándo se corre cada suite
+## Cuándo se corre cada cosa
 
 | Momento | Comando | Incluye |
 |---|---|---|
@@ -98,3 +98,29 @@ Reglas:
 - Cobertura HTML: `coverage/index.html`.
 - Mutación HTML: `<paquete>/reports/mutation/index.html` (en la web, un archivo por shard: `results.html`,
   `staff.html`, …). Mutantes sobrevivientes = tests a mejorar.
+
+## Matriz de pruebas del incremento — Sprint 2 (US-2)
+
+Como parte de la **US-2** ("Realizar un testeo del nuevo incremento del producto"), se consolidó la matriz de pruebas del incremento entregable del Sprint 2, abarcando las interacciones entre los módulos de autenticación, personal/pilotos, sanciones, controles técnicos y mensajería cifrada.
+
+| ID Caso | US | Aspecto / Flujo | Entrada | Resultado Esperado | Estado |
+|---|---|---|---|---|---|
+| **TC-S2-01** | US-4 | Login con credenciales válidas | Email y contraseña de admin FIA | Sesión válida creada, redirección a panel administrativo | **PASÓ** |
+| **TC-S2-02** | US-4 | Rechazo de credenciales inválidas | Contraseña incorrecta | 401 con mensaje genérico ("Credenciales inválidas") sin enumeración de usuarios | **PASÓ** |
+| **TC-S2-03** | US-4 | Política deny-by-default | Petición anónima a ruta protegida | 401 / 403 según corresponda, sin filtración de datos | **PASÓ** |
+| **TC-S2-04** | US-10 | Inscripción de piloto en escudería | Datos válidos de titular en escudería del usuario | 201 Created, piloto visible en nómina oficial | **PASÓ** |
+| **TC-S2-05** | US-10 | Aislamiento y límites de equipo | Intento de cargar tercer titular o en equipo ajeno | 409 `TOO_MANY_MAIN_DRIVERS` / 403 Forbidden | **PASÓ** |
+| **TC-S2-06** | US-13 | Carga de sanciones oficiales | Comisario FIA registra multa / recargo | 201 Created, disponible en listado público de sanciones | **PASÓ** |
+| **TC-S2-07** | US-13 | Filtro público de sanciones | Consulta por temporada, escudería y tipo | 200 OK con listado filtrado ordenado cronológicamente | **PASÓ** |
+| **TC-S2-08** | US-21 | Control técnico vehicular | Dictamen de pesaje `passed` / `rejected` | 201 Created con fecha, tipo y notas técnicas | **PASÓ** |
+| **TC-S2-09** | US-21 | Consulta pública de controles | Escudería consulta inspecciones activas | 200 OK con dictamen oficial en tiempo real | **PASÓ** |
+| **TC-S2-10** | US-6 | Intercambio de claves públicas | Registro de JWKs ECDH y ECDSA | 200 OK, claves públicas indexadas por usuario | **PASÓ** |
+| **TC-S2-11** | US-6 | Cifrado y firma en cliente | Mensaje cifrado AES-GCM firmado con ECDSA | El servidor almacena sólo payload opaco en Base64 | **PASÓ** |
+| **TC-S2-12** | US-6 | Detección de alteración (tampering) | Payload manipulado en tránsito | Rechazo en cliente por firma digital no coincidente | **PASÓ** |
+| **TC-S2-13** | US-2 | Flujo integral del incremento | Ciclo completo: inspección técnica → sanción → chat E2E | 200/201 en todas las fases sin regresiones | **PASÓ** |
+
+### Resumen de ejecución
+- **Comando unificado**: `pnpm test:coverage`
+- **Total de pruebas**: 651 tests en 145 archivos.
+- **Cobertura obtenida**: Statements 94.06% · Branches 85.39% · Lines 94.17%.
+- **Defectos bloqueantes encontrados**: 0.
