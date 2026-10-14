@@ -29,4 +29,12 @@ export const RACING_ERRORS = {
     status: 422,
     message: 'Se alcanzó el límite reglamentario de pilotos para esta condición.',
   },
+  PENALTY_NOT_FOUND: {
+    status: 404,
+    message: 'La sanción solicitada no existe o fue eliminada.',
+  },
+  INVALID_PENALTY_TARGET: {
+    status: 400,
+    message: 'El piloto seleccionado no pertenece a la escudería indicada.',
+  },
 } as const satisfies Record<string, ErrorDefinition>

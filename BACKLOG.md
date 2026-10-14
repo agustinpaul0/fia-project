@@ -302,7 +302,7 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 |---|---|---|---|---|---|---|---|---|---|
 | US-4 | Iniciar sesión mediante credenciales seguras | 13 | 13 | 9 h | 1 h | Hecho | Santiago | T-1 | |
 | US-10 | Cargar la información de los pilotos titulares y suplentes | 5 | 13 | 7 h | 1 h | Hecho | Santiago | US-4, T-2 | |
-| US-13 | Cargar sanciones a pilotos o escuderías | 5 | 13 | 7,5 h | | En progreso | Santiago | US-4, US-10 | |
+| US-13 | Cargar sanciones a pilotos o escuderías | 5 | 13 | 7,5 h | 1 h | Hecho | Santiago | US-4, US-10 | |
 | US-21 | Ingresar fechas, tipos y resultado de controles técnicos por auto | 3 | 13 | 5 h | | Pendiente | — | US-4, US-13 | |
 | US-6 | Chats de mensajería cifrados de extremo a extremo | 13 | 13 | 9 h | | Pendiente | — | US-4 | |
 | US-2 | Realizar un testeo del nuevo incremento del producto | 5 | 13 | 7 h | | Pendiente | — | — | |
@@ -384,26 +384,28 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 
 | Tarea (Naranja) | Est. | Real | Hecha |
 |---|---|---|---|
-| Diseñar y desarrollar la opción para cargar sanciones en el área administrativa de la FIA | 1,5 h | | [ ] |
-| Crear la tabla en la base de datos para registrar las sanciones (fecha, sancionado, motivo, penalización y duración) | 1 h | | [ ] |
-| Crear el formulario con validaciones para cargar los datos de la sanción | 1,5 h | | [ ] |
-| Crear la conexión necesaria para que el listado de sanciones esté disponible para las escuderías y público en general | 1,5 h | | [ ] |
-| Diseñar e implementar el listado de sanciones para las escuderías y público en general | 2 h | | [ ] |
-| **Total** | **7,5 h** | | |
+| Diseñar y desarrollar la opción para cargar sanciones en el área administrativa de la FIA | 1,5 h | | [x] |
+| Crear la tabla en la base de datos para registrar las sanciones (fecha, sancionado, motivo, penalización y duración) | 1 h | | [x] |
+| Crear el formulario con validaciones para cargar los datos de la sanción | 1,5 h | | [x] |
+| Crear la conexión necesaria para que el listado de sanciones esté disponible para las escuderías y público en general | 1,5 h | | [x] |
+| Diseñar e implementar el listado de sanciones para las escuderías y público en general | 2 h | | [x] |
+| **Total** | **7,5 h** | **1 h** | |
 
 **Criterios de aceptación**
-- [ ] En menos de 10 minutos tiene que estar disponible la actualización del listado de las sanciones para las escuderías y público en general (en la web es en tiempo real/inmediato).
-- [ ] La opción para ver el listado debe estar disponible para escuderías y público general además de la administración FIA (sólo la FIA puede actualizarlo o cargarlo).
-- [ ] El listado debe mostrar todos los datos necesarios para saber a qué piloto o escudería se le otorgó.
-- [ ] Debe contar con filtros por fecha/temporada, tipo de sanción, escudería y cualquier otra relevante.
-- [ ] Las sanciones en el listado duran 5 años (alcance histórico acorde a US-5).
+- [x] En menos de 10 minutos tiene que estar disponible la actualización del listado de las sanciones para las escuderías y público en general (en la web es en tiempo real/inmediato).
+- [x] La opción para ver el listado debe estar disponible para escuderías y público general además de la administración FIA (sólo la FIA puede actualizarlo o cargarlo).
+- [x] El listado debe mostrar todos los datos necesarios para saber a qué piloto o escudería se le otorgó.
+- [x] Debe contar con filtros por fecha/temporada, tipo de sanción, escudería y cualquier otra relevante.
+- [x] Las sanciones en el listado duran 5 años (alcance histórico acorde a US-5).
 
 **Acuerdos con el PO (Grupo Naranja)**
 - Roles: Sólo el personal administrativo de la FIA (`fia_admin`) puede cargar y registrar sanciones. Escuderías y público en general tienen acceso de solo lectura.
 - Tipos de sanción: recargo de tiempo, puestos en grilla, quita de puntos, descalificación, multa económica y apercibimiento.
 - Alcance: sanciones aplicadas tanto a un piloto específico (asociado a su escudería) como a una escudería directamente.
 
-**Falta para cerrar**: diseño técnico e implementación. Plan: [docs/plans/US-13-penalties.md](docs/plans/US-13-penalties.md).
+**Horas reales**: 1 h (sesión del 2026-10-14, implementación asistida por IA).
+
+**Falta para cerrar**: ninguno. Plan: [docs/plans/US-13-penalties.md](docs/plans/US-13-penalties.md).
 
 ---
 

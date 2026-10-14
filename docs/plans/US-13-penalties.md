@@ -1,7 +1,7 @@
 # Plan: US-13 — Cargar sanciones a pilotos o escuderías
 
 - **Ítem del backlog**: US-13
-- **Autor**: Santiago / Antigravity · **Fecha**: 2026-10-14 · **Estado**: Borrador
+- **Autor**: Santiago / Antigravity · **Fecha**: 2026-10-14 · **Estado**: Implementado
 - **Rama**: `feat/us-13-penalties`
 
 ## Objetivo

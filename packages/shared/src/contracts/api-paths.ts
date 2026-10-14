@@ -7,6 +7,7 @@ export const API_PATHS = {
   races: '/races',
   notifications: '/notifications',
   teamDrivers: '/team-drivers',
+  penalties: '/penalties',
 } as const
 
 export const categoryPath = (id: string): string => `${API_PATHS.categories}/${id}`

@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as ResultsRouteImport } from './routes/results'
+import { Route as SanctionsRouteImport } from './routes/sanctions'
 import { Route as AdminNotificationsRouteImport } from './routes/admin.notifications'
 import { Route as AdminTeamStaffRouteImport } from './routes/admin.team-staff'
 import { Route as RacesRaceIdRouteImport } from './routes/races.$raceId'
@@ -38,6 +39,11 @@ const NotificationsRoute = NotificationsRouteImport.update({
 const ResultsRoute = ResultsRouteImport.update({
   id: '/results',
   path: '/results',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SanctionsRoute = SanctionsRouteImport.update({
+  id: '/sanctions',
+  path: '/sanctions',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminNotificationsRoute = AdminNotificationsRouteImport.update({
@@ -76,6 +82,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/results': typeof ResultsRoute
+  '/sanctions': typeof SanctionsRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/team-staff': typeof AdminTeamStaffRoute
   '/races/$raceId': typeof RacesRaceIdRoute
@@ -88,6 +95,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/results': typeof ResultsRoute
+  '/sanctions': typeof SanctionsRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/team-staff': typeof AdminTeamStaffRoute
   '/races/$raceId': typeof RacesRaceIdRoute
@@ -101,6 +109,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/results': typeof ResultsRoute
+  '/sanctions': typeof SanctionsRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/team-staff': typeof AdminTeamStaffRoute
   '/races/$raceId': typeof RacesRaceIdRoute
@@ -115,6 +124,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/notifications'
     | '/results'
+    | '/sanctions'
     | '/admin/notifications'
     | '/admin/team-staff'
     | '/races/$raceId'
@@ -127,6 +137,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/notifications'
     | '/results'
+    | '/sanctions'
     | '/admin/notifications'
     | '/admin/team-staff'
     | '/races/$raceId'
@@ -139,6 +150,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/notifications'
     | '/results'
+    | '/sanctions'
     | '/admin/notifications'
     | '/admin/team-staff'
     | '/races/$raceId'
@@ -152,6 +164,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   NotificationsRoute: typeof NotificationsRoute
   ResultsRoute: typeof ResultsRoute
+  SanctionsRoute: typeof SanctionsRoute
   AdminNotificationsRoute: typeof AdminNotificationsRoute
   AdminTeamStaffRoute: typeof AdminTeamStaffRoute
   RacesRaceIdRoute: typeof RacesRaceIdRoute
@@ -188,6 +201,13 @@ declare module '@tanstack/react-router' {
       path: '/results'
       fullPath: '/results'
       preLoaderRoute: typeof ResultsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sanctions': {
+      id: '/sanctions'
+      path: '/sanctions'
+      fullPath: '/sanctions'
+      preLoaderRoute: typeof SanctionsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/notifications': {
@@ -240,6 +260,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   NotificationsRoute: NotificationsRoute,
   ResultsRoute: ResultsRoute,
+  SanctionsRoute: SanctionsRoute,
   AdminNotificationsRoute: AdminNotificationsRoute,
   AdminTeamStaffRoute: AdminTeamStaffRoute,
   RacesRaceIdRoute: RacesRaceIdRoute,

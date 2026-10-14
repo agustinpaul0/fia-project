@@ -12,14 +12,15 @@ describe('MainNav', () => {
     vi.unstubAllGlobals()
   })
 
-  it('ofrece a todos el acceso a inicio y a resultados', async () => {
+  it('ofrece a todos el acceso a inicio, a resultados y a sanciones', async () => {
     renderWithRouter(<MainNav userRole={null} />)
     expect(await screen.findByRole('link', { name: 'Resultados' })).toHaveAttribute(
       'href',
       '/results',
     )
+    expect(screen.getByRole('link', { name: 'Sanciones' })).toHaveAttribute('href', '/sanctions')
     expect(screen.getByRole('link', { name: 'Inicio' })).toHaveAttribute('href', '/')
-    expect(linkNames()).toEqual(['Inicio', 'Resultados'])
+    expect(linkNames()).toEqual(['Inicio', 'Resultados', 'Sanciones'])
   })
 
   it('suma las secciones administrativas para fia_admin', async () => {
