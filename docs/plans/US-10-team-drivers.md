@@ -1,7 +1,7 @@
 # Plan: US-10 — Cargar la información de los pilotos titulares y suplentes
 
 - **Ítem del backlog**: US-10
-- **Autor**: Santiago / Antigravity · **Fecha**: 2026-10-14 · **Estado**: Borrador
+- **Autor**: Santiago / Antigravity · **Fecha**: 2026-10-14 · **Estado**: Implementado
 - **Rama**: `feat/us-10-team-drivers`
 
 ## Objetivo

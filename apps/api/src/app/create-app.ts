@@ -13,6 +13,8 @@ import { createNotificationsRoutes } from '../features/notifications/notificatio
 import { createNotificationsService } from '../features/notifications/notifications.service'
 import { createRaceResultsRoutes } from '../features/race-results/race-results.routes'
 import { createRaceResultsService } from '../features/race-results/race-results.service'
+import { createTeamDriversRoutes } from '../features/team-drivers/team-drivers.routes'
+import { createTeamDriversService } from '../features/team-drivers/team-drivers.service'
 import { createTeamStaffRoutes } from '../features/team-staff/team-staff.routes'
 import { createTeamStaffService } from '../features/team-staff/team-staff.service'
 import { createTeamsRoutes } from '../features/teams/teams.routes'
@@ -56,6 +58,10 @@ export const createApp = (deps: AppDependencies): Hono<AppEnv> => {
       clock,
     })
     app.route(API_PATHS.notifications, createNotificationsRoutes(service))
+  }
+  if (deps.repositories.teamDrivers) {
+    const service = createTeamDriversService(deps.repositories.teamDrivers)
+    app.route(API_PATHS.teamDrivers, createTeamDriversRoutes(service))
   }
   app.notFound((c) => c.json(toErrorBody(new AppError('ROUTE_NOT_FOUND')), { status: 404 }))
   app.onError(createErrorHandler(deps.logger))

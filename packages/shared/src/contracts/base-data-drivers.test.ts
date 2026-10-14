@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import {
   createDriverBodySchema,
+  createTeamDriverBodySchema,
   driverCodeSchema,
+  driverListSchema,
   driverNumberSchema,
   driverRoleSchema,
   driverSchema,
@@ -69,5 +71,12 @@ describe('contratos de pilotos', () => {
       updatedAt: '2026-01-01T00:00:00.000Z',
     }
     expect(driverSchema.parse(dto)).toEqual(dto)
+  })
+
+  it('valida alta de piloto por escudería y lista de pilotos', () => {
+    const parsed = createTeamDriverBodySchema.parse(valid)
+    expect(parsed).toEqual({ ...valid, role: 'main' })
+    const list = driverListSchema.parse([])
+    expect(list).toEqual([])
   })
 })

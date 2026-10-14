@@ -301,7 +301,7 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 | ID | Ítem | SP | BV | Est. | Real | Estado | Dueño | Depende de | PR |
 |---|---|---|---|---|---|---|---|---|---|
 | US-4 | Iniciar sesión mediante credenciales seguras | 13 | 13 | 9 h | 1 h | Hecho | Santiago | T-1 | |
-| US-10 | Cargar la información de los pilotos titulares y suplentes | 5 | 13 | 7 h | | En progreso | Santiago | US-4, T-2 | |
+| US-10 | Cargar la información de los pilotos titulares y suplentes | 5 | 13 | 7 h | 1 h | Hecho | Santiago | US-4, T-2 | |
 | US-13 | Cargar sanciones a pilotos o escuderías | 5 | 13 | 7,5 h | | Pendiente | — | US-4, US-10 | |
 | US-21 | Ingresar fechas, tipos y resultado de controles técnicos por auto | 3 | 13 | 5 h | | Pendiente | — | US-4, US-13 | |
 | US-6 | Chats de mensajería cifrados de extremo a extremo | 13 | 13 | 9 h | | Pendiente | — | US-4 | |
@@ -353,25 +353,27 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 
 | Tarea (Naranja) | Est. | Real | Hecha |
 |---|---|---|---|
-| Modelar la entidad Piloto y sus relaciones en la base de datos | 1,5 h | | [ ] |
-| Implementar la lógica de negocio y endpoints en la API | 1,5 h | | [ ] |
-| Diseñar e implementar el formulario de inscripción en el panel de la escudería | 1,5 h | | [ ] |
-| Implementar el control de acceso y aislamiento por escudería | 1 h | | [ ] |
-| Pruebas unitarias, de validación y de integración | 1,5 h | | [ ] |
-| **Total** | **7 h** | | |
+| Modelar la entidad Piloto y sus relaciones en la base de datos | 1,5 h | | [x] |
+| Implementar la lógica de negocio y endpoints en la API | 1,5 h | | [x] |
+| Diseñar e implementar el formulario de inscripción en el panel de la escudería | 1,5 h | | [x] |
+| Implementar el control de acceso y aislamiento por escudería | 1 h | | [x] |
+| Pruebas unitarias, de validación y de integración | 1,5 h | | [x] |
+| **Total** | **7 h** | **1 h** | |
 
 **Criterios de aceptación**
-- [ ] El representante de la escudería puede inscribir pilotos completando todos los datos obligatorios (nombre, apellido, número de auto, licencia y condición de titular o suplente).
-- [ ] El sistema rechaza la inscripción si el número de coche ya está asignado a otro piloto de la misma categoría o si faltan datos requeridos.
-- [ ] Cada escudería solo puede gestionar los pilotos de su propio equipo; el servidor rechaza cualquier intento de asociar o registrar pilotos en escuderías ajenas.
-- [ ] Al confirmarse el alta, el piloto queda registrado con estado oficial y visible en la nómina de la escudería para las próximas competencias.
+- [x] El representante de la escudería puede inscribir pilotos completando todos los datos obligatorios (nombre, apellido, número de auto, licencia y condición de titular o suplente).
+- [x] El sistema rechaza la inscripción si el número de coche ya está asignado a otro piloto de la misma categoría o si faltan datos requeridos.
+- [x] Cada escudería solo puede gestionar los pilotos de su propio equipo; el servidor rechaza cualquier intento de asociar o registrar pilotos en escuderías ajenas.
+- [x] Al confirmarse el alta, el piloto queda registrado con estado oficial y visible en la nómina de la escudería para las próximas competencias.
 
 **Acuerdos con el PO (Grupo Naranja)**
 - El número de coche (dorsal) es único dentro de la misma categoría.
 - Aislamiento estricto: el usuario de escudería sólo puede inscribir y consultar pilotos bajo el identificador de su propia escudería (`team_id`).
 - Límite reglamentario: hasta 2 titulares y 2 suplentes por escudería.
 
-**Falta para cerrar**: diseño técnico e implementación. Plan: [docs/plans/US-10-team-drivers.md](docs/plans/US-10-team-drivers.md).
+**Horas reales**: 1 h (sesión del 2026-10-14, implementación asistida por IA).
+
+**Falta para cerrar**: ninguno. Plan: [docs/plans/US-10-team-drivers.md](docs/plans/US-10-team-drivers.md).
 
 ---
 

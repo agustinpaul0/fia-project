@@ -17,4 +17,16 @@ export const RACING_ERRORS = {
     status: 422,
     message: 'Uno de los pilotos elegidos no corre en la categoría de esta carrera.',
   },
+  CAR_NUMBER_ALREADY_TAKEN: {
+    status: 409,
+    message: 'El número de auto ya está asignado a otro piloto de la categoría.',
+  },
+  DRIVER_CODE_ALREADY_TAKEN: {
+    status: 409,
+    message: 'El código de tres letras ya está asignado a otro piloto.',
+  },
+  DRIVER_LIMIT_EXCEEDED: {
+    status: 422,
+    message: 'Se alcanzó el límite reglamentario de pilotos para esta condición.',
+  },
 } as const satisfies Record<string, ErrorDefinition>

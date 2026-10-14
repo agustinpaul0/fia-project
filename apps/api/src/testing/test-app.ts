@@ -1,5 +1,5 @@
 import type { TeamOption, TeamStaff } from '@fia/shared/contracts'
-import type { CategoryRow } from '@fia/shared/db'
+import type { CategoryRow, DriverRow } from '@fia/shared/db'
 import type { Hono } from 'hono'
 import { createApp } from '../app/create-app'
 import type { BetterAuthInstance } from '../core/auth/better-auth'
@@ -22,6 +22,10 @@ import {
   createInMemoryRaceResults,
   type InMemoryRaceResults,
 } from './in-memory-race-results.repository'
+import {
+  createInMemoryTeamDriversRepository,
+  type InMemoryTeamDriversRepository,
+} from './in-memory-team-drivers.repository'
 import { createInMemoryTeamStaffRepository } from './in-memory-team-staff.repository'
 import { createInMemoryTeamStaffUnitOfWork } from './in-memory-team-staff-unit-of-work'
 import { createInMemoryTeamsRepository } from './in-memory-teams.repository'
@@ -42,6 +46,7 @@ export type TestAppOptions = {
   readonly races?: readonly RaceHeader[]
   readonly drivers?: readonly TestDriver[]
   readonly notifications?: readonly NotificationRecord[]
+  readonly teamDrivers?: readonly DriverRow[]
 }
 
 export type TestApp = {
@@ -51,6 +56,7 @@ export type TestApp = {
   readonly teamStaffUow: TeamStaffUnitOfWork
   readonly raceResults: InMemoryRaceResults
   readonly notifications: InMemoryNotifications
+  readonly teamDrivers: InMemoryTeamDriversRepository
 }
 
 export const createTestApp = (options: TestAppOptions = {}): TestApp => {
@@ -60,15 +66,16 @@ export const createTestApp = (options: TestAppOptions = {}): TestApp => {
   const teamStaffUow = options.teamStaffUow ?? createInMemoryTeamStaffUnitOfWork({ staffRepo })
   const raceResults = createInMemoryRaceResults(options.races ?? [], options.drivers ?? [])
   const notifications = createInMemoryNotifications(options.notifications ?? [])
+  const teamDrivers = createInMemoryTeamDriversRepository(options.teamDrivers ?? [])
 
   const app = createApp({
     webOrigin: TEST_WEB_ORIGIN,
     logger: options.logger ?? silentLogger,
     sessionResolver: fixedSessionResolver(options.sessionUser ?? null),
     databasePing: () => Promise.resolve(options.databaseUp ?? true),
-    repositories: { categories, teams, teamStaffUow, raceResults, notifications },
+    repositories: { categories, teams, teamStaffUow, raceResults, notifications, teamDrivers },
     clock: () => TEST_NOW,
     ...(options.auth !== undefined ? { auth: options.auth } : {}),
   })
-  return { app, categories, teams, teamStaffUow, raceResults, notifications }
+  return { app, categories, teams, teamStaffUow, raceResults, notifications, teamDrivers }
 }

@@ -6,6 +6,7 @@ import type { AuthHandler } from '../features/auth/auth.routes'
 import type { CategoriesRepository } from '../features/categories/categories.port'
 import type { NotificationsRepository } from '../features/notifications/notifications.port'
 import type { RaceResultsRepository } from '../features/race-results/race-results.port'
+import type { TeamDriversRepository } from '../features/team-drivers/team-drivers.port'
 import type { TeamStaffUnitOfWork } from '../features/team-staff/team-staff-unit-of-work.port'
 import type { TeamsRepository } from '../features/teams/teams.port'
 
@@ -15,6 +16,7 @@ export type Repositories = {
   readonly teamStaffUow?: TeamStaffUnitOfWork
   readonly raceResults?: RaceResultsRepository
   readonly notifications?: NotificationsRepository
+  readonly teamDrivers?: TeamDriversRepository
 }
 
 export type AppDependencies = {
