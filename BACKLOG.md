@@ -300,12 +300,12 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 
 | ID | Ítem | SP | BV | Est. | Real | Estado | Dueño | Depende de | PR |
 |---|---|---|---|---|---|---|---|---|---|
-| US-4 | Iniciar sesión mediante credenciales seguras | 13 | 13 | 9 h | 1 h | Hecho | Santiago | T-1 | |
-| US-10 | Cargar la información de los pilotos titulares y suplentes | 5 | 13 | 7 h | 1 h | Hecho | Santiago | US-4, T-2 | |
-| US-13 | Cargar sanciones a pilotos o escuderías | 5 | 13 | 7,5 h | 1 h | Hecho | Santiago | US-4, US-10 | |
-| US-21 | Ingresar fechas, tipos y resultado de controles técnicos por auto | 3 | 13 | 5 h | 1 h | Hecho | Santiago | US-4, US-13 | |
-| US-6 | Chats de mensajería cifrados de extremo a extremo | 13 | 13 | 9 h | 1,5 h | Hecho | Santiago | US-4 | |
-| US-2 | Realizar un testeo del nuevo incremento del producto | 5 | 13 | 7 h | 1 h | Hecho | Santiago | US-4, US-10, US-13, US-21, US-6 | |
+| US-4 | Iniciar sesión mediante credenciales seguras | 13 | 13 | 9 h | 1 h | Hecho | Santiago | T-1 | #13 |
+| US-10 | Cargar la información de los pilotos titulares y suplentes | 5 | 13 | 7 h | 1 h | Hecho | Santiago | US-4, T-2 | #14 |
+| US-13 | Cargar sanciones a pilotos o escuderías | 5 | 13 | 7,5 h | 1 h | Hecho | Santiago | US-4, US-10 | #15 |
+| US-21 | Ingresar fechas, tipos y resultado de controles técnicos por auto | 3 | 13 | 5 h | 1 h | Hecho | Santiago | US-4, US-13 | #16 |
+| US-6 | Chats de mensajería cifrados de extremo a extremo | 13 | 13 | 9 h | 1,5 h | Hecho | Santiago | US-4 | #17 |
+| US-2 | Realizar un testeo del nuevo incremento del producto | 5 | 13 | 7 h | 1 h | Hecho | Santiago | US-4, US-10, US-13, US-21, US-6 | #18 |
 
 **Nueva escala de equivalencia de Naranja**: 1 SP = 1–4 h · 3 SP = 4–6 h · 5 SP = 6–8 h · 13 SP = 8–10 h.  
 **Orden sugerido [equipo]**: US-4 → US-10 → US-13 → US-21 → US-6. US-2 acompaña todo el sprint con la suite de pruebas.
