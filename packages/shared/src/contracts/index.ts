@@ -1,6 +1,7 @@
 export * from './api-paths'
 export * from './auth'
 export * from './categories'
+export * from './chat'
 export * from './circuits'
 export * from './common'
 export * from './drivers'

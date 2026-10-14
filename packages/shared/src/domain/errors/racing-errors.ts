@@ -45,4 +45,16 @@ export const RACING_ERRORS = {
     status: 400,
     message: 'El piloto o vehículo seleccionado no pertenece a la escudería.',
   },
+  CHAT_KEY_NOT_FOUND: {
+    status: 404,
+    message: 'El destinatario aún no ha registrado sus claves de cifrado de extremo a extremo.',
+  },
+  CONVERSATION_NOT_FOUND: {
+    status: 404,
+    message: 'La conversación solicitada no existe o no tenés permiso para acceder a ella.',
+  },
+  INVALID_CHAT_RECIPIENT: {
+    status: 400,
+    message: 'No podés iniciar una conversación con vos mismo o con un usuario inválido.',
+  },
 } as const satisfies Record<string, ErrorDefinition>

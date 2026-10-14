@@ -1,7 +1,7 @@
 # Plan: US-6 — Chats de mensajería cifrados de extremo a extremo
 
 - **Ítem del backlog**: US-6
-- **Autor**: Santiago / Antigravity · **Fecha**: 2026-10-14 · **Estado**: Borrador
+- **Autor**: Santiago / Antigravity · **Fecha**: 2026-10-14 · **Estado**: Implementado
 - **Rama**: `feat/us-6-encrypted-chat`
 
 ## Objetivo

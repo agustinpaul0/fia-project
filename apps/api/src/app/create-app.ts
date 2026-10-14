@@ -8,6 +8,8 @@ import { securityMiddlewares } from '../core/security/security-middlewares'
 import { createAuthRoutes } from '../features/auth/auth.routes'
 import { createCategoriesRoutes } from '../features/categories/categories.routes'
 import { createCategoriesService } from '../features/categories/categories.service'
+import { createChatRoutes } from '../features/chat/chat.routes'
+import { createChatService } from '../features/chat/chat.service'
 import { createHealthRoutes } from '../features/health/health.routes'
 import { createNotificationsRoutes } from '../features/notifications/notifications.routes'
 import { createNotificationsService } from '../features/notifications/notifications.service'
@@ -54,6 +56,9 @@ const mountFeatureRoutes = (app: Hono<AppEnv>, deps: AppDependencies): void => {
         createTechnicalControlsService(deps.repositories.technicalControls),
       ),
     )
+  }
+  if (deps.repositories.chat) {
+    app.route(API_PATHS.chat, createChatRoutes(createChatService(deps.repositories.chat)))
   }
 }
 

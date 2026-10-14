@@ -72,5 +72,15 @@ export const MainNav = ({ userRole }: { readonly userRole: Role | null }): React
         <NotificationsNavLink />
       </>
     ) : null}
+    {userRole !== null ? (
+      <Link
+        to="/chat"
+        className={NAV_LINK_CLASS}
+        activeProps={NAV_ACTIVE}
+        inactiveProps={NAV_INACTIVE}
+      >
+        Mensajes
+      </Link>
+    ) : null}
   </nav>
 )
