@@ -37,4 +37,12 @@ export const RACING_ERRORS = {
     status: 400,
     message: 'El piloto seleccionado no pertenece a la escudería indicada.',
   },
+  TECHNICAL_CONTROL_NOT_FOUND: {
+    status: 404,
+    message: 'El control técnico solicitado no existe o fue eliminado.',
+  },
+  INVALID_TECHNICAL_CONTROL_TARGET: {
+    status: 400,
+    message: 'El piloto o vehículo seleccionado no pertenece a la escudería.',
+  },
 } as const satisfies Record<string, ErrorDefinition>

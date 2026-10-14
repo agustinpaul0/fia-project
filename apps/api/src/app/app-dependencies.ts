@@ -10,6 +10,7 @@ import type { RaceResultsRepository } from '../features/race-results/race-result
 import type { TeamDriversRepository } from '../features/team-drivers/team-drivers.port'
 import type { TeamStaffUnitOfWork } from '../features/team-staff/team-staff-unit-of-work.port'
 import type { TeamsRepository } from '../features/teams/teams.port'
+import type { TechnicalControlsRepository } from '../features/technical-controls/technical-controls.port'
 
 export type Repositories = {
   readonly categories: CategoriesRepository
@@ -19,6 +20,7 @@ export type Repositories = {
   readonly notifications?: NotificationsRepository
   readonly teamDrivers?: TeamDriversRepository
   readonly penalties?: PenaltiesRepository
+  readonly technicalControls?: TechnicalControlsRepository
 }
 
 export type AppDependencies = {

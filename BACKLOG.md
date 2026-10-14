@@ -303,7 +303,7 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 | US-4 | Iniciar sesión mediante credenciales seguras | 13 | 13 | 9 h | 1 h | Hecho | Santiago | T-1 | |
 | US-10 | Cargar la información de los pilotos titulares y suplentes | 5 | 13 | 7 h | 1 h | Hecho | Santiago | US-4, T-2 | |
 | US-13 | Cargar sanciones a pilotos o escuderías | 5 | 13 | 7,5 h | 1 h | Hecho | Santiago | US-4, US-10 | |
-| US-21 | Ingresar fechas, tipos y resultado de controles técnicos por auto | 3 | 13 | 5 h | | En progreso | Santiago | US-4, US-13 | |
+| US-21 | Ingresar fechas, tipos y resultado de controles técnicos por auto | 3 | 13 | 5 h | 1 h | Hecho | Santiago | US-4, US-13 | |
 | US-6 | Chats de mensajería cifrados de extremo a extremo | 13 | 13 | 9 h | | Pendiente | — | US-4 | |
 | US-2 | Realizar un testeo del nuevo incremento del producto | 5 | 13 | 7 h | | Pendiente | — | — | |
 
@@ -416,18 +416,18 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 
 | Tarea (Naranja) | Est. | Real | Hecha |
 |---|---|---|---|
-| Diseñar y desarrollar la opción para cargar controles técnicos en el área correspondiente al personal administrativo de la FIA | 1 h | | [ ] |
-| Crear la tabla correspondiente a los controles técnicos en la base de datos | 1 h | | [ ] |
-| Crear el formulario para cargar los datos de los controles técnicos | 1 h | | [ ] |
-| Crear la conexión necesaria para que el listado de controles técnicos esté disponible para las escuderías y público en general | 1 h | | [ ] |
-| Diseñar e implementar el listado de controles técnicos para las escuderías y público en general | 1 h | | [ ] |
-| **Total** | **5 h** | | |
+| Diseñar y desarrollar la opción para cargar controles técnicos en el área correspondiente al personal administrativo de la FIA | 1 h | | [x] |
+| Crear la tabla correspondiente a los controles técnicos en la base de datos | 1 h | | [x] |
+| Crear el formulario para cargar los datos de los controles técnicos | 1 h | | [x] |
+| Crear la conexión necesaria para que el listado de controles técnicos esté disponible para las escuderías y público en general | 1 h | | [x] |
+| Diseñar e implementar el listado de controles técnicos para las escuderías y público en general | 1 h | | [x] |
+| **Total** | **5 h** | **1 h** | |
 
 **Criterios de aceptación**
-- [ ] El listado de controles técnicos debe actualizarse en menos de 10 minutos (en la web es en tiempo real).
-- [ ] Los controles técnicos deben tener fecha, hora, vehículo inspeccionado y dictamen final (aprobado / rechazado).
-- [ ] Los controles técnicos duran en el listado hasta su fecha y hora de expiración que coincide con la del control / evento.
-- [ ] Disponible para escuderías y público general además de la administración FIA (sólo la FIA puede cargar/actualizar).
+- [x] El listado de controles técnicos debe actualizarse en menos de 10 minutos (en la web es en tiempo real).
+- [x] Los controles técnicos deben tener fecha, hora, vehículo inspeccionado y dictamen final (aprobado / rechazado).
+- [x] Los controles técnicos duran en el listado hasta su fecha y hora de expiración que coincide con la del control / evento.
+- [x] Disponible para escuderías y público general además de la administración FIA (sólo la FIA puede cargar/actualizar).
 
 **Acuerdos con el PO (Grupo Naranja)**
 - Roles: Sólo `fia_admin` puede crear y gestionar controles técnicos. Escuderías y público en general tienen acceso de solo lectura.
@@ -435,7 +435,9 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 - Resultados: Aprobado (`passed`) o Rechazado (`rejected`).
 - Vehículo inspeccionado: asociado a una escudería (`team_id`) y opcionalmente a un auto/piloto (`driver_id` y su número de auto) y/o carrera (`race_id`).
 
-**Falta para cerrar**: diseño técnico e implementación. Plan: [docs/plans/US-21-technical-controls.md](docs/plans/US-21-technical-controls.md).
+**Horas reales**: 1 h (sesión del 2026-10-14, implementación asistida por IA).
+
+**Falta para cerrar**: ninguno. Plan: [docs/plans/US-21-technical-controls.md](docs/plans/US-21-technical-controls.md).
 
 ---
 

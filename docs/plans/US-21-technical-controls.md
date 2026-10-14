@@ -1,7 +1,7 @@
 # Plan: US-21 — Ingresar fechas, tipos y resultado de controles técnicos por auto
 
 - **Ítem del backlog**: US-21
-- **Autor**: Santiago / Antigravity · **Fecha**: 2026-10-14 · **Estado**: Borrador
+- **Autor**: Santiago / Antigravity · **Fecha**: 2026-10-14 · **Estado**: Implementado
 - **Rama**: `feat/us-21-scrutineering`
 
 ## Objetivo

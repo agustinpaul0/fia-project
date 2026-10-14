@@ -14,6 +14,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as ResultsRouteImport } from './routes/results'
 import { Route as SanctionsRouteImport } from './routes/sanctions'
+import { Route as ScrutineeringRouteImport } from './routes/scrutineering'
 import { Route as AdminNotificationsRouteImport } from './routes/admin.notifications'
 import { Route as AdminTeamStaffRouteImport } from './routes/admin.team-staff'
 import { Route as RacesRaceIdRouteImport } from './routes/races.$raceId'
@@ -44,6 +45,11 @@ const ResultsRoute = ResultsRouteImport.update({
 const SanctionsRoute = SanctionsRouteImport.update({
   id: '/sanctions',
   path: '/sanctions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ScrutineeringRoute = ScrutineeringRouteImport.update({
+  id: '/scrutineering',
+  path: '/scrutineering',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminNotificationsRoute = AdminNotificationsRouteImport.update({
@@ -83,6 +89,7 @@ export interface FileRoutesByFullPath {
   '/notifications': typeof NotificationsRoute
   '/results': typeof ResultsRoute
   '/sanctions': typeof SanctionsRoute
+  '/scrutineering': typeof ScrutineeringRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/team-staff': typeof AdminTeamStaffRoute
   '/races/$raceId': typeof RacesRaceIdRoute
@@ -96,6 +103,7 @@ export interface FileRoutesByTo {
   '/notifications': typeof NotificationsRoute
   '/results': typeof ResultsRoute
   '/sanctions': typeof SanctionsRoute
+  '/scrutineering': typeof ScrutineeringRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/team-staff': typeof AdminTeamStaffRoute
   '/races/$raceId': typeof RacesRaceIdRoute
@@ -110,6 +118,7 @@ export interface FileRoutesById {
   '/notifications': typeof NotificationsRoute
   '/results': typeof ResultsRoute
   '/sanctions': typeof SanctionsRoute
+  '/scrutineering': typeof ScrutineeringRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/team-staff': typeof AdminTeamStaffRoute
   '/races/$raceId': typeof RacesRaceIdRoute
@@ -125,6 +134,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/results'
     | '/sanctions'
+    | '/scrutineering'
     | '/admin/notifications'
     | '/admin/team-staff'
     | '/races/$raceId'
@@ -138,6 +148,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/results'
     | '/sanctions'
+    | '/scrutineering'
     | '/admin/notifications'
     | '/admin/team-staff'
     | '/races/$raceId'
@@ -151,6 +162,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/results'
     | '/sanctions'
+    | '/scrutineering'
     | '/admin/notifications'
     | '/admin/team-staff'
     | '/races/$raceId'
@@ -165,6 +177,7 @@ export interface RootRouteChildren {
   NotificationsRoute: typeof NotificationsRoute
   ResultsRoute: typeof ResultsRoute
   SanctionsRoute: typeof SanctionsRoute
+  ScrutineeringRoute: typeof ScrutineeringRoute
   AdminNotificationsRoute: typeof AdminNotificationsRoute
   AdminTeamStaffRoute: typeof AdminTeamStaffRoute
   RacesRaceIdRoute: typeof RacesRaceIdRoute
@@ -208,6 +221,13 @@ declare module '@tanstack/react-router' {
       path: '/sanctions'
       fullPath: '/sanctions'
       preLoaderRoute: typeof SanctionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/scrutineering': {
+      id: '/scrutineering'
+      path: '/scrutineering'
+      fullPath: '/scrutineering'
+      preLoaderRoute: typeof ScrutineeringRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/notifications': {
@@ -261,6 +281,7 @@ const rootRouteChildren: RootRouteChildren = {
   NotificationsRoute: NotificationsRoute,
   ResultsRoute: ResultsRoute,
   SanctionsRoute: SanctionsRoute,
+  ScrutineeringRoute: ScrutineeringRoute,
   AdminNotificationsRoute: AdminNotificationsRoute,
   AdminTeamStaffRoute: AdminTeamStaffRoute,
   RacesRaceIdRoute: RacesRaceIdRoute,
