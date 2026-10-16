@@ -1,4 +1,4 @@
-import { chatConversations, chatMessages, teams, user, userPublicKeys } from '@fia/shared/db'
+import { chatConversations, chatMessages, user, userPublicKeys } from '@fia/shared/db'
 import { and, desc, eq, or } from 'drizzle-orm'
 import type { DbExecutor } from '../../core/db/executor'
 
@@ -6,7 +6,7 @@ export const userKeysSelect = {
   userId: userPublicKeys.userId,
   userName: user.name,
   userRole: user.role,
-  teamName: teams.name,
+  teamId: user.teamId,
   ecdhPublicKey: userPublicKeys.ecdhPublicKey,
   ecdsaPublicKey: userPublicKeys.ecdsaPublicKey,
 }

@@ -13,6 +13,7 @@ describe('TeamDriverCreateForm', () => {
     fireEvent.change(screen.getByLabelText(/Código/), { target: { value: 'COL' } })
     fireEvent.change(screen.getByLabelText(/Dorsal/), { target: { value: '43' } })
     fireEvent.change(screen.getByLabelText(/País/), { target: { value: 'Argentina' } })
+    fireEvent.change(screen.getByLabelText(/Licencia/), { target: { value: 'FIA-43-COL' } })
 
     fireEvent.click(screen.getByRole('button', { name: 'Inscribir piloto' }))
 
@@ -23,6 +24,7 @@ describe('TeamDriverCreateForm', () => {
         code: 'COL',
         number: 43,
         country: 'Argentina',
+        license: 'FIA-43-COL',
         role: 'main',
       })
     })
@@ -37,6 +39,7 @@ describe('TeamDriverCreateForm', () => {
     fireEvent.change(screen.getByLabelText(/Código/), { target: { value: 'COL' } })
     fireEvent.change(screen.getByLabelText(/Dorsal/), { target: { value: '43' } })
     fireEvent.change(screen.getByLabelText(/País/), { target: { value: 'Argentina' } })
+    fireEvent.change(screen.getByLabelText(/Licencia/), { target: { value: 'FIA-43-COL' } })
 
     fireEvent.click(screen.getByRole('button', { name: 'Inscribir piloto' }))
 

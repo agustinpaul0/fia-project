@@ -16,12 +16,13 @@ Permite al personal de comisarios de la FIA (`fia_admin`) registrar el historial
 
 | Regla | Fuente |
 |---|---|
-| Carga exclusiva: sólo `fia_admin` puede asentar inspecciones técnicas y dictámenes | PO |
-| Acceso público: el listado está disponible para escuderías y público general de sólo lectura | PO |
-| Tipos de control: pesaje (`weight`), combustible (`fuel`), dimensiones (`dimensions`), motor (`engine`), seguridad (`safety`), post-carrera (`post_race`) | PO |
-| Resultados posibles: Aprobado (`passed`) o Rechazado (`rejected`) | PO |
-| Expiración: los controles duran en el listado activo hasta su fecha de expiración o finalización del evento | PO |
-| Concurrencia optimista: registro con columna `version` | dev |
+| Carga exclusiva: sólo `fia_admin` registra controles | US-21 |
+| Listado público para escuderías y público en general | US-21 |
+| Datos obligatorios: escudería, número de auto inspeccionado (1–99), tipo, dictamen (aprobado/rechazado), fecha y hora del control y vigencia ("Vigente hasta") | US-21 |
+| La vigencia debe ser posterior al control (contrato y `check` en la base) | US-21 + QA |
+| El listado oculta los controles cuya vigencia ya pasó | US-21 |
+| Las fechas se cargan en hora de Buenos Aires y viajan en UTC | AGENTS.md |
+| Origen de la vigencia: la carga la FIA a mano | dev — consulta P5 al PO |
 
 ## Roles y permisos
 
@@ -41,7 +42,8 @@ Permite al personal de comisarios de la FIA (`fia_admin`) registrar el historial
 
 | Acción inválida | code | status | Mensaje |
 |---|---|---|---|
-| Escudería inexistente | `TEAM_NOT_FOUND` | 404 | La escudería indicada no existe. |
-| Piloto inexistente | `DRIVER_NOT_FOUND` | 404 | El piloto inspeccionado no existe. |
-| Carrera inexistente | `RACE_NOT_FOUND` | 404 | El evento de carrera indicado no existe. |
-| Piloto no pertenece a la escudería | `DRIVER_NOT_IN_TEAM` | 400 | El piloto inspeccionado no pertenece a la escudería seleccionada. |
+| Escudería inexistente | `TEAM_NOT_FOUND` | 404 | La escudería seleccionada no existe o fue eliminada. |
+| Piloto inexistente | `DRIVER_NOT_FOUND` | 404 | Uno de los pilotos elegidos no existe. Recargá la página y volvé a intentar. |
+| Carrera inexistente | `RACE_NOT_FOUND` | 404 | La carrera no existe o fue eliminada. |
+| El piloto no es de esa escudería | `INVALID_TECHNICAL_CONTROL_TARGET` | 400 | El piloto o vehículo seleccionado no pertenece a la escudería. |
+| Falta el auto, la fecha o la vigencia, o la vigencia no es posterior | `VALIDATION_FAILED` | 400 | Hay datos inválidos. Revisá los campos marcados y volvé a intentar. |

@@ -16,9 +16,15 @@ const mockControl: TechnicalControl = {
   status: 'passed',
   notes: null,
   inspectedAt: '2026-10-14T12:00:00.000Z',
-  expiresAt: null,
+  expiresAt: '2026-10-21T12:00:00.000Z',
   version: 1,
   createdAt: '2026-10-14T12:00:00.000Z',
+}
+
+const WHEN = {
+  carNumber: 16,
+  inspectedAt: '2026-10-14T12:00:00.000Z',
+  expiresAt: '2026-10-21T12:00:00.000Z',
 }
 
 describe('TechnicalControlsService', () => {
@@ -31,12 +37,13 @@ describe('TechnicalControlsService', () => {
     ...overrides,
   })
 
-  it('lista controles delegando al repositorio', async () => {
+  it('lista sólo los controles vigentes al momento de la consulta', async () => {
     const repo = createMockRepo()
-    const service = createTechnicalControlsService(repo)
+    const now = new Date('2026-10-16T12:00:00.000Z')
+    const service = createTechnicalControlsService(repo, () => now)
     const result = await service.list({ season: 2026 })
     expect(result).toHaveLength(1)
-    expect(repo.list).toHaveBeenCalledWith({ season: 2026 })
+    expect(repo.list).toHaveBeenCalledWith({ season: 2026, activeAt: now })
   })
 
   it('crea control sin piloto sin verificar pertenencia', async () => {
@@ -46,6 +53,7 @@ describe('TechnicalControlsService', () => {
       teamId: '22222222-2222-4222-8222-222222222222',
       controlType: 'fuel',
       status: 'passed',
+      ...WHEN,
     }
     const result = await service.create(body)
     expect(result.id).toBe(mockControl.id)
@@ -60,6 +68,7 @@ describe('TechnicalControlsService', () => {
       driverId: '33333333-3333-4333-8333-333333333333',
       controlType: 'dimensions',
       status: 'passed',
+      ...WHEN,
     }
     const result = await service.create(body)
     expect(result.id).toBe(mockControl.id)
@@ -73,6 +82,7 @@ describe('TechnicalControlsService', () => {
       driverId: '33333333-3333-4333-8333-333333333333',
       controlType: 'engine',
       status: 'rejected',
+      ...WHEN,
     }
     await expect(service.create(body)).rejects.toMatchObject({
       code: 'INVALID_TECHNICAL_CONTROL_TARGET',

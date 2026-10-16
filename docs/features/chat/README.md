@@ -16,28 +16,33 @@ Provee un canal de mensajería segura entre el personal administrativo de la FIA
 
 | Regla | Fuente |
 |---|---|
-| Acceso autenticado: canal privado reservado a personal FIA y de escuderías (`fia_admin` y `team_staff`) | PO |
-| Acuerdo de claves: `ECDH` curva P-256 para derivación de secreto compartido en cliente | PO + dev |
-| Cifrado simétrico: `AES-GCM` 256 bits con vector de inicialización (IV) de 12 bytes aleatorio | PO + dev |
-| Firma digital y autenticidad: `ECDSA` (P-256 / SHA-256) en cada mensaje para verificar emisor y evitar manipulación | PO + dev |
-| Servidor opaco: el backend sólo almacena claves públicas en formato JWK, payloads cifrados en Base64, IVs y firmas | PO |
-| Indicadores de seguridad: la UI muestra badge de "Cifrado E2E Activo" y estado de verificación de claves | PO |
+| Sólo FIA (`fia_admin`) y escuderías (`team_staff`) activas usan el chat; `GET /chat/contacts` lista con quién se puede hablar | US-6 |
+| Cada usuario genera en el navegador un par ECDH P-256 y otro ECDSA P-256; las claves privadas son **no exportables** y se guardan en IndexedDB (`fia-chat-keys`) | US-6 |
+| Al entrar al chat se publican sólo las claves públicas (JWK) en `POST /chat/keys` | US-6 |
+| Cada mensaje se cifra con AES-GCM 256 (IV aleatorio de 12 bytes) usando la clave derivada por ECDH y se firma con ECDSA/SHA-256 | US-6 |
+| El servidor sólo guarda el texto cifrado, el IV y la firma: nunca ve el texto plano | US-6 |
+| Al mostrar cada mensaje se verifica la firma del emisor; si no coincide se muestra una alerta en lugar del texto | US-6 |
+| No se abre una conversación con alguien que no registró sus claves (`CHAT_KEY_NOT_FOUND`) | US-6 |
+| Sólo los dos participantes leen o escriben en una conversación | US-6 + QA |
+| Si un usuario cambia de navegador, genera claves nuevas y los mensajes anteriores ya no se pueden descifrar (se alertan) | dev |
 
 ## Roles y permisos
 
 | Acción | fia_admin | team_staff | public |
 |---|---|---|---|
-| Registrar claves públicas (`POST /chat/keys`) | ✓ | ✓ | ✗ (401) |
-| Consultar claves de usuario (`GET /chat/keys/:userId`) | ✓ | ✓ | ✗ (401) |
-| Listar conversaciones (`GET /chat/conversations`) | ✓ | ✓ | ✗ (401) |
-| Iniciar conversación (`POST /chat/conversations`) | ✓ | ✓ | ✗ (401) |
-| Listar mensajes (`GET /chat/conversations/:id/messages`) | ✓ | ✓ | ✗ (401) |
-| Enviar mensaje cifrado (`POST /chat/conversations/:id/messages`) | ✓ | ✓ | ✗ (401) |
+| Listar contactos (`GET /chat/contacts`) | ✓ | ✓ | ✗ (403) |
+| Registrar claves públicas (`POST /chat/keys`) | ✓ | ✓ | ✗ (403) |
+| Consultar claves de usuario (`GET /chat/keys/:userId`) | ✓ | ✓ | ✗ (403) |
+| Listar conversaciones (`GET /chat/conversations`) | ✓ | ✓ | ✗ (403) |
+| Iniciar conversación (`POST /chat/conversations`) | ✓ | ✓ | ✗ (403) |
+| Listar mensajes (`GET /chat/conversations/:id/messages`) | ✓ | ✓ | ✗ (403) |
+| Enviar mensaje cifrado (`POST /chat/conversations/:id/messages`) | ✓ | ✓ | ✗ (403) |
 
 ## API
 
 | Método | Ruta | Acceso | Query / Body | Respuesta |
 |---|---|---|---|---|
+| GET | `/chat/contacts` | `fia_admin`, `team_staff` | — | 200 `ChatContact[]` |
 | POST | `/chat/keys` | `fia_admin`, `team_staff` | `RegisterPublicKeysBody` | 200 `UserPublicKeys` |
 | GET | `/chat/keys/:userId` | `fia_admin`, `team_staff` | — | 200 `UserPublicKeys` |
 | GET | `/chat/conversations` | `fia_admin`, `team_staff` | — | 200 `ChatConversation[]` |

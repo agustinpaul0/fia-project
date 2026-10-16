@@ -16,11 +16,11 @@ Permite al personal autenticado de una escudería (`team_staff`) inscribir y con
 
 | Regla | Fuente |
 |---|---|
-| Aislamiento: sólo se permite inscribir y listar pilotos pertenecientes a la escudería del usuario autenticado | PO + dev |
-| Campos obligatorios: nombre (1–60), apellido (1–60), número de auto (1–99), código de 3 letras (3 letras mayúsculas), nacionalidad y rol (titular/suplente) | PO |
-| Unicidad de dorsal: el número de auto no puede repetirse dentro de la misma categoría | PO |
-| Tope reglamentario: máximo 2 pilotos titulares y 2 suplentes por escudería | PO |
-| Licencia deportiva: opcional alfanumérica de hasta 30 caracteres | dev |
+| Aislamiento: sólo se inscriben y listan pilotos de la escudería del usuario (`teamId` de la sesión; el cuerpo no acepta `teamId`) | US-10 |
+| Datos obligatorios: nombre y apellido (2–60), código de 3 letras mayúsculas, número de auto (1–99), nacionalidad (2–60), licencia deportiva (3–20) y condición (titular/suplente) | US-10 |
+| Número de auto y código únicos entre todos los pilotos (la base lo garantiza con `unique`) | dev — consulta P2 al PO |
+| Tope reglamentario: máximo 2 titulares y 2 suplentes por escudería | PO |
+| La licencia es obligatoria al inscribir; los pilotos cargados por el seed la traen como `FIA-<número>-<código>` | US-10 + QA |
 
 ## Roles y permisos
 
@@ -40,7 +40,8 @@ Permite al personal autenticado de una escudería (`team_staff`) inscribir y con
 
 | Acción inválida | code | status | Mensaje |
 |---|---|---|---|
-| Usuario sin escudería asociada | `TEAM_NOT_FOUND` | 400 | El usuario no pertenece a ninguna escudería registrada. |
-| Número de coche duplicado en categoría | `DRIVER_NUMBER_ALREADY_EXISTS` | 409 | El número de auto ya se encuentra registrado en la categoría. |
-| Excedido límite de titulares (máx 2) | `TOO_MANY_MAIN_DRIVERS` | 409 | La escudería ya alcanzó el límite reglamentario de 2 pilotos titulares. |
-| Excedido límite de suplentes (máx 2) | `TOO_MANY_RESERVE_DRIVERS` | 409 | La escudería ya alcanzó el límite reglamentario de 2 pilotos suplentes. |
+| Usuario sin escudería asociada | `TEAM_REQUIRED` | 403 | Tu cuenta no está asociada a ninguna escudería. Pedile a la FIA que revise tu cuenta. |
+| Número de auto repetido | `CAR_NUMBER_ALREADY_TAKEN` | 409 | El número de auto ya está asignado a otro piloto de la categoría. |
+| Código de 3 letras repetido | `DRIVER_CODE_ALREADY_TAKEN` | 409 | El código de tres letras ya está asignado a otro piloto. |
+| Se superó el tope de titulares o suplentes | `DRIVER_LIMIT_EXCEEDED` | 422 | Se alcanzó el límite reglamentario de pilotos para esta condición. |
+| Datos faltantes o con formato inválido | `VALIDATION_FAILED` | 400 | Hay datos inválidos. Revisá los campos marcados y volvé a intentar. |

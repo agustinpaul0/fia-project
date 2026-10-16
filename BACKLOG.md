@@ -336,7 +336,8 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 
 **Acuerdos con el PO (Grupo Naranja)**
 - Mensajes genéricos de error ante fallo de autenticación para prevenir enumeración de cuentas.
-- Redirección post-login: administradores FIA (`fia_admin`) redirigen a su panel administrativo (`/admin/team-staff`), personal de escudería (`team_staff`) a su área (`/results` / `/admin/results`), y usuarios generales al inicio (`/`).
+- Redirección post-login: administradores FIA (`fia_admin`) redirigen a su panel administrativo (`/admin/team-staff`); el resto de los roles (`team_staff`, `public`) va al inicio (`/`), desde donde navega a su área.
+- Ante el límite de intentos (429) se muestra el mensaje de `RATE_LIMITED` en lugar del genérico.
 - Sesión con expiración por inactividad e invalidación al cerrar sesión.
 - Rate limiting activo para prevenir fuerza bruta (máximo 10 intentos por minuto por IP).
 
@@ -373,6 +374,11 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 
 **Horas reales**: 1 h (sesión del 2026-10-14, implementación asistida por IA).
 
+**QA (Agustín)**: faltaba la licencia deportiva que pide el primer criterio; se agregó en schema (migración
+`0007_add_driver_license`), contrato, API, formulario y nómina. Se sumaron test de integración del repositorio
+(con violaciones de unicidad traducidas a 409), fuzz de la ruta y tests de UI. Consultas abiertas al PO en
+[docs/preguntas-po.md](docs/preguntas-po.md) (formato de licencia, dorsal por categoría, foto → US-22).
+
 **Falta para cerrar**: ninguno. Plan: [docs/plans/US-10-team-drivers.md](docs/plans/US-10-team-drivers.md).
 
 ---
@@ -405,6 +411,11 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 
 **Horas reales**: 1 h (sesión del 2026-10-14, implementación asistida por IA).
 
+**QA (Agustín)**: el listado no aplicaba los 5 años (ahora el servicio filtra por `issuedAt` de los últimos
+5 años), el formulario no permitía sancionar a un piloto (se agregó el selector con `GET /teams/:id/drivers`) y
+faltaba el filtro por escudería. Escudería o carrera inexistente daban 500 (ahora 404) y el tipo no tenía
+`check` en la base. Se sumaron tests de integración, fuzz y de UI (mutación web 33 % → 85 %).
+
 **Falta para cerrar**: ninguno. Plan: [docs/plans/US-13-penalties.md](docs/plans/US-13-penalties.md).
 
 ---
@@ -436,6 +447,12 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 - Vehículo inspeccionado: asociado a una escudería (`team_id`) y opcionalmente a un auto/piloto (`driver_id` y su número de auto) y/o carrera (`race_id`).
 
 **Horas reales**: 1 h (sesión del 2026-10-14, implementación asistida por IA).
+
+**QA (Agustín)**: el listado mostraba también los controles vencidos (ahora oculta los que pasaron su
+`expiresAt`), el vehículo inspeccionado (número de auto) era opcional y el formulario no permitía cargar la
+fecha y hora del control ni su vigencia. Número de auto, fecha del control y vigencia pasan a ser obligatorios
+(con `check` en la base: rango del auto, tipo, dictamen y vigencia posterior al control), y una FK inexistente
+ahora responde 404 en lugar de 500. Se sumaron tests de integración, fuzz y de UI (mutación web 46 % → 83 %).
 
 **Falta para cerrar**: ninguno. Plan: [docs/plans/US-21-technical-controls.md](docs/plans/US-21-technical-controls.md).
 
@@ -470,6 +487,16 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 
 **Horas reales**: 1,5 h (sesión del 2026-10-14, implementación asistida por IA).
 
+**QA (Agustín)**: la entrega no cumplía ningún criterio. La pantalla mandaba el texto **en plano** (con IV y
+firma falsos) y mostraba "Cifrado E2E" igual; las claves privadas vivían sólo en memoria; `isParticipant`
+ignoraba el id de la conversación (cualquiera con un chat podía leer y escribir en todos); el `JOIN` de
+`user.team_id` (text) con `teams.id` (uuid) rompía en Postgres; no había forma de iniciar una conversación;
+y los parámetros no se validaban. Se reimplementó: cifrado AES-GCM con clave ECDH y firma ECDSA en el
+navegador, claves privadas no exportables guardadas en IndexedDB, verificación de firma con alerta en cada
+mensaje, selector de contactos (`GET /chat/contacts`), rechazo si el destinatario no tiene claves, control de
+participantes y validación Zod. Se sumaron tests de integración, fuzz, un flujo E2E con claves reales y tests
+de UI.
+
 **Falta para cerrar**: ninguno. Plan: [docs/plans/US-6-encrypted-chat.md](docs/plans/US-6-encrypted-chat.md).
 
 ---
@@ -500,6 +527,11 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 - Automatización: `pnpm test:coverage` y `pnpm test:int` garantizan la suite reproducible e integrada.
 
 **Horas reales**: 1 h (sesión del 2026-10-14, implementación asistida por IA).
+
+**QA (Agustín)**: la matriz daba por aprobados casos que no lo estaban (el chat mandaba texto plano) y el test
+del incremento usaba datos que hoy el contrato rechaza. Se rehízo la matriz apuntando a los tests reales
+(`docs/testing.md`), se reescribió el flujo integral en `sprint2-increment-*.test.ts`, el seed de la demo
+carga licencias y controles vigentes, y la mutación web del shard `rest` pasó de 57,6 % a 83,4 %.
 
 **Falta para cerrar**: ninguno. Plan: [docs/plans/US-2-increment-testing.md](docs/plans/US-2-increment-testing.md).
 

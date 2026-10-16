@@ -14,6 +14,13 @@ export const teamOptionSchema = z.strictObject({
 
 export const teamOptionListSchema = z.array(teamOptionSchema).readonly()
 
+export const driverOptionSchema = z.strictObject({
+  id: z.uuid(),
+  name: z.string(),
+})
+
+export const driverOptionListSchema = z.array(driverOptionSchema).readonly()
+
 export const teamSchema = z.strictObject({
   id: z.uuid(),
   name: z.string(),
@@ -27,3 +34,4 @@ export const teamSchema = z.strictObject({
 export type Team = z.infer<typeof teamSchema>
 export type CreateTeamBody = z.infer<typeof createTeamBodySchema>
 export type TeamOption = z.infer<typeof teamOptionSchema>
+export type DriverOption = z.infer<typeof driverOptionSchema>

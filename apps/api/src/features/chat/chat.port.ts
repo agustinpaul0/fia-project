@@ -1,4 +1,5 @@
 import type {
+  ChatContact,
   ChatConversation,
   ChatMessage,
   CreateEncryptedMessageBody,
@@ -21,6 +22,7 @@ export type ChatRepository = {
     recipientId: string,
   ) => Promise<ChatConversation>
   readonly isParticipant: (conversationId: string, userId: string) => Promise<boolean>
+  readonly listContacts: (userId: string) => Promise<readonly ChatContact[]>
   readonly listMessages: (conversationId: string) => Promise<readonly ChatMessage[]>
   readonly sendMessage: (params: SendMessageParams) => Promise<ChatMessage>
 }

@@ -1,30 +1,28 @@
 import { registerKeysApi } from '../api/chat-api'
 import { exportJwk } from './crypto-utils'
 import { generateE2EKeyPairs } from './e2e-crypto'
+import { type ClientKeyStore, indexedDbKeyStorage, type KeyStorage } from './key-storage'
 
-export type ClientKeyStore = {
-  ecdh: CryptoKeyPair
-  ecdsa: CryptoKeyPair
+export type { ClientKeyStore } from './key-storage'
+
+const loadOrCreate = async (userId: string, storage: KeyStorage): Promise<ClientKeyStore> => {
+  const stored = await storage.load(userId)
+  if (stored !== null) {
+    return stored
+  }
+  const created = await generateE2EKeyPairs()
+  await storage.save(userId, created)
+  return created
 }
 
-let activeStore: ClientKeyStore | null = null
-
-export const ensureMyKeys = async (_userId: string): Promise<ClientKeyStore> => {
-  if (activeStore) {
-    return activeStore
-  }
-  const keyPairs = await generateE2EKeyPairs()
-  const ecdhPublicKey = await exportJwk(keyPairs.ecdh.publicKey)
-  const ecdsaPublicKey = await exportJwk(keyPairs.ecdsa.publicKey)
-
-  try {
-    await registerKeysApi({ ecdhPublicKey, ecdsaPublicKey })
-  } catch {
-    // Si ya están registradas o falla la red, continuamos con el store local
-  }
-
-  activeStore = keyPairs
-  return keyPairs
+export const ensureMyKeys = async (
+  userId: string,
+  storage: KeyStorage = indexedDbKeyStorage,
+): Promise<ClientKeyStore> => {
+  const keys = await loadOrCreate(userId, storage)
+  await registerKeysApi({
+    ecdhPublicKey: await exportJwk(keys.ecdh.publicKey),
+    ecdsaPublicKey: await exportJwk(keys.ecdsa.publicKey),
+  })
+  return keys
 }
-
-export const getActiveKeyStore = (): ClientKeyStore | null => activeStore

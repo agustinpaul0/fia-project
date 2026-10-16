@@ -16,12 +16,12 @@ Permite al personal administrativo de la FIA (`fia_admin`) cargar sanciones ofic
 
 | Regla | Fuente |
 |---|---|
-| Carga exclusiva: sólo `fia_admin` puede registrar sanciones oficiales | PO |
-| Acceso público: el listado está disponible para escuderías y público en general de sólo lectura | PO |
-| Tipos de sanción: recargo de tiempo (`time_penalty`), puestos en grilla (`grid_penalty`), quita de puntos (`points_deduction`), descalificación (`disqualification`), multa económica (`fine`) y apercibimiento (`reprimand`) | PO |
-| Alcance: aplicadas a una escudería obligatoriamente, y opcionalmente a un piloto y/o evento de carrera | PO |
-| Retención histórica: las sanciones permanecen en el listado durante 5 temporadas (coherente con US-5) | PO |
-| Concurrencia optimista: la tabla maneja columna de `version` para prevenir colisiones | dev |
+| Carga exclusiva: sólo `fia_admin` registra sanciones | US-13 |
+| Listado público para escuderías y público en general | US-13 |
+| Tipos: `time_penalty`, `grid_penalty`, `points_deduction`, `disqualification`, `fine`, `reprimand` (con `check` en la base) | PO |
+| Se sanciona a una escudería y, opcionalmente, a uno de sus pilotos (el formulario ofrece los pilotos de la escudería elegida vía `GET /teams/:id/drivers`) | US-13 + QA |
+| Retención: el listado muestra sólo las sanciones emitidas en los últimos 5 años (lo calcula el servicio) | US-13 |
+| Filtros: temporada y tipo (en el servidor) y escudería (sobre el listado) | US-13 |
 
 ## Roles y permisos
 
@@ -41,7 +41,8 @@ Permite al personal administrativo de la FIA (`fia_admin`) cargar sanciones ofic
 
 | Acción inválida | code | status | Mensaje |
 |---|---|---|---|
-| Escudería inexistente | `TEAM_NOT_FOUND` | 404 | La escudería indicada no existe. |
-| Piloto inexistente | `DRIVER_NOT_FOUND` | 404 | El piloto sancionado no existe. |
-| Carrera inexistente | `RACE_NOT_FOUND` | 404 | El evento de carrera indicado no existe. |
-| Piloto no pertenece a la escudería | `DRIVER_NOT_IN_TEAM` | 400 | El piloto sancionado no pertenece a la escudería indicada. |
+| Escudería inexistente | `TEAM_NOT_FOUND` | 404 | La escudería seleccionada no existe o fue eliminada. |
+| Piloto inexistente | `DRIVER_NOT_FOUND` | 404 | Uno de los pilotos elegidos no existe. Recargá la página y volvé a intentar. |
+| Carrera inexistente | `RACE_NOT_FOUND` | 404 | La carrera no existe o fue eliminada. |
+| El piloto no es de esa escudería | `INVALID_PENALTY_TARGET` | 400 | El piloto seleccionado no pertenece a la escudería indicada. |
+| Datos faltantes o inválidos | `VALIDATION_FAILED` | 400 | Hay datos inválidos. Revisá los campos marcados y volvé a intentar. |

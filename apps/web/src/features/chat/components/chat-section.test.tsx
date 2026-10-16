@@ -1,51 +1,54 @@
 import type { ChatConversation } from '@fia/shared/contracts'
 import { fireEvent, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { jsonResponse, mockFetchOnce } from '@/testing/mock-fetch'
+import { CONVERSATION } from '@/testing/fake-chat-server'
+import { jsonResponse } from '@/testing/mock-fetch'
+import { mockFetchRoutes } from '@/testing/mock-fetch-routes'
 import { renderWithQuery } from '@/testing/render-with-query'
-import { ChatSection } from './chat-section'
+import { ChatSection, MY_KEYS_ERROR } from './chat-section'
 
 vi.mock('@/lib/auth-client', () => ({
-  useSession: vi.fn(() => ({ data: { user: { id: 'user-1', role: 'fia_admin' } } })),
+  useSession: () => ({ data: { user: { id: 'alice', role: 'fia_admin' } } }),
 }))
+const ensureMyKeys = vi.hoisted(() => vi.fn())
+vi.mock('../crypto/key-manager', () => ({ ensureMyKeys }))
 
-vi.mock('../crypto/key-manager', () => ({
-  ensureMyKeys: vi.fn().mockResolvedValue({}),
-}))
-
-const mockConv: ChatConversation = {
-  id: '00000000-0000-4000-8000-000000000001',
-  otherUserId: 'user-2',
-  otherUserName: 'Lewis Hamilton',
-  otherUserRole: 'team_staff',
-  otherTeamName: 'Ferrari',
-  createdAt: '2026-10-14T12:00:00.000Z',
-}
+const routes = (conversations: readonly ChatConversation[]) => ({
+  'GET /chat/conversations': () => jsonResponse(conversations),
+  'GET /chat/contacts': () => jsonResponse([]),
+})
 
 describe('ChatSection', () => {
   afterEach(() => {
     vi.unstubAllGlobals()
+    ensureMyKeys.mockReset()
   })
 
-  it('muestra estado inicial con lista de conversaciones y placeholder de selección', async () => {
-    mockFetchOnce(jsonResponse([mockConv]))
+  it('invita a elegir una conversación cuando no hay ninguna seleccionada', async () => {
+    ensureMyKeys.mockResolvedValue({})
+    mockFetchRoutes(routes([]))
     renderWithQuery(<ChatSection />)
-
-    expect(await screen.findByText('Lewis Hamilton')).toBeInTheDocument()
-    expect(screen.getByText('Ferrari')).toBeInTheDocument()
+    expect(await screen.findByText('No tenés conversaciones iniciadas.')).toBeInTheDocument()
     expect(screen.getByText('Seleccioná una conversación')).toBeInTheDocument()
+    expect(screen.getByText('Conversaciones Activas (0)')).toBeInTheDocument()
+    expect(ensureMyKeys).toHaveBeenCalledWith('alice')
   })
 
-  it('selecciona una conversación al hacer click en el contacto', async () => {
-    mockFetchOnce(jsonResponse([mockConv]))
+  it('muestra la conversación elegida con su escudería', async () => {
+    ensureMyKeys.mockResolvedValue({})
+    mockFetchRoutes(routes([CONVERSATION]))
     renderWithQuery(<ChatSection />)
+    fireEvent.click(await screen.findByRole('button', { name: /Bob Staff/ }))
+    expect(await screen.findByRole('heading', { name: 'Bob Staff' })).toBeInTheDocument()
+    expect(screen.getAllByText('Ferrari').length).toBeGreaterThanOrEqual(1)
+  })
 
-    const item = await screen.findByText('Lewis Hamilton')
-    fireEvent.click(item)
-
-    expect(await screen.findByText(/Cifrado E2E Activo/)).toBeInTheDocument()
-    expect(
-      screen.getByPlaceholderText(/Escribí un mensaje cifrado de extremo a extremo/),
-    ).toBeInTheDocument()
+  it('avisa si no se pudieron preparar las claves propias', async () => {
+    ensureMyKeys.mockRejectedValue(new Error('sin indexedDB'))
+    mockFetchRoutes(routes([CONVERSATION]))
+    renderWithQuery(<ChatSection />)
+    fireEvent.click(await screen.findByRole('button', { name: /Bob Staff/ }))
+    expect(await screen.findByText(MY_KEYS_ERROR)).toBeInTheDocument()
+    expect(screen.getByPlaceholderText(/Escribí un mensaje/)).toBeDisabled()
   })
 })

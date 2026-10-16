@@ -16,6 +16,7 @@ const mockRow: DriverRow = {
   code: 'LEC',
   number: 16,
   country: 'Mónaco',
+  license: 'FIA-16-LEC',
   teamId: '00000000-0000-4000-8000-000000000010',
   role: 'main',
   version: 1,
@@ -29,6 +30,7 @@ const validPayload = {
   code: 'SAI',
   number: 55,
   country: 'España',
+  license: 'FIA-55-SAI',
   role: 'main' as const,
 }
 
@@ -67,5 +69,15 @@ describe('rutas de escritura team-drivers', () => {
       body: JSON.stringify({ ...validPayload, number: 16 }),
     })
     expect(res.status).toBe(409)
+  })
+
+  it('ignora intentos de inscribir en otra escudería: rechaza teamId en el cuerpo', async () => {
+    const { app } = createTestApp({ sessionUser: STAFF_FERRARI })
+    const res = await app.request('/team-drivers', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ ...validPayload, teamId: '00000000-0000-4000-8000-000000000099' }),
+    })
+    expect(res.status).toBe(400)
   })
 })

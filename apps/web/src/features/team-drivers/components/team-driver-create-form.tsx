@@ -22,6 +22,7 @@ const EMPTY: CreateTeamDriverInput = {
   code: '',
   number: 1,
   country: '',
+  license: '',
   role: 'main',
 }
 

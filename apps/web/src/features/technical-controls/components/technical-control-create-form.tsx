@@ -19,11 +19,13 @@ type Props = {
 const EMPTY: CreateTechnicalControlInput = {
   teamId: '',
   driverId: null,
-  carNumber: null,
+  carNumber: Number.NaN,
   raceId: null,
   controlType: 'weight',
   status: 'passed',
   notes: '',
+  inspectedAt: '',
+  expiresAt: '',
 }
 
 export const TechnicalControlCreateForm = ({ onCancel, onSubmit }: Props): ReactNode => {

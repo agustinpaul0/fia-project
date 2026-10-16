@@ -15,6 +15,7 @@ export type TestAppOptions = RepositoriesOptions & {
   readonly databaseUp?: boolean
   readonly logger?: Logger
   readonly auth?: BetterAuthInstance | AuthHandler
+  readonly sharedRepositories?: ReturnType<typeof createAllInMemoryRepositories>
 }
 
 export type TestApp = ReturnType<typeof createAllInMemoryRepositories> & {
@@ -22,7 +23,7 @@ export type TestApp = ReturnType<typeof createAllInMemoryRepositories> & {
 }
 
 export const createTestApp = (options: TestAppOptions = {}): TestApp => {
-  const repos = createAllInMemoryRepositories(options)
+  const repos = options.sharedRepositories ?? createAllInMemoryRepositories(options)
   const app = createApp({
     webOrigin: TEST_WEB_ORIGIN,
     logger: options.logger ?? silentLogger,

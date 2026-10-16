@@ -26,11 +26,14 @@ describe('technical-controls contracts', () => {
     expect(parsed.carNumber).toBe(44)
   })
 
-  it('permite campos opcionales omitidos o nulos', () => {
+  it('permite omitir piloto, carrera y observaciones', () => {
     const minimal = {
       teamId: validUuid,
+      carNumber: 44,
       controlType: 'fuel' as const,
       status: 'rejected' as const,
+      inspectedAt: '2026-10-14T12:00:00.000Z',
+      expiresAt: '2026-10-14T18:00:00.000Z',
     }
     const parsed = createTechnicalControlBodySchema.parse(minimal)
     expect(parsed.controlType).toBe('fuel')
@@ -78,7 +81,7 @@ describe('technical-controls contracts', () => {
       status: 'passed' as const,
       notes: null,
       inspectedAt: '2026-10-14T12:00:00.000Z',
-      expiresAt: null,
+      expiresAt: '2026-10-14T18:00:00.000Z',
       version: 1,
       createdAt: '2026-10-14T12:00:00.000Z',
     }

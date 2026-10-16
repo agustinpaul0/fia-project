@@ -15,9 +15,20 @@ export const userPublicKeysSchema = z.strictObject({
   ecdsaPublicKey: z.string(),
 })
 
-export const createConversationBodySchema = z.strictObject({
-  recipientId: z.string().min(1, 'Elegí un destinatario válido.'),
+const userIdSchema = z.string().min(1, 'Elegí un destinatario válido.').max(64)
+
+export const chatUserParamsSchema = z.strictObject({ userId: userIdSchema })
+
+export const createConversationBodySchema = z.strictObject({ recipientId: userIdSchema })
+
+export const chatContactSchema = z.strictObject({
+  id: z.string(),
+  name: z.string(),
+  role: z.enum(['fia_admin', 'team_staff']),
+  teamName: z.string().nullable(),
 })
+
+export const chatContactListSchema = z.array(chatContactSchema).readonly()
 
 export const chatConversationSchema = z.strictObject({
   id: z.uuid(),
@@ -54,6 +65,7 @@ export const chatMessageListSchema = z.array(chatMessageSchema).readonly()
 export type RegisterPublicKeysBody = z.infer<typeof registerPublicKeysBodySchema>
 export type UserPublicKeys = z.infer<typeof userPublicKeysSchema>
 export type CreateConversationBody = z.infer<typeof createConversationBodySchema>
+export type ChatContact = z.infer<typeof chatContactSchema>
 export type ChatConversation = z.infer<typeof chatConversationSchema>
 export type ChatConversationList = z.infer<typeof chatConversationListSchema>
 export type CreateEncryptedMessageBody = z.infer<typeof createEncryptedMessageBodySchema>

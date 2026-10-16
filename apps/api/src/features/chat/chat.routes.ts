@@ -1,82 +1,80 @@
 import {
+  chatContactListSchema,
   chatConversationListSchema,
   chatConversationSchema,
   chatMessageListSchema,
   chatMessageSchema,
+  chatUserParamsSchema,
   createConversationBodySchema,
   createEncryptedMessageBodySchema,
+  idParamsSchema,
   registerPublicKeysBodySchema,
   userPublicKeysSchema,
 } from '@fia/shared/contracts'
-import { Hono } from 'hono'
+import { AppError } from '@fia/shared/domain'
+import { type Context, Hono } from 'hono'
 import { requireRole } from '../../core/auth/access'
 import type { AppEnv } from '../../core/auth/session'
 import { created, ok } from '../../core/http/respond'
 import { validate } from '../../core/http/validate'
 import type { ChatService } from './chat.service'
 
-const authRoles = requireRole('fia_admin', 'team_staff')
+const chatUsers = requireRole('fia_admin', 'team_staff')
+
+const userIdOf = (c: Context<AppEnv>): string => {
+  const user = c.get('sessionUser')
+  if (user === null) {
+    throw new AppError('UNAUTHENTICATED')
+  }
+  return user.id
+}
 
 const createKeysRouter = (service: ChatService): Hono<AppEnv> =>
   new Hono<AppEnv>()
-    .post('/', authRoles, validate('json', registerPublicKeysBodySchema), async (c) => {
-      const user = c.get('sessionUser')
-      if (!user) {
-        return c.json({ error: 'UNAUTHORIZED' }, 401)
-      }
-      await service.registerKeys(user.id, c.req.valid('json'))
+    .post('/', chatUsers, validate('json', registerPublicKeysBodySchema), async (c) => {
+      await service.registerKeys(userIdOf(c), c.req.valid('json'))
       return ok(c, registerPublicKeysBodySchema, c.req.valid('json'))
     })
-    .get('/:userId', authRoles, async (c) => {
-      const keys = await service.getUserKeys(c.req.param('userId'))
-      return ok(c, userPublicKeysSchema, keys)
-    })
+    .get('/:userId', chatUsers, validate('param', chatUserParamsSchema), async (c) =>
+      ok(c, userPublicKeysSchema, await service.getUserKeys(c.req.valid('param').userId)),
+    )
 
 const createConversationsRouter = (service: ChatService): Hono<AppEnv> =>
   new Hono<AppEnv>()
-    .get('/', authRoles, async (c) => {
-      const user = c.get('sessionUser')
-      if (!user) {
-        return c.json({ error: 'UNAUTHORIZED' }, 401)
-      }
-      const list = await service.listConversations(user.id)
-      return ok(c, chatConversationListSchema, list)
+    .get('/', chatUsers, async (c) =>
+      ok(c, chatConversationListSchema, await service.listConversations(userIdOf(c))),
+    )
+    .post('/', chatUsers, validate('json', createConversationBodySchema), async (c) => {
+      const { recipientId } = c.req.valid('json')
+      return created(
+        c,
+        chatConversationSchema,
+        await service.getOrCreateConversation(userIdOf(c), recipientId),
+      )
     })
-    .post('/', authRoles, validate('json', createConversationBodySchema), async (c) => {
-      const user = c.get('sessionUser')
-      if (!user) {
-        return c.json({ error: 'UNAUTHORIZED' }, 401)
-      }
-      const conv = await service.getOrCreateConversation(user.id, c.req.valid('json').recipientId)
-      return created(c, chatConversationSchema, conv)
-    })
-    .get('/:id/messages', authRoles, async (c) => {
-      const user = c.get('sessionUser')
-      if (!user) {
-        return c.json({ error: 'UNAUTHORIZED' }, 401)
-      }
-      const list = await service.listMessages(c.req.param('id'), user.id)
-      return ok(c, chatMessageListSchema, list)
-    })
+    .get('/:id/messages', chatUsers, validate('param', idParamsSchema), async (c) =>
+      ok(
+        c,
+        chatMessageListSchema,
+        await service.listMessages(c.req.valid('param').id, userIdOf(c)),
+      ),
+    )
     .post(
       '/:id/messages',
-      authRoles,
+      chatUsers,
+      validate('param', idParamsSchema),
       validate('json', createEncryptedMessageBodySchema),
       async (c) => {
-        const user = c.get('sessionUser')
-        if (!user) {
-          return c.json({ error: 'UNAUTHORIZED' }, 401)
-        }
-        const msg = await service.sendMessage({
-          conversationId: c.req.param('id'),
-          senderId: user.id,
-          body: c.req.valid('json'),
-        })
-        return created(c, chatMessageSchema, msg)
+        const conversationId = c.req.valid('param').id
+        const params = { conversationId, senderId: userIdOf(c), body: c.req.valid('json') }
+        return created(c, chatMessageSchema, await service.sendMessage(params))
       },
     )
 
 export const createChatRoutes = (service: ChatService): Hono<AppEnv> =>
   new Hono<AppEnv>()
+    .get('/contacts', chatUsers, async (c) =>
+      ok(c, chatContactListSchema, await service.listContacts(userIdOf(c))),
+    )
     .route('/keys', createKeysRouter(service))
     .route('/conversations', createConversationsRouter(service))

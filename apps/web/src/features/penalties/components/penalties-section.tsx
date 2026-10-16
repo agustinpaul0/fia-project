@@ -7,7 +7,7 @@ import { useSession } from '@/lib/auth-client'
 import { useCreatePenalty } from '../hooks/use-create-penalty'
 import { usePenalties } from '../hooks/use-penalties'
 import { PenaltiesFilters } from './penalties-filters'
-import { PenaltiesTable } from './penalties-table'
+import { PenaltiesList } from './penalties-list'
 import { PenaltyCreateDialog } from './penalty-create-dialog'
 
 export const PenaltiesSection = (): ReactNode => {
@@ -51,7 +51,7 @@ export const PenaltiesSection = (): ReactNode => {
         isEmpty={(items) => items.length === 0}
         emptyMessage="No se encontraron sanciones registradas para los filtros aplicados."
       >
-        {(items) => <PenaltiesTable penalties={items} />}
+        {(items) => <PenaltiesList penalties={items} />}
       </QueryView>
 
       {isFiaAdmin && (
