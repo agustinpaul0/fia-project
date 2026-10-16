@@ -4,7 +4,7 @@ import { TeamDriverRow } from './team-driver-row'
 
 export const NO_DRIVERS_MESSAGE = 'No hay pilotos inscriptos en tu escudería.'
 
-const HEADERS = ['Dorsal', 'Piloto', 'Código', 'Nacionalidad', 'Condición'] as const
+const HEADERS = ['Dorsal', 'Piloto', 'Código', 'Nacionalidad', 'Licencia', 'Condición'] as const
 
 export const TeamDriversTable = ({
   drivers,

@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { createTeamBodySchema, teamOptionListSchema, teamOptionSchema, teamSchema } from './teams'
+import {
+  createTeamBodySchema,
+  driverOptionListSchema,
+  teamOptionListSchema,
+  teamOptionSchema,
+  teamSchema,
+} from './teams'
 
 describe('contratos de equipos', () => {
   const catId = '00000000-0000-4000-8000-000000000001'
@@ -38,5 +44,11 @@ describe('contratos de equipos', () => {
     expect(teamOptionListSchema.parse([option])).toEqual([option])
     expect(teamOptionSchema.safeParse({ id: 'invalido', name: 'Ferrari' }).success).toBe(false)
     expect(teamOptionSchema.safeParse({ ...option, extra: 1 }).success).toBe(false)
+  })
+
+  it('valida las opciones de pilotos de una escudería', () => {
+    const option = { id: '00000000-0000-4000-8000-000000000002', name: 'Charles Leclerc' }
+    expect(driverOptionListSchema.parse([option])).toEqual([option])
+    expect(driverOptionListSchema.safeParse([{ ...option, id: 'x' }]).success).toBe(false)
   })
 })

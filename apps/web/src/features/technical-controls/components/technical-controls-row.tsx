@@ -19,11 +19,9 @@ export const TechnicalControlsRow = ({
     <td className="px-4 py-3">
       <div className="font-bold font-headline text-sm text-on-surface">
         {control.teamName}
-        {control.carNumber !== null && (
-          <span className="ml-2 font-mono text-xs text-primary font-bold">
-            Auto #{control.carNumber}
-          </span>
-        )}
+        <span className="ml-2 font-mono text-xs text-primary font-bold">
+          Auto #{control.carNumber}
+        </span>
       </div>
       {control.driverName && (
         <div className="text-xs text-on-surface-variant">{control.driverName}</div>
@@ -36,7 +34,7 @@ export const TechnicalControlsRow = ({
       <TechnicalControlStatusBadge status={control.status} />
     </td>
     <td className="px-4 py-3 font-mono text-xs text-on-surface-variant">
-      {control.expiresAt ? formatDateTime(control.expiresAt) : '—'}
+      {formatDateTime(control.expiresAt)}
     </td>
     <td className="px-4 py-3 text-xs text-on-surface-variant max-w-xs">{control.notes ?? '—'}</td>
   </tr>

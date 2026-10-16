@@ -18,6 +18,7 @@ export const TeamDriverRow = ({ driver }: { readonly driver: Driver }): ReactNod
     </td>
     <td className="px-4 py-3 font-bold font-mono text-secondary text-sm">{driver.code}</td>
     <td className="px-4 py-3 text-on-surface-variant text-sm">{driver.country}</td>
+    <td className="px-4 py-3 font-mono text-on-surface-variant text-sm">{driver.license ?? '—'}</td>
     <td className="px-4 py-3">
       <span
         className={`inline-block border px-2 py-0.5 font-bold font-mono text-xs uppercase ${

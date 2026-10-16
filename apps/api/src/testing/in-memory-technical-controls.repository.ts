@@ -1,9 +1,8 @@
+import type { CreateTechnicalControlBody, TechnicalControl } from '@fia/shared/contracts'
 import type {
-  CreateTechnicalControlBody,
-  TechnicalControl,
-  TechnicalControlsQuery,
-} from '@fia/shared/contracts'
-import type { TechnicalControlsRepository } from '../features/technical-controls/technical-controls.port'
+  TechnicalControlsListFilter,
+  TechnicalControlsRepository,
+} from '../features/technical-controls/technical-controls.port'
 
 export type InMemoryTechnicalControlsRepository = TechnicalControlsRepository & {
   readonly controls: TechnicalControl[]
@@ -17,8 +16,8 @@ export const createInMemoryTechnicalControlsRepository = (
 
   return {
     controls,
-    list: async (filter: TechnicalControlsQuery) => {
-      let result = controls
+    list: async (filter: TechnicalControlsListFilter) => {
+      let result = controls.filter((c) => new Date(c.expiresAt) > filter.activeAt)
       if (filter.teamId) {
         result = result.filter((c) => c.teamId === filter.teamId)
       }
@@ -41,14 +40,14 @@ export const createInMemoryTechnicalControlsRepository = (
         teamName: 'Test Team',
         driverId: body.driverId ?? null,
         driverName: body.driverId ? 'Test Driver' : null,
-        carNumber: body.carNumber ?? null,
+        carNumber: body.carNumber,
         raceId: body.raceId ?? null,
         raceName: body.raceId ? 'Test Race' : null,
         controlType: body.controlType,
         status: body.status,
         notes: body.notes ?? null,
-        inspectedAt: body.inspectedAt ?? now,
-        expiresAt: body.expiresAt ?? null,
+        inspectedAt: body.inspectedAt,
+        expiresAt: body.expiresAt,
         version: 1,
         createdAt: now,
       }

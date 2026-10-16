@@ -3,6 +3,7 @@ import type { ReactNode } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 import { FIELD_CLASS, LABEL_CLASS } from '@/features/team-staff/components/field-message'
 import { useTeamOptions } from '@/features/teams/hooks/use-team-options'
+import { TechnicalControlDatesFields } from './technical-control-dates-fields'
 
 type Props = {
   readonly form: UseFormReturn<CreateTechnicalControlInput, unknown, CreateTechnicalControlBody>
@@ -43,6 +44,9 @@ export const TechnicalControlFormFields = ({ form }: Props): ReactNode => {
             placeholder="Ej: 16"
             className={FIELD_CLASS}
           />
+          {errors.carNumber && (
+            <span className="text-secondary text-xs">{errors.carNumber.message}</span>
+          )}
         </div>
       </div>
       <div className="grid grid-cols-2 gap-3">
@@ -69,6 +73,7 @@ export const TechnicalControlFormFields = ({ form }: Props): ReactNode => {
           </select>
         </div>
       </div>
+      <TechnicalControlDatesFields form={form} />
       <div className="flex flex-col gap-1">
         <label htmlFor="notes" className={LABEL_CLASS}>
           Observaciones

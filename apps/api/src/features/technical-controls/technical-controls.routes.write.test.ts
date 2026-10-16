@@ -21,6 +21,8 @@ const validPayload = {
   controlType: 'weight',
   status: 'passed',
   notes: 'Pesaje reglamentario verificado.',
+  inspectedAt: '2026-10-14T12:00:00.000Z',
+  expiresAt: '2026-10-21T12:00:00.000Z',
 }
 
 describe('rutas de escritura technical-controls', () => {

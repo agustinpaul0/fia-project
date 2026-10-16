@@ -27,6 +27,7 @@ export const createInMemoryTeamDriversRepository = (
         code: body.code,
         number: body.number,
         country: body.country,
+        license: body.license,
         teamId,
         role: body.role,
         version: 1,

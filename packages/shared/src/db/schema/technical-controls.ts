@@ -1,4 +1,5 @@
-import { index, integer, pgTable, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core'
+import { sql } from 'drizzle-orm'
+import { check, index, integer, pgTable, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core'
 import { idColumn, versionedChecks, versionedColumns } from './columns'
 import { drivers } from './drivers'
 import { races } from './races'
@@ -12,13 +13,13 @@ export const technicalControls = pgTable(
       .notNull()
       .references(() => teams.id, { onDelete: 'cascade' }),
     driverId: uuid('driver_id').references(() => drivers.id, { onDelete: 'set null' }),
-    carNumber: integer('car_number'),
+    carNumber: integer('car_number').notNull(),
     raceId: uuid('race_id').references(() => races.id, { onDelete: 'set null' }),
     controlType: varchar('control_type', { length: 40 }).notNull(),
     status: varchar('status', { length: 20 }).notNull(),
     notes: text('notes'),
     inspectedAt: timestamp('inspected_at', { withTimezone: true, mode: 'date' }).notNull(),
-    expiresAt: timestamp('expires_at', { withTimezone: true, mode: 'date' }),
+    expiresAt: timestamp('expires_at', { withTimezone: true, mode: 'date' }).notNull(),
     ...versionedColumns(),
   },
   (table) => [
@@ -27,6 +28,13 @@ export const technicalControls = pgTable(
     index('tech_controls_race_id_idx').on(table.raceId),
     index('tech_controls_status_idx').on(table.status),
     index('tech_controls_inspected_at_idx').on(table.inspectedAt),
+    check('tech_controls_car_number_range', sql`${table.carNumber} between 1 and 99`),
+    check(
+      'tech_controls_type_valid',
+      sql`${table.controlType} in ('weight', 'fuel', 'dimensions', 'engine', 'safety', 'post_race')`,
+    ),
+    check('tech_controls_status_valid', sql`${table.status} in ('passed', 'rejected')`),
+    check('tech_controls_expires_after_inspection', sql`${table.expiresAt} > ${table.inspectedAt}`),
     ...versionedChecks('technical_controls', table),
   ],
 )

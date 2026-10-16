@@ -46,6 +46,17 @@ describe('LoginForm', () => {
     expect(await screen.findByText('Credenciales inválidas.')).toBeInTheDocument()
   })
 
+  it('avisa que hay que esperar si se superó el límite de intentos', async () => {
+    const user = userEvent.setup()
+    const { signIn } = await import('@/lib/auth-client')
+    vi.mocked(signIn.email).mockResolvedValue({ error: { status: 429 } } as never)
+    render(<LoginForm />)
+    await user.type(screen.getByLabelText('Correo electrónico'), 'admin@fia.com')
+    await user.type(screen.getByLabelText('Contraseña'), 'AdminPassword123!')
+    await user.click(screen.getByRole('button', { name: '[ Iniciar sesión ]' }))
+    expect(await screen.findByText(/Hiciste demasiados intentos/)).toBeInTheDocument()
+  })
+
   it('navega a la vista de administración tras login de fia_admin', async () => {
     const user = userEvent.setup()
     const { signIn } = await import('@/lib/auth-client')
