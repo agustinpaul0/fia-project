@@ -18,11 +18,13 @@ export const ChatInput = ({ onSend, disabled = false }: Props): ReactNode => {
       return
     }
     setSending(true)
-    try {
-      await onSend(text.trim())
+    const sent = await onSend(text.trim()).then(
+      () => true,
+      () => false,
+    )
+    setSending(false)
+    if (sent) {
       setText('')
-    } finally {
-      setSending(false)
     }
   }
 

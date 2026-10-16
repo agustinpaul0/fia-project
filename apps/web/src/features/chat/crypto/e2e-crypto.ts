@@ -4,11 +4,11 @@ export const generateE2EKeyPairs = async (): Promise<{
   ecdh: CryptoKeyPair
   ecdsa: CryptoKeyPair
 }> => {
-  const ecdh = await crypto.subtle.generateKey({ name: 'ECDH', namedCurve: 'P-256' }, true, [
+  const ecdh = await crypto.subtle.generateKey({ name: 'ECDH', namedCurve: 'P-256' }, false, [
     'deriveKey',
     'deriveBits',
   ])
-  const ecdsa = await crypto.subtle.generateKey({ name: 'ECDSA', namedCurve: 'P-256' }, true, [
+  const ecdsa = await crypto.subtle.generateKey({ name: 'ECDSA', namedCurve: 'P-256' }, false, [
     'sign',
     'verify',
   ])

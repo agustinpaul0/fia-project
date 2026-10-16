@@ -1,52 +1,71 @@
-import type { ChatConversation, ChatMessage, RegisterPublicKeysBody } from '@fia/shared/contracts'
+import type {
+  ChatContact,
+  ChatConversation,
+  ChatMessage,
+  RegisterPublicKeysBody,
+} from '@fia/shared/contracts'
 import type { ChatRepository, SendMessageParams } from '../features/chat/chat.port'
 
+export type StoredConversation = ChatConversation & { readonly participants: readonly string[] }
+
 export type InMemoryChatRepository = ChatRepository & {
-  readonly conversations: ChatConversation[]
+  readonly conversations: StoredConversation[]
   readonly messages: ChatMessage[]
   readonly keys: Map<string, RegisterPublicKeysBody>
 }
 
-const buildKeyRecord = (userId: string, k: RegisterPublicKeysBody) => ({
-  userId,
-  userName: `User ${userId}`,
-  userRole: 'team_staff' as const,
-  teamName: 'Test Team',
-  ecdhPublicKey: k.ecdhPublicKey,
-  ecdsaPublicKey: k.ecdsaPublicKey,
-})
+const idOf = (n: number): string => `00000000-0000-4000-8000-${String(n).padStart(12, '0')}`
 
-const buildNewConversation = (recipientId: string, idx: number): ChatConversation => ({
-  id: `00000000-0000-4000-8000-${String(idx).padStart(12, '0')}`,
-  otherUserId: recipientId,
-  otherUserName: `User ${recipientId}`,
-  otherUserRole: 'team_staff',
-  otherTeamName: 'Test Team',
-  createdAt: new Date().toISOString(),
-})
+const toConversation = (c: StoredConversation, userId: string): ChatConversation => {
+  const { participants, ...rest } = c
+  return { ...rest, otherUserId: participants.find((p) => p !== userId) ?? rest.otherUserId }
+}
 
-const buildNewMessage = (p: SendMessageParams, idx: number): ChatMessage => ({
-  id: `00000000-0000-4000-8000-${String(idx).padStart(12, '0')}`,
+const buildMessage = (p: SendMessageParams, idx: number, recipientId: string): ChatMessage => ({
+  id: idOf(idx),
   conversationId: p.conversationId,
   senderId: p.senderId,
-  senderName: 'Test Sender',
-  recipientId: 'recipient-1',
-  encryptedContent: p.body.encryptedContent,
-  iv: p.body.iv,
-  signature: p.body.signature,
+  senderName: `User ${p.senderId}`,
+  recipientId,
+  ...p.body,
   sentAt: new Date().toISOString(),
   version: 1,
 })
 
-export const createInMemoryChatRepository = (
-  initialConversations: readonly ChatConversation[] = [],
-  initialMessages: readonly ChatMessage[] = [],
-): InMemoryChatRepository => {
-  const conversations: ChatConversation[] = [...initialConversations]
-  const messages: ChatMessage[] = [...initialMessages]
-  const keys = new Map<string, RegisterPublicKeysBody>()
+type GetOrCreateParams = {
+  readonly conversations: StoredConversation[]
+  readonly contacts: readonly ChatContact[]
+  readonly pair: readonly [string, string]
+}
 
-  return {
+const getOrCreate = ({ conversations, contacts, pair }: GetOrCreateParams): ChatConversation => {
+  const [userId, recipientId] = pair
+  const existing = conversations.find(
+    (c) => c.participants.includes(userId) && c.participants.includes(recipientId),
+  )
+  if (existing) {
+    return toConversation(existing, userId)
+  }
+  const other = contacts.find((c) => c.id === recipientId)
+  const conv: StoredConversation = {
+    id: idOf(conversations.length + 1),
+    otherUserId: recipientId,
+    otherUserName: other?.name ?? recipientId,
+    otherUserRole: other?.role ?? 'team_staff',
+    otherTeamName: other?.teamName ?? null,
+    createdAt: new Date().toISOString(),
+    participants: [userId, recipientId],
+  }
+  conversations.push(conv)
+  return toConversation(conv, userId)
+}
+
+export const createInMemoryChatRepository = (contacts: readonly ChatContact[] = []) => {
+  const conversations: StoredConversation[] = []
+  const messages: ChatMessage[] = []
+  const keys = new Map<string, RegisterPublicKeysBody>()
+  const find = (id: string) => conversations.find((c) => c.id === id)
+  const repo: InMemoryChatRepository = {
     conversations,
     messages,
     keys,
@@ -55,24 +74,25 @@ export const createInMemoryChatRepository = (
     },
     getUserKeys: async (userId) => {
       const k = keys.get(userId)
-      return k ? buildKeyRecord(userId, k) : null
+      return k
+        ? { userId, userName: `User ${userId}`, userRole: 'team_staff', teamName: null, ...k }
+        : null
     },
-    listConversations: async () => conversations,
-    getOrCreateConversation: async (_userId, recipientId) => {
-      const existing = conversations.find((c) => c.otherUserId === recipientId)
-      if (existing) {
-        return existing
-      }
-      const conv = buildNewConversation(recipientId, conversations.length + 1)
-      conversations.push(conv)
-      return conv
-    },
-    isParticipant: async () => true,
+    listContacts: async (userId) => contacts.filter((c) => c.id !== userId),
+    listConversations: async (userId) =>
+      conversations
+        .filter((c) => c.participants.includes(userId))
+        .map((c) => toConversation(c, userId)),
+    getOrCreateConversation: async (userId, recipientId) =>
+      getOrCreate({ conversations, contacts, pair: [userId, recipientId] }),
+    isParticipant: async (convId, userId) => find(convId)?.participants.includes(userId) ?? false,
     listMessages: async (cId) => messages.filter((m) => m.conversationId === cId),
     sendMessage: async (p) => {
-      const msg = buildNewMessage(p, messages.length + 1)
+      const recipient = find(p.conversationId)?.participants.find((u) => u !== p.senderId) ?? ''
+      const msg = buildMessage(p, messages.length + 1, recipient)
       messages.push(msg)
       return msg
     },
   }
+  return repo
 }

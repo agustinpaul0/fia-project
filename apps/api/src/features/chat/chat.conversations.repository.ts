@@ -1,7 +1,7 @@
 import type { ChatConversation } from '@fia/shared/contracts'
-import { chatConversations, teams, user } from '@fia/shared/db'
+import { chatConversations, user } from '@fia/shared/db'
 import { AppError } from '@fia/shared/domain'
-import { eq, or } from 'drizzle-orm'
+import { and, eq, or } from 'drizzle-orm'
 import type { DbExecutor } from '../../core/db/executor'
 import type { ChatRepository } from './chat.port'
 import {
@@ -9,15 +9,15 @@ import {
   findConversationQuery,
   listUserConversationsQuery,
 } from './chat.sql'
+import { loadTeamNames } from './chat.team-names'
 
 const fetchOtherUserData = async (db: DbExecutor, otherId: string) => {
   const [u] = await db
-    .select({ name: user.name, role: user.role, teamName: teams.name })
+    .select({ name: user.name, role: user.role, teamId: user.teamId })
     .from(user)
-    .leftJoin(teams, eq(user.teamId, teams.id))
     .where(eq(user.id, otherId))
     .limit(1)
-  return u
+  return u ? { ...u, teamName: (await loadTeamNames(db))(u.teamId) } : undefined
 }
 
 const executeListConversations = async (
@@ -83,11 +83,16 @@ export const createChatConversationsRepository = (
 ): Pick<ChatRepository, 'listConversations' | 'getOrCreateConversation' | 'isParticipant'> => ({
   listConversations: (userId) => executeListConversations(db, userId),
   getOrCreateConversation: (userId, recipientId) => executeGetOrCreate(db, userId, recipientId),
-  isParticipant: async (_convId, userId) => {
+  isParticipant: async (convId, userId) => {
     const [row] = await db
       .select({ id: chatConversations.id })
       .from(chatConversations)
-      .where(or(eq(chatConversations.userAId, userId), eq(chatConversations.userBId, userId)))
+      .where(
+        and(
+          eq(chatConversations.id, convId),
+          or(eq(chatConversations.userAId, userId), eq(chatConversations.userBId, userId)),
+        ),
+      )
       .limit(1)
     return Boolean(row)
   },

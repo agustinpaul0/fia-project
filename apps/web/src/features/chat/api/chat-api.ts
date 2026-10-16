@@ -1,8 +1,10 @@
 import {
   API_PATHS,
+  type ChatContact,
   type ChatConversation,
   type ChatMessage,
   type CreateEncryptedMessageBody,
+  chatContactListSchema,
   chatConversationListSchema,
   chatConversationSchema,
   chatMessageListSchema,
@@ -18,7 +20,11 @@ export const CHAT_QUERY_KEYS = {
   conversations: ['chat', 'conversations'] as const,
   messages: (convId: string) => ['chat', 'messages', convId] as const,
   userKeys: (userId: string) => ['chat', 'keys', userId] as const,
+  contacts: ['chat', 'contacts'] as const,
 }
+
+export const fetchContactsApi = (): Promise<readonly ChatContact[]> =>
+  apiRequest({ path: `${API_PATHS.chat}/contacts`, schema: chatContactListSchema })
 
 export const registerKeysApi = (body: RegisterPublicKeysBody): Promise<RegisterPublicKeysBody> =>
   apiRequest({

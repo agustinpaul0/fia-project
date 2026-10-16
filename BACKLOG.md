@@ -487,6 +487,16 @@ ahora responde 404 en lugar de 500. Se sumaron tests de integración, fuzz y de 
 
 **Horas reales**: 1,5 h (sesión del 2026-10-14, implementación asistida por IA).
 
+**QA (Agustín)**: la entrega no cumplía ningún criterio. La pantalla mandaba el texto **en plano** (con IV y
+firma falsos) y mostraba "Cifrado E2E" igual; las claves privadas vivían sólo en memoria; `isParticipant`
+ignoraba el id de la conversación (cualquiera con un chat podía leer y escribir en todos); el `JOIN` de
+`user.team_id` (text) con `teams.id` (uuid) rompía en Postgres; no había forma de iniciar una conversación;
+y los parámetros no se validaban. Se reimplementó: cifrado AES-GCM con clave ECDH y firma ECDSA en el
+navegador, claves privadas no exportables guardadas en IndexedDB, verificación de firma con alerta en cada
+mensaje, selector de contactos (`GET /chat/contacts`), rechazo si el destinatario no tiene claves, control de
+participantes y validación Zod. Se sumaron tests de integración, fuzz, un flujo E2E con claves reales y tests
+de UI.
+
 **Falta para cerrar**: ninguno. Plan: [docs/plans/US-6-encrypted-chat.md](docs/plans/US-6-encrypted-chat.md).
 
 ---

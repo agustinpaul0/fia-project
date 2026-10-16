@@ -1,8 +1,9 @@
-import { teams, user, userPublicKeys } from '@fia/shared/db'
+import { user, userPublicKeys } from '@fia/shared/db'
 import { eq } from 'drizzle-orm'
 import type { DbExecutor } from '../../core/db/executor'
 import type { ChatRepository } from './chat.port'
 import { userKeysSelect } from './chat.sql'
+import { loadTeamNames } from './chat.team-names'
 
 export const createChatKeysRepository = (
   db: DbExecutor,
@@ -25,9 +26,12 @@ export const createChatKeysRepository = (
       .select(userKeysSelect)
       .from(userPublicKeys)
       .innerJoin(user, eq(userPublicKeys.userId, user.id))
-      .leftJoin(teams, eq(user.teamId, teams.id))
       .where(eq(userPublicKeys.userId, userId))
       .limit(1)
-    return row ? { ...row, teamName: row.teamName ?? null } : null
+    if (!row) {
+      return null
+    }
+    const { teamId, ...keys } = row
+    return { ...keys, teamName: (await loadTeamNames(db))(teamId) }
   },
 })
