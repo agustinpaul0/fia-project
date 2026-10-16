@@ -1,5 +1,5 @@
-import type { CreatePenaltyBody, PenaltiesQuery, Penalty } from '@fia/shared/contracts'
-import type { PenaltiesRepository } from '../features/penalties/penalties.port'
+import type { CreatePenaltyBody, Penalty } from '@fia/shared/contracts'
+import type { PenaltiesListFilter, PenaltiesRepository } from '../features/penalties/penalties.port'
 
 export type InMemoryPenaltiesRepository = PenaltiesRepository & {
   readonly penalties: Penalty[]
@@ -13,8 +13,8 @@ export const createInMemoryPenaltiesRepository = (
 
   return {
     penalties,
-    list: async (filter: PenaltiesQuery) => {
-      let result = penalties
+    list: async (filter: PenaltiesListFilter) => {
+      let result = penalties.filter((p) => new Date(p.issuedAt) >= filter.issuedSince)
       if (filter.teamId) {
         result = result.filter((p) => p.teamId === filter.teamId)
       }

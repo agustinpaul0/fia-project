@@ -1,5 +1,5 @@
 {
-  "id": "a2e255a6-c28f-448f-8a7e-69f0da4da669",
+  "id": "9549d58f-a22e-471c-a39a-fab8d25bd38d",
   "prevId": "8b011b59-db73-4a95-9bed-f8e459fdb0a6",
   "version": "7",
   "dialect": "postgresql",
@@ -840,6 +840,18 @@
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {
+        "penalties_type_valid": {
+          "name": "penalties_type_valid",
+          "value": "\"penalties\".\"type\" in ('time_penalty', 'grid_penalty', 'points_deduction', 'disqualification', 'fine', 'reprimand')"
+        },
+        "penalties_penalty_length": {
+          "name": "penalties_penalty_length",
+          "value": "char_length(\"penalties\".\"penalty\") >= 2"
+        },
+        "penalties_reason_length": {
+          "name": "penalties_reason_length",
+          "value": "char_length(\"penalties\".\"reason\") between 5 and 255"
+        },
         "penalties_version_positive": {
           "name": "penalties_version_positive",
           "value": "\"penalties\".\"version\" >= 1"

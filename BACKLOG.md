@@ -411,6 +411,11 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 
 **Horas reales**: 1 h (sesión del 2026-10-14, implementación asistida por IA).
 
+**QA (Agustín)**: el listado no aplicaba los 5 años (ahora el servicio filtra por `issuedAt` de los últimos
+5 años), el formulario no permitía sancionar a un piloto (se agregó el selector con `GET /teams/:id/drivers`) y
+faltaba el filtro por escudería. Escudería o carrera inexistente daban 500 (ahora 404) y el tipo no tenía
+`check` en la base. Se sumaron tests de integración, fuzz y de UI (mutación web 33 % → 85 %).
+
 **Falta para cerrar**: ninguno. Plan: [docs/plans/US-13-penalties.md](docs/plans/US-13-penalties.md).
 
 ---

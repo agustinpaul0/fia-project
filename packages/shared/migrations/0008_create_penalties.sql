@@ -10,6 +10,9 @@ CREATE TABLE "penalties" (
 	"version" integer DEFAULT 1 NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
+	CONSTRAINT "penalties_type_valid" CHECK ("penalties"."type" in ('time_penalty', 'grid_penalty', 'points_deduction', 'disqualification', 'fine', 'reprimand')),
+	CONSTRAINT "penalties_penalty_length" CHECK (char_length("penalties"."penalty") >= 2),
+	CONSTRAINT "penalties_reason_length" CHECK (char_length("penalties"."reason") between 5 and 255),
 	CONSTRAINT "penalties_version_positive" CHECK ("penalties"."version" >= 1),
 	CONSTRAINT "penalties_updated_after_created" CHECK ("penalties"."updated_at" >= "penalties"."created_at")
 );
