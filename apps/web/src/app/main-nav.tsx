@@ -42,6 +42,14 @@ export const MainNav = ({ userRole }: { readonly userRole: Role | null }): React
     >
       Resultados
     </Link>
+    <Link
+      to="/sanctions"
+      className={NAV_LINK_CLASS}
+      activeProps={NAV_ACTIVE}
+      inactiveProps={NAV_INACTIVE}
+    >
+      Sanciones
+    </Link>
     {userRole === 'fia_admin' ? <AdminLinks /> : null}
     {userRole === 'team_staff' ? (
       <>

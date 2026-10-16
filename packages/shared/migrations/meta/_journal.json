@@ -57,6 +57,13 @@
       "when": 1792161451417,
       "tag": "0007_add_driver_license",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1792162016033,
+      "tag": "0008_create_penalties",
+      "breakpoints": true
     }
   ]
 }

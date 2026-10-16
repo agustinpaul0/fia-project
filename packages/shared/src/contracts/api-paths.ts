@@ -7,10 +7,13 @@ export const API_PATHS = {
   races: '/races',
   notifications: '/notifications',
   teamDrivers: '/team-drivers',
+  penalties: '/penalties',
 } as const
 
 export const categoryPath = (id: string): string => `${API_PATHS.categories}/${id}`
 export const teamStaffPath = (id: string): string => `${API_PATHS.teamStaff}/${id}`
+export const teamDriverOptionsPath = (teamId: string): string =>
+  `${API_PATHS.teams}/${teamId}/drivers`
 const seasonQuery = (season: number, category: string | null): string =>
   category === null
     ? `season=${season}`
