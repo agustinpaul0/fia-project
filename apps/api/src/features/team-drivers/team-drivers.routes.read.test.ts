@@ -22,6 +22,7 @@ const mockRow: DriverRow = {
   code: 'LEC',
   number: 16,
   country: 'Mónaco',
+  license: 'FIA-16-LEC',
   teamId: '00000000-0000-4000-8000-000000000010',
   role: 'main',
   version: 1,

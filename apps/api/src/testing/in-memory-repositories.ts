@@ -29,7 +29,7 @@ export type RepositoriesOptions = {
 
 export const createAllInMemoryRepositories = (options: RepositoriesOptions) => {
   const categories = createInMemoryCategoriesRepository(options.categories ?? [])
-  const teams = createInMemoryTeamsRepository(options.teams ?? [])
+  const teams = createInMemoryTeamsRepository(options.teams ?? [], options.teamDrivers ?? [])
   const staffRepo = createInMemoryTeamStaffRepository(options.staff ?? [])
   const teamStaffUow = options.teamStaffUow ?? createInMemoryTeamStaffUnitOfWork({ staffRepo })
   const raceResults = createInMemoryRaceResults(options.races ?? [], options.drivers ?? [])

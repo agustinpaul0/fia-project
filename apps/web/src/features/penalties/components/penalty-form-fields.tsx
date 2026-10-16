@@ -2,14 +2,13 @@ import type { CreatePenaltyBody, CreatePenaltyInput } from '@fia/shared/contract
 import type { ReactNode } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 import { FIELD_CLASS, LABEL_CLASS } from '@/features/team-staff/components/field-message'
-import { useTeamOptions } from '@/features/teams/hooks/use-team-options'
+import { PenaltyTargetFields } from './penalty-target-fields'
 
 type Props = {
   readonly form: UseFormReturn<CreatePenaltyInput, unknown, CreatePenaltyBody>
 }
 
 export const PenaltyFormFields = ({ form }: Props): ReactNode => {
-  const { data: teams = [] } = useTeamOptions()
   const {
     register,
     formState: { errors },
@@ -17,20 +16,7 @@ export const PenaltyFormFields = ({ form }: Props): ReactNode => {
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex flex-col gap-1">
-        <label htmlFor="teamId" className={LABEL_CLASS}>
-          Escudería
-        </label>
-        <select id="teamId" {...register('teamId')} className={FIELD_CLASS}>
-          <option value="">Seleccionar escudería...</option>
-          {teams.map((t) => (
-            <option key={t.id} value={t.id}>
-              {t.name}
-            </option>
-          ))}
-        </select>
-        {errors.teamId && <span className="text-secondary text-xs">{errors.teamId.message}</span>}
-      </div>
+      <PenaltyTargetFields form={form} />
       <div className="grid grid-cols-2 gap-3">
         <div className="flex flex-col gap-1">
           <label htmlFor="type" className={LABEL_CLASS}>

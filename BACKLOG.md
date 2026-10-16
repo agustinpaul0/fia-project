@@ -336,7 +336,8 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 
 **Acuerdos con el PO (Grupo Naranja)**
 - Mensajes genéricos de error ante fallo de autenticación para prevenir enumeración de cuentas.
-- Redirección post-login: administradores FIA (`fia_admin`) redirigen a su panel administrativo (`/admin/team-staff`), personal de escudería (`team_staff`) a su área (`/results` / `/admin/results`), y usuarios generales al inicio (`/`).
+- Redirección post-login: administradores FIA (`fia_admin`) redirigen a su panel administrativo (`/admin/team-staff`); el resto de los roles (`team_staff`, `public`) va al inicio (`/`), desde donde navega a su área.
+- Ante el límite de intentos (429) se muestra el mensaje de `RATE_LIMITED` en lugar del genérico.
 - Sesión con expiración por inactividad e invalidación al cerrar sesión.
 - Rate limiting activo para prevenir fuerza bruta (máximo 10 intentos por minuto por IP).
 
@@ -373,6 +374,11 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 
 **Horas reales**: 1 h (sesión del 2026-10-14, implementación asistida por IA).
 
+**QA (Agustín)**: faltaba la licencia deportiva que pide el primer criterio; se agregó en schema (migración
+`0007_add_driver_license`), contrato, API, formulario y nómina. Se sumaron test de integración del repositorio
+(con violaciones de unicidad traducidas a 409), fuzz de la ruta y tests de UI. Consultas abiertas al PO en
+[docs/preguntas-po.md](docs/preguntas-po.md) (formato de licencia, dorsal por categoría, foto → US-22).
+
 **Falta para cerrar**: ninguno. Plan: [docs/plans/US-10-team-drivers.md](docs/plans/US-10-team-drivers.md).
 
 ---
@@ -404,6 +410,11 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 - Alcance: sanciones aplicadas tanto a un piloto específico (asociado a su escudería) como a una escudería directamente.
 
 **Horas reales**: 1 h (sesión del 2026-10-14, implementación asistida por IA).
+
+**QA (Agustín)**: el listado no aplicaba los 5 años (ahora el servicio filtra por `issuedAt` de los últimos
+5 años), el formulario no permitía sancionar a un piloto (se agregó el selector con `GET /teams/:id/drivers`) y
+faltaba el filtro por escudería. Escudería o carrera inexistente daban 500 (ahora 404) y el tipo no tenía
+`check` en la base. Se sumaron tests de integración, fuzz y de UI (mutación web 33 % → 85 %).
 
 **Falta para cerrar**: ninguno. Plan: [docs/plans/US-13-penalties.md](docs/plans/US-13-penalties.md).
 

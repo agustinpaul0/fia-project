@@ -1,5 +1,5 @@
 {
-  "id": "d638d1a9-a529-4b94-9d09-64aeae72f206",
+  "id": "8b011b59-db73-4a95-9bed-f8e459fdb0a6",
   "prevId": "7851c209-7582-45d6-bcab-d6651870a066",
   "version": "7",
   "dialect": "postgresql",
@@ -555,6 +555,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "license": {
+          "name": "license",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": false
+        },
         "team_id": {
           "name": "team_id",
           "type": "uuid",
@@ -636,6 +642,10 @@
         "drivers_role_valid": {
           "name": "drivers_role_valid",
           "value": "\"drivers\".\"role\" in ('main', 'reserve')"
+        },
+        "drivers_license_length": {
+          "name": "drivers_license_length",
+          "value": "\"drivers\".\"license\" is null or char_length(\"drivers\".\"license\") >= 3"
         },
         "drivers_version_positive": {
           "name": "drivers_version_positive",
@@ -1489,199 +1499,6 @@
         "teams_updated_after_created": {
           "name": "teams_updated_after_created",
           "value": "\"teams\".\"updated_at\" >= \"teams\".\"created_at\""
-        }
-      },
-      "isRLSEnabled": false
-    },
-    "public.penalties": {
-      "name": "penalties",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "team_id": {
-          "name": "team_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "driver_id": {
-          "name": "driver_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "race_id": {
-          "name": "race_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "type": {
-          "name": "type",
-          "type": "varchar(40)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "penalty": {
-          "name": "penalty",
-          "type": "varchar(100)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "reason": {
-          "name": "reason",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "issued_at": {
-          "name": "issued_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "version": {
-          "name": "version",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 1
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {
-        "penalties_team_id_idx": {
-          "name": "penalties_team_id_idx",
-          "columns": [
-            {
-              "expression": "team_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "penalties_driver_id_idx": {
-          "name": "penalties_driver_id_idx",
-          "columns": [
-            {
-              "expression": "driver_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "penalties_race_id_idx": {
-          "name": "penalties_race_id_idx",
-          "columns": [
-            {
-              "expression": "race_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "penalties_issued_at_idx": {
-          "name": "penalties_issued_at_idx",
-          "columns": [
-            {
-              "expression": "issued_at",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "penalties_team_id_teams_id_fk": {
-          "name": "penalties_team_id_teams_id_fk",
-          "tableFrom": "penalties",
-          "tableTo": "teams",
-          "columnsFrom": [
-            "team_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "penalties_driver_id_drivers_id_fk": {
-          "name": "penalties_driver_id_drivers_id_fk",
-          "tableFrom": "penalties",
-          "tableTo": "drivers",
-          "columnsFrom": [
-            "driver_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        },
-        "penalties_race_id_races_id_fk": {
-          "name": "penalties_race_id_races_id_fk",
-          "tableFrom": "penalties",
-          "tableTo": "races",
-          "columnsFrom": [
-            "race_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {
-        "penalties_version_positive": {
-          "name": "penalties_version_positive",
-          "value": "\"penalties\".\"version\" >= 1"
-        },
-        "penalties_updated_after_created": {
-          "name": "penalties_updated_after_created",
-          "value": "\"penalties\".\"updated_at\" >= \"penalties\".\"created_at\""
         }
       },
       "isRLSEnabled": false

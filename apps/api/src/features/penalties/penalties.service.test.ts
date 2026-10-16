@@ -35,11 +35,14 @@ const mockRepo = (overrides: Partial<PenaltiesRepository> = {}): PenaltiesReposi
 })
 
 describe('PenaltiesService', () => {
-  it('lista las sanciones llamando al repositorio con filtros', async () => {
+  it('lista sólo las sanciones de los últimos 5 años, con los filtros pedidos', async () => {
     const repo = mockRepo()
-    const service = createPenaltiesService(repo)
+    const service = createPenaltiesService(repo, () => new Date('2026-10-16T12:00:00.000Z'))
     const result = await service.list({ season: 2026 })
-    expect(repo.list).toHaveBeenCalledWith({ season: 2026 })
+    expect(repo.list).toHaveBeenCalledWith({
+      season: 2026,
+      issuedSince: new Date('2021-10-16T12:00:00.000Z'),
+    })
     expect(result).toHaveLength(1)
   })
 

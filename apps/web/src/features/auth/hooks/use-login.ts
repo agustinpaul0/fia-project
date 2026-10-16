@@ -13,6 +13,7 @@ export type LoginState = {
 }
 
 const GENERIC_ERROR = 'Credenciales inválidas.'
+const RATE_LIMITED_ERROR = 'Hiciste demasiados intentos. Esperá unos minutos y volvé a probar.'
 
 export const useLogin = (): LoginState => {
   const navigate = useNavigate()
@@ -27,11 +28,10 @@ export const useLogin = (): LoginState => {
     const { data, error: signInError } = await signIn.email({ email, password })
     setLoading(false)
     if (signInError) {
-      setError(GENERIC_ERROR)
+      setError(signInError.status === 429 ? RATE_LIMITED_ERROR : GENERIC_ERROR)
       return
     }
-    const role = (data?.user as { role?: string } | undefined)?.role
-    if (role === 'fia_admin') {
+    if (data?.user.role === 'fia_admin') {
       void navigate({ to: '/admin/team-staff' })
       return
     }

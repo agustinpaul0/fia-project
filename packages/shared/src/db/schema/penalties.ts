@@ -1,4 +1,5 @@
-import { index, pgTable, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core'
+import { sql } from 'drizzle-orm'
+import { check, index, pgTable, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core'
 import { idColumn, versionedChecks, versionedColumns } from './columns'
 import { drivers } from './drivers'
 import { races } from './races'
@@ -24,6 +25,12 @@ export const penalties = pgTable(
     index('penalties_driver_id_idx').on(table.driverId),
     index('penalties_race_id_idx').on(table.raceId),
     index('penalties_issued_at_idx').on(table.issuedAt),
+    check(
+      'penalties_type_valid',
+      sql`${table.type} in ('time_penalty', 'grid_penalty', 'points_deduction', 'disqualification', 'fine', 'reprimand')`,
+    ),
+    check('penalties_penalty_length', sql`char_length(${table.penalty}) >= 2`),
+    check('penalties_reason_length', sql`char_length(${table.reason}) between 5 and 255`),
     ...versionedChecks('penalties', table),
   ],
 )

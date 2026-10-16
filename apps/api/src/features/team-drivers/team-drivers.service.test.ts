@@ -18,6 +18,7 @@ const mockRow: DriverRow = {
   code: 'LEC',
   number: 16,
   country: 'Mónaco',
+  license: 'FIA-16-LEC',
   teamId: 'team-ferrari',
   role: 'main',
   version: 1,
@@ -31,6 +32,7 @@ const mockBody: CreateTeamDriverBody = {
   code: 'LEC',
   number: 16,
   country: 'Mónaco',
+  license: 'FIA-16-LEC',
   role: 'main',
 }
 
