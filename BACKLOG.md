@@ -336,7 +336,8 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 
 **Acuerdos con el PO (Grupo Naranja)**
 - Mensajes genéricos de error ante fallo de autenticación para prevenir enumeración de cuentas.
-- Redirección post-login: administradores FIA (`fia_admin`) redirigen a su panel administrativo (`/admin/team-staff`), personal de escudería (`team_staff`) a su área (`/results` / `/admin/results`), y usuarios generales al inicio (`/`).
+- Redirección post-login: administradores FIA (`fia_admin`) redirigen a su panel administrativo (`/admin/team-staff`); el resto de los roles (`team_staff`, `public`) va al inicio (`/`), desde donde navega a su área.
+- Ante el límite de intentos (429) se muestra el mensaje de `RATE_LIMITED` en lugar del genérico.
 - Sesión con expiración por inactividad e invalidación al cerrar sesión.
 - Rate limiting activo para prevenir fuerza bruta (máximo 10 intentos por minuto por IP).
 
