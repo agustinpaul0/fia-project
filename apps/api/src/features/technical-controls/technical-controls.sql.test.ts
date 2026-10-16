@@ -2,9 +2,10 @@ import { describe, expect, it } from 'vitest'
 import { buildFilterConditions } from './technical-controls.sql'
 
 describe('buildFilterConditions', () => {
-  it('retorna arreglo vacío si no hay filtros', () => {
-    const conditions = buildFilterConditions({})
-    expect(conditions).toHaveLength(0)
+  const activeAt = new Date('2026-10-16T12:00:00.000Z')
+
+  it('siempre filtra por vigencia aunque no haya otros filtros', () => {
+    expect(buildFilterConditions({ activeAt })).toHaveLength(1)
   })
 
   it('construye condiciones para cada filtro presente', () => {
@@ -13,7 +14,8 @@ describe('buildFilterConditions', () => {
       controlType: 'dimensions',
       status: 'passed',
       season: 2026,
+      activeAt,
     })
-    expect(conditions.length).toBeGreaterThanOrEqual(4)
+    expect(conditions).toHaveLength(6)
   })
 })

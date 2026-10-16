@@ -1,6 +1,6 @@
-import type { TechnicalControlsQuery } from '@fia/shared/contracts'
 import { drivers, races, teams, technicalControls } from '@fia/shared/db'
-import { eq, gte, lte, type SQL } from 'drizzle-orm'
+import { eq, gt, gte, lte, type SQL } from 'drizzle-orm'
+import type { TechnicalControlsListFilter } from './technical-controls.port'
 
 export const technicalControlSelectFields = {
   id: technicalControls.id,
@@ -21,8 +21,8 @@ export const technicalControlSelectFields = {
   createdAt: technicalControls.createdAt,
 }
 
-export const buildFilterConditions = (filter: TechnicalControlsQuery): SQL[] => {
-  const conditions: SQL[] = []
+export const buildFilterConditions = (filter: TechnicalControlsListFilter): SQL[] => {
+  const conditions: SQL[] = [gt(technicalControls.expiresAt, filter.activeAt)]
   if (filter.teamId) {
     conditions.push(eq(technicalControls.teamId, filter.teamId))
   }

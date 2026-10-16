@@ -13,8 +13,9 @@ export type TechnicalControlsService = {
 
 export const createTechnicalControlsService = (
   repo: TechnicalControlsRepository,
+  now: () => Date = () => new Date(),
 ): TechnicalControlsService => ({
-  list: (filter) => repo.list(filter),
+  list: (filter) => repo.list({ ...filter, activeAt: now() }),
   create: async (body) => {
     if (body.driverId !== null && body.driverId !== undefined) {
       const belongs = await repo.driverBelongsToTeam(body.driverId, body.teamId)

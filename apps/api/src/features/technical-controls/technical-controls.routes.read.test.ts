@@ -15,7 +15,7 @@ const mockControl: TechnicalControl = {
   status: 'passed',
   notes: 'Pesaje conforme a reglamento.',
   inspectedAt: '2026-05-24T14:30:00.000Z',
-  expiresAt: '2026-05-24T20:00:00.000Z',
+  expiresAt: '2099-05-24T20:00:00.000Z',
   version: 1,
   createdAt: '2026-05-24T14:35:00.000Z',
 }
@@ -49,5 +49,16 @@ describe('rutas de lectura technical-controls', () => {
     expect(resTeam.status).toBe(200)
     const teamBody = (await resTeam.json()) as unknown[]
     expect(teamBody).toHaveLength(1)
+  })
+
+  it('oculta los controles cuya expiración ya pasó', async () => {
+    const expired = {
+      ...mockControl,
+      id: '00000000-0000-4000-8000-000000000002',
+      expiresAt: '2020-01-01T00:00:00.000Z',
+    }
+    const { app } = createTestApp({ sessionUser: null, technicalControls: [mockControl, expired] })
+    const body = (await (await app.request('/technical-controls')).json()) as Array<{ id: string }>
+    expect(body.map((c) => c.id)).toEqual([mockControl.id])
   })
 })

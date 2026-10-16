@@ -11,14 +11,14 @@ type RawTechnicalControlRow = {
   readonly driverId: string | null
   readonly driverFirstName: string | null
   readonly driverLastName: string | null
-  readonly carNumber: number | null
+  readonly carNumber: number
   readonly raceId: string | null
   readonly raceName: string | null
   readonly controlType: string
   readonly status: string
   readonly notes: string | null
   readonly inspectedAt: Date
-  readonly expiresAt: Date | null
+  readonly expiresAt: Date
   readonly version: number
   readonly createdAt: Date
 }
@@ -36,7 +36,7 @@ export const toTechnicalControlDto = (row: RawTechnicalControlRow): TechnicalCon
   status: technicalControlStatusSchema.parse(row.status),
   notes: row.notes,
   inspectedAt: row.inspectedAt.toISOString(),
-  expiresAt: row.expiresAt ? row.expiresAt.toISOString() : null,
+  expiresAt: row.expiresAt.toISOString(),
   version: row.version,
   createdAt: row.createdAt.toISOString(),
 })

@@ -1,5 +1,5 @@
 {
-  "id": "d0356edb-8f49-488c-9edd-5b5b139e7aba",
+  "id": "5eeadb31-b597-4f89-9121-7be07f42b740",
   "prevId": "9549d58f-a22e-471c-a39a-fab8d25bd38d",
   "version": "7",
   "dialect": "postgresql",
@@ -1735,7 +1735,7 @@
           "name": "car_number",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "race_id": {
           "name": "race_id",
@@ -1771,7 +1771,7 @@
           "name": "expires_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "version": {
           "name": "version",
@@ -1917,6 +1917,22 @@
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {
+        "tech_controls_car_number_range": {
+          "name": "tech_controls_car_number_range",
+          "value": "\"technical_controls\".\"car_number\" between 1 and 99"
+        },
+        "tech_controls_type_valid": {
+          "name": "tech_controls_type_valid",
+          "value": "\"technical_controls\".\"control_type\" in ('weight', 'fuel', 'dimensions', 'engine', 'safety', 'post_race')"
+        },
+        "tech_controls_status_valid": {
+          "name": "tech_controls_status_valid",
+          "value": "\"technical_controls\".\"status\" in ('passed', 'rejected')"
+        },
+        "tech_controls_expires_after_inspection": {
+          "name": "tech_controls_expires_after_inspection",
+          "value": "\"technical_controls\".\"expires_at\" > \"technical_controls\".\"inspected_at\""
+        },
         "technical_controls_version_positive": {
           "name": "technical_controls_version_positive",
           "value": "\"technical_controls\".\"version\" >= 1"

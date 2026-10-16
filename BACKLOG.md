@@ -448,6 +448,12 @@ faltaba el filtro por escudería. Escudería o carrera inexistente daban 500 (ah
 
 **Horas reales**: 1 h (sesión del 2026-10-14, implementación asistida por IA).
 
+**QA (Agustín)**: el listado mostraba también los controles vencidos (ahora oculta los que pasaron su
+`expiresAt`), el vehículo inspeccionado (número de auto) era opcional y el formulario no permitía cargar la
+fecha y hora del control ni su vigencia. Número de auto, fecha del control y vigencia pasan a ser obligatorios
+(con `check` en la base: rango del auto, tipo, dictamen y vigencia posterior al control), y una FK inexistente
+ahora responde 404 en lugar de 500. Se sumaron tests de integración, fuzz y de UI (mutación web 46 % → 83 %).
+
 **Falta para cerrar**: ninguno. Plan: [docs/plans/US-21-technical-controls.md](docs/plans/US-21-technical-controls.md).
 
 ---

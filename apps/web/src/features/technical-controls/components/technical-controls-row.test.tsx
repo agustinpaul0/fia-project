@@ -1,38 +1,43 @@
-import type { TechnicalControl } from '@fia/shared/contracts'
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
+import { aTechnicalControl } from '@/testing/technical-control-builders'
 import { TechnicalControlsRow } from './technical-controls-row'
 
-const minimalControl: TechnicalControl = {
-  id: '00000000-0000-4000-8000-000000000001',
-  teamId: '00000000-0000-4000-8000-000000000010',
-  teamName: 'McLaren',
-  driverId: null,
-  driverName: null,
-  carNumber: null,
-  raceId: null,
-  raceName: null,
-  controlType: 'fuel',
-  status: 'rejected',
-  notes: null,
-  inspectedAt: '2026-05-24T14:30:00.000Z',
-  expiresAt: null,
-  version: 1,
-  createdAt: '2026-05-24T14:35:00.000Z',
+const cellsOf = (control = aTechnicalControl()): string[] => {
+  render(
+    <table>
+      <tbody>
+        <TechnicalControlsRow control={control} />
+      </tbody>
+    </table>,
+  )
+  return within(screen.getByRole('row'))
+    .getAllByRole('cell')
+    .map((c) => c.textContent ?? '')
 }
 
 describe('TechnicalControlsRow', () => {
-  it('renderiza correctamente un control mínimo con guiones en opcionales', () => {
-    render(
-      <table>
-        <tbody>
-          <TechnicalControlsRow control={minimalControl} />
-        </tbody>
-      </table>,
+  it('muestra fecha y hora, vehículo, tipo, dictamen y vigencia del control', () => {
+    expect(cellsOf()).toEqual([
+      '24/5/26, 11:30',
+      'McLarenAuto #4',
+      'Combustible',
+      'Rechazado',
+      '31/5/26, 11:30',
+      '—',
+    ])
+  })
+
+  it('agrega la carrera, el piloto y las observaciones cuando existen', () => {
+    const cells = cellsOf(
+      aTechnicalControl({
+        raceName: 'Gran Premio de Mónaco',
+        driverName: 'Lando Norris',
+        notes: 'Combustible fuera de norma.',
+      }),
     )
-    expect(screen.getByText('McLaren')).toBeInTheDocument()
-    expect(screen.getByText('Combustible')).toBeInTheDocument()
-    expect(screen.getByText('Rechazado')).toBeInTheDocument()
-    expect(screen.getAllByText('—').length).toBeGreaterThanOrEqual(2)
+    expect(cells[0]).toBe('24/5/26, 11:30Gran Premio de Mónaco')
+    expect(cells[1]).toBe('McLarenAuto #4Lando Norris')
+    expect(cells[5]).toBe('Combustible fuera de norma.')
   })
 })
