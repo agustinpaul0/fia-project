@@ -28,6 +28,10 @@ export const createBetterAuth = ({ db, secret, baseURL, trustedOrigins }: Better
       minPasswordLength: 12,
       maxPasswordLength: 128,
     },
+    session: {
+      expiresIn: 60 * 60 * 8,
+      updateAge: 60 * 60,
+    },
     user: {
       additionalFields: {
         teamId: {

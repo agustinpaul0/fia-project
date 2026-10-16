@@ -12,6 +12,9 @@ export type LoginState = {
   readonly submit: (event: FormEvent) => Promise<void>
 }
 
+const GENERIC_ERROR = 'Credenciales inválidas.'
+const RATE_LIMITED_ERROR = 'Hiciste demasiados intentos. Esperá unos minutos y volvé a probar.'
+
 export const useLogin = (): LoginState => {
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
@@ -22,10 +25,14 @@ export const useLogin = (): LoginState => {
     event.preventDefault()
     setError(null)
     setLoading(true)
-    const { error: signInError } = await signIn.email({ email, password })
+    const { data, error: signInError } = await signIn.email({ email, password })
     setLoading(false)
     if (signInError) {
-      setError(signInError.message ?? 'Credenciales incorrectas.')
+      setError(signInError.status === 429 ? RATE_LIMITED_ERROR : GENERIC_ERROR)
+      return
+    }
+    if (data?.user.role === 'fia_admin') {
+      void navigate({ to: '/admin/team-staff' })
       return
     }
     void navigate({ to: '/' })

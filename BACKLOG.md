@@ -294,34 +294,81 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 
 ---
 
+## Sprint 2 — 06/10/2026 → 20/10/2026 (demo: martes 20/10/2026)
+
+### Resumen
+
+| ID | Ítem | SP | BV | Est. | Real | Estado | Dueño | Depende de | PR |
+|---|---|---|---|---|---|---|---|---|---|
+| US-4 | Iniciar sesión mediante credenciales seguras | 13 | 13 | 9 h | 1 h | Hecho | Santiago | T-1 | |
+| US-10 | Cargar la información de los pilotos titulares y suplentes | 5 | 13 | 7 h | | Pendiente | — | US-4, T-2 | |
+| US-13 | Cargar sanciones a pilotos o escuderías | 5 | 13 | 7,5 h | | Pendiente | — | US-4, US-10 | |
+| US-21 | Ingresar fechas, tipos y resultado de controles técnicos por auto | 3 | 13 | 5 h | | Pendiente | — | US-4, US-13 | |
+| US-6 | Chats de mensajería cifrados de extremo a extremo | 13 | 13 | 9 h | | Pendiente | — | US-4 | |
+| US-2 | Realizar un testeo del nuevo incremento del producto | 5 | 13 | 7 h | | Pendiente | — | — | |
+
+**Nueva escala de equivalencia de Naranja**: 1 SP = 1–4 h · 3 SP = 4–6 h · 5 SP = 6–8 h · 13 SP = 8–10 h.  
+**Orden sugerido [equipo]**: US-4 → US-10 → US-13 → US-21 → US-6. US-2 acompaña todo el sprint con la suite de pruebas.
+
+---
+
+### US-4 — Iniciar sesión mediante credenciales seguras
+
+> **Como** Personal Administrativo de la FIA **quiero** iniciar sesión en el sistema mediante credenciales seguras
+> **de forma que** pueda acceder a las funciones de administración y configuración de la plataforma. — SP 13 · BV 13
+
+| Tarea (Naranja) | Est. | Real | Hecha |
+|---|---|---|---|
+| Diseñar el esquema de base de datos para credenciales, roles y hash seguro de contraseñas (bcrypt/Argon2 con sal) | 1 h | | [x] |
+| Implementar servicio de autenticación de backend (validación de credenciales y generación de token de sesión/JWT) | 2 h | | [x] |
+| Implementar middleware de autorización y control de acceso para proteger rutas del rol administrativo de la FIA | 1,5 h | | [x] |
+| Desarrollar la pantalla de inicio de sesión con validaciones de formulario y manejo de mensajes de error | 1,5 h | | [x] |
+| Implementar expiración de sesión por inactividad y mecanismo de cierre de sesión seguro | 1 h | | [x] |
+| Pruebas funcionales de seguridad: Bloqueo ante intentos fallidos, inyección y acceso no autorizado por URL | 2 h | | [x] |
+| **Total** | **9 h** | **1 h** | |
+
+**Criterios de aceptación**
+- [x] Un administrador registrado ingresa sus credenciales válidas y el sistema lo redirige a la vista de administración de la FIA.
+- [x] Ante un email o contraseña incorrectos, el sistema muestra un mensaje genérico (ej: <<Credenciales inválidas>>) sin revelar si el usuario existe.
+- [x] Las contraseñas nunca viajan ni se almacenan en texto plano, guardándose siempre mediante hash seguro con sal.
+- [x] Si un usuario no autenticado o con otro rol intenta acceder a un endpoint o URL administrativa, el servidor deniega el acceso con código HTTP correspondiente (401/403).
+- [x] Al cerrar sesión o vencer el tiempo de inactividad, el token/sesión queda invalidado de forma efectiva.
+
+**Acuerdos con el PO (Grupo Naranja)**
+- Mensajes genéricos de error ante fallo de autenticación para prevenir enumeración de cuentas.
+- Redirección post-login: administradores FIA (`fia_admin`) redirigen a su panel administrativo (`/admin/team-staff`); el resto de los roles (`team_staff`, `public`) va al inicio (`/`), desde donde navega a su área.
+- Ante el límite de intentos (429) se muestra el mensaje de `RATE_LIMITED` en lugar del genérico.
+- Sesión con expiración por inactividad e invalidación al cerrar sesión.
+- Rate limiting activo para prevenir fuerza bruta (máximo 10 intentos por minuto por IP).
+
+**Horas reales**: 1 h (sesión del 2026-10-14, implementación asistida por IA).
+
+**Falta para cerrar**: ninguno. Plan: [docs/plans/US-4-authentication.md](docs/plans/US-4-authentication.md).
+
+---
+
 ## Diferido
 
 | ID | Ítem | Motivo | Estado |
 |---|---|---|---|
 | T-3 | Tests e2e con Playwright de los flujos principales **[equipo]** | Se dejan para el final del proyecto (decisión del equipo). | Pendiente |
 
-## Product backlog (no seleccionado para el Sprint 1)
+## Product backlog (no seleccionado para el Sprint 1 ni 2)
 
 | ID | Como | Quiero | SP | BV |
 |---|---|---|---|---|
 | US-1 | Miembro del equipo de desarrollo | Que la aplicación tenga el mismo desempeño en móvil y en web | 8 | 8 |
-| US-2 | Miembro del equipo de desarrollo | Realizar un testeo del nuevo incremento del producto | 5 | 13 |
 | US-3 | Usuario | Aplicar filtros (fecha, año, relevancia, tipo de control técnico, identificador, etc.) | 5 | 8 |
-| US-4 | Personal Administrativo de la FIA | Iniciar sesión mediante credenciales seguras | 13 | 13 |
-| US-6 | Personal Administrativo de la FIA y/o de las escuderías | Chats de mensajería cifrados de extremo a extremo | 13 | 13 |
 | US-7 | Usuario | Acceder a la app móvil con datos biométricos o el PIN del celular | 13 | 5 |
 | US-8 | Personal Administrativo de la FIA | Cargar una fecha de carrera o evento (categoría, circuito y fecha) | 5 | 5 |
-| US-10 | Personal de las escuderías | Cargar la información de los pilotos titulares y suplentes | 5 | 13 |
 | US-11 | Personal de las escuderías | Modificar la información de los pilotos y su condición de titular/suplente | 5 | 8 |
 | US-12 | Miembro del equipo de desarrollo | Alta disponibilidad y escalabilidad en número de usuarios | 13 | 8 |
-| US-13 | Personal Administrativo de la FIA | Cargar sanciones a pilotos o escuderías | 5 | 13 |
 | US-14 | Usuario | Crear un nuevo usuario desde la app | 3 | 1 |
 | US-15 | Personal de las escuderías | Asentar la confirmación de notificación de una sanción | 3 | 8 |
 | US-16 | Usuario | Consultar el listado histórico y en vivo de sanciones de la temporada | 3 | 8 |
 | US-17 | Usuario | Consultar perfiles de pilotos titulares y suplentes de todas las escuderías | 3 | 8 |
 | US-18 | Usuario | Compartir contenido en redes sociales (WhatsApp, Instagram) | 5 | 2 |
 | US-19 | Personal Administrativo de la FIA | Modificar o dar de baja eventos deportivos programados | 5 | 13 |
-| US-21 | Personal Administrativo de la FIA | Ingresar fechas, tipos y resultado de controles técnicos por auto | 3 | 13 |
 | US-22 | Miembro del equipo de desarrollo | Cargar fotos de pilotos y autos | 2 | 3 |
 | US-24 | Personal de las escuderías | Visualizar resultados y observaciones de controles técnicos | 2 | 13 |
 | US-25 | Usuario | Visualizar reportes de controles técnicos por gran premio | 2 | 5 |
