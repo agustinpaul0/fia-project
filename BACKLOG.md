@@ -336,7 +336,8 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 
 **Acuerdos con el PO (Grupo Naranja)**
 - Mensajes genéricos de error ante fallo de autenticación para prevenir enumeración de cuentas.
-- Redirección post-login: administradores FIA (`fia_admin`) redirigen a su panel administrativo (`/admin/team-staff`), personal de escudería (`team_staff`) a su área (`/results` / `/admin/results`), y usuarios generales al inicio (`/`).
+- Redirección post-login: administradores FIA (`fia_admin`) redirigen a su panel administrativo (`/admin/team-staff`); el resto de los roles (`team_staff`, `public`) va al inicio (`/`), desde donde navega a su área.
+- Ante el límite de intentos (429) se muestra el mensaje de `RATE_LIMITED` en lugar del genérico.
 - Sesión con expiración por inactividad e invalidación al cerrar sesión.
 - Rate limiting activo para prevenir fuerza bruta (máximo 10 intentos por minuto por IP).
 
@@ -372,6 +373,11 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 - Límite reglamentario: hasta 2 titulares y 2 suplentes por escudería.
 
 **Horas reales**: 1 h (sesión del 2026-10-14, implementación asistida por IA).
+
+**QA (Agustín)**: faltaba la licencia deportiva que pide el primer criterio; se agregó en schema (migración
+`0007_add_driver_license`), contrato, API, formulario y nómina. Se sumaron test de integración del repositorio
+(con violaciones de unicidad traducidas a 409), fuzz de la ruta y tests de UI. Consultas abiertas al PO en
+[docs/preguntas-po.md](docs/preguntas-po.md) (formato de licencia, dorsal por categoría, foto → US-22).
 
 **Falta para cerrar**: ninguno. Plan: [docs/plans/US-10-team-drivers.md](docs/plans/US-10-team-drivers.md).
 

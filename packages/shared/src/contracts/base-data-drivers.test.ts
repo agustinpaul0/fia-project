@@ -64,6 +64,7 @@ describe('contratos de pilotos', () => {
     const dto = {
       id: '00000000-0000-4000-8000-000000000003',
       ...valid,
+      license: null,
       teamId: null,
       role: 'main' as const,
       version: 1,
@@ -74,9 +75,19 @@ describe('contratos de pilotos', () => {
   })
 
   it('valida alta de piloto por escudería y lista de pilotos', () => {
-    const parsed = createTeamDriverBodySchema.parse(valid)
-    expect(parsed).toEqual({ ...valid, role: 'main' })
+    const body = { ...valid, license: ' FIA-16-LEC ' }
+    const parsed = createTeamDriverBodySchema.parse(body)
+    expect(parsed).toEqual({ ...valid, license: 'FIA-16-LEC', role: 'main' })
     const list = driverListSchema.parse([])
     expect(list).toEqual([])
+  })
+
+  it.each([
+    [undefined, 'Invalid input: expected string, received undefined'],
+    ['AB', 'La licencia deportiva debe tener al menos 3 caracteres.'],
+    ['A'.repeat(21), 'La licencia deportiva no puede superar los 20 caracteres.'],
+  ])('rechaza el alta por escudería con licencia %s', (license, message) => {
+    const result = createTeamDriverBodySchema.safeParse({ ...valid, license })
+    expect(result.error?.issues[0]?.message).toBe(message)
   })
 })

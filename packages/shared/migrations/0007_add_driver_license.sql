@@ -1,0 +1,2 @@
+ALTER TABLE "drivers" ADD COLUMN "license" varchar(20);--> statement-breakpoint
+ALTER TABLE "drivers" ADD CONSTRAINT "drivers_license_length" CHECK ("drivers"."license" is null or char_length("drivers"."license") >= 3);
