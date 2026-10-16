@@ -50,6 +50,14 @@ export const MainNav = ({ userRole }: { readonly userRole: Role | null }): React
     >
       Sanciones
     </Link>
+    <Link
+      to="/scrutineering"
+      className={NAV_LINK_CLASS}
+      activeProps={NAV_ACTIVE}
+      inactiveProps={NAV_INACTIVE}
+    >
+      Técnica
+    </Link>
     {userRole === 'fia_admin' ? <AdminLinks /> : null}
     {userRole === 'team_staff' ? (
       <>

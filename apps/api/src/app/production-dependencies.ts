@@ -11,6 +11,7 @@ import { createDrizzleRaceResultsRepository } from '../features/race-results/rac
 import { createDrizzleTeamDriversRepository } from '../features/team-drivers/team-drivers.repository'
 import { createDrizzleTeamStaffUnitOfWork } from '../features/team-staff/team-staff-unit-of-work'
 import { createDrizzleTeamsRepository } from '../features/teams/teams.repository'
+import { createDrizzleTechnicalControlsRepository } from '../features/technical-controls/technical-controls.repository'
 import type { AppDependencies } from './app-dependencies'
 
 export type ProductionContext = {
@@ -46,6 +47,7 @@ export const createProductionDependencies = ({
       notifications: createDrizzleNotificationsRepository(db),
       teamDrivers: createDrizzleTeamDriversRepository(db),
       penalties: createDrizzlePenaltiesRepository(db),
+      technicalControls: createDrizzleTechnicalControlsRepository(db),
     },
     auth,
   }

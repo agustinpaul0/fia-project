@@ -1,0 +1,72 @@
+import type { TechnicalControlStatus, TechnicalControlType } from '@fia/shared/contracts'
+import { type ReactNode, useState } from 'react'
+import { toast } from 'sonner'
+import { QueryView } from '@/components/common/query-view'
+import { Button } from '@/components/ui/button'
+import { useSession } from '@/lib/auth-client'
+import { useCreateTechnicalControl } from '../hooks/use-create-technical-control'
+import { useTechnicalControls } from '../hooks/use-technical-controls'
+import { TechnicalControlCreateDialog } from './technical-control-create-dialog'
+import { TechnicalControlsFilters } from './technical-controls-filters'
+import { TechnicalControlsTable } from './technical-controls-table'
+
+export const TechnicalControlsSection = (): ReactNode => {
+  const { data: session } = useSession()
+  const isFiaAdmin = session?.user?.role === 'fia_admin'
+
+  const [season, setSeason] = useState<number | undefined>(undefined)
+  const [controlType, setControlType] = useState<TechnicalControlType | undefined>(undefined)
+  const [status, setStatus] = useState<TechnicalControlStatus | undefined>(undefined)
+  const [dialogOpen, setDialogOpen] = useState(false)
+
+  const query = useTechnicalControls({ season, controlType, status })
+  const createMut = useCreateTechnicalControl()
+
+  return (
+    <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-8">
+      <div className="flex flex-col justify-between gap-4 border-2 border-black bg-surface p-6 shadow-brutal sm:flex-row sm:items-center">
+        <div>
+          <h1 className="font-bold font-headline text-2xl text-on-surface uppercase tracking-wide">
+            Controles Técnicos Oficiales
+          </h1>
+          <p className="font-mono text-on-surface-variant text-sm">
+            Registro y dictamen de verificaciones técnicas reglamentarias por vehículo y evento.
+          </p>
+        </div>
+        {isFiaAdmin && (
+          <Button variant="accent" className="shadow-brutal-sm" onClick={() => setDialogOpen(true)}>
+            + Nuevo control técnico
+          </Button>
+        )}
+      </div>
+
+      <TechnicalControlsFilters
+        selectedSeason={season}
+        selectedControlType={controlType}
+        selectedStatus={status}
+        onSeasonChange={setSeason}
+        onControlTypeChange={setControlType}
+        onStatusChange={setStatus}
+      />
+
+      <QueryView
+        query={query}
+        isEmpty={(items) => items.length === 0}
+        emptyMessage="No se encontraron controles técnicos registrados para los filtros aplicados."
+      >
+        {(items) => <TechnicalControlsTable controls={items} />}
+      </QueryView>
+
+      {isFiaAdmin && (
+        <TechnicalControlCreateDialog
+          open={dialogOpen}
+          onOpenChange={setDialogOpen}
+          onSubmit={async (data) => {
+            await createMut.mutateAsync(data)
+            toast.success('Control técnico registrado exitosamente.')
+          }}
+        />
+      )}
+    </div>
+  )
+}
