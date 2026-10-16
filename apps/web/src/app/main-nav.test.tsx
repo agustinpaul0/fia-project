@@ -38,6 +38,7 @@ describe('MainNav', () => {
       'href',
       '/admin/notifications',
     )
+    expect(screen.getByRole('link', { name: 'Mensajes' })).toHaveAttribute('href', '/chat')
   })
 
   it('suma la bandeja de notificaciones y pilotos para team_staff', async () => {
@@ -48,6 +49,7 @@ describe('MainNav', () => {
       '/notifications',
     )
     expect(screen.getByRole('link', { name: 'Pilotos' })).toHaveAttribute('href', '/team/drivers')
+    expect(screen.getByRole('link', { name: 'Mensajes' })).toHaveAttribute('href', '/chat')
     expect(screen.queryByRole('link', { name: 'Personal' })).not.toBeInTheDocument()
   })
 

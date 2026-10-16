@@ -1,5 +1,6 @@
 export * from './auth'
 export * from './categories'
+export * from './chat'
 export * from './circuits'
 export * from './drivers'
 export * from './penalties'

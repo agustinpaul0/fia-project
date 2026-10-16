@@ -304,7 +304,7 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 | US-10 | Cargar la información de los pilotos titulares y suplentes | 5 | 13 | 7 h | 1 h | Hecho | Santiago | US-4, T-2 | |
 | US-13 | Cargar sanciones a pilotos o escuderías | 5 | 13 | 7,5 h | 1 h | Hecho | Santiago | US-4, US-10 | |
 | US-21 | Ingresar fechas, tipos y resultado de controles técnicos por auto | 3 | 13 | 5 h | 1 h | Hecho | Santiago | US-4, US-13 | |
-| US-6 | Chats de mensajería cifrados de extremo a extremo | 13 | 13 | 9 h | | Pendiente | — | US-4 | |
+| US-6 | Chats de mensajería cifrados de extremo a extremo | 13 | 13 | 9 h | 1,5 h | Hecho | Santiago | US-4 | |
 | US-2 | Realizar un testeo del nuevo incremento del producto | 5 | 13 | 7 h | | Pendiente | — | — | |
 
 **Nueva escala de equivalencia de Naranja**: 1 SP = 1–4 h · 3 SP = 4–6 h · 5 SP = 6–8 h · 13 SP = 8–10 h.  
@@ -455,6 +455,49 @@ fecha y hora del control ni su vigencia. Número de auto, fecha del control y vi
 ahora responde 404 en lugar de 500. Se sumaron tests de integración, fuzz y de UI (mutación web 46 % → 83 %).
 
 **Falta para cerrar**: ninguno. Plan: [docs/plans/US-21-technical-controls.md](docs/plans/US-21-technical-controls.md).
+
+---
+
+### US-6 — Chats de mensajería cifrados de extremo a extremo
+
+> **Como** Personal Administrativo de la FIA y/o de las escuderías
+> **quiero** que los chats de mensajería estén cifrados de extremo a extremo
+> **de forma que** se valore la privacidad y la seguridad de los datos compartidos. — SP 13 · BV 13
+
+| Tarea (Naranja) | Est. | Real | Hecha |
+|---|---|---|---|
+| Diseñar el protocolo de intercambio de claves públicas/privadas y almacenamiento seguro de llaves en el cliente | 2 h | | [x] |
+| Implementar servicio de cifrado y descifrado de mensajes en el lado cliente antes del envío | 2 h | | [x] |
+| Desarrollar backend de retransmisión de mensajes cifrados (almacenamiento como payload opaco en servidor) | 1,5 h | | [x] |
+| Adaptar la interfaz del chat para mostrar estado de seguridad y verificación de claves de la conversación | 1,5 h | | [x] |
+| Manejar escenarios de desconexión, almacenamiento local seguro y sincronización de mensajes fuera de línea | 1 h | | [x] |
+| Pruebas de seguridad e interceptación: verificar que el servidor o un tercero no puedan leer el contenido de los mensajes | 1 h | | [x] |
+| **Total** | **9 h** | **1,5 h** | |
+
+**Criterios de aceptación**
+- [x] Los mensajes se cifran en el dispositivo del emisor y solo pueden ser descifrados en el dispositivo del receptor destinatario.
+- [x] La base de datos y los registros del servidor únicamente persisten el contenido cifrado (texto plano inaccesible para los administradores del servidor).
+- [x] La interfaz del chat indica con un indicador visible que la conversación cuenta con cifrado extremo a extremo activo.
+- [x] El sistema rechaza o alerta si una de las partes no tiene un par de claves válido o si la firma criptográfica del mensaje no coincide.
+
+**Acuerdos con el PO (Grupo Naranja)**
+- Criptografía estándar: Web Crypto API (`ECDH` P-256 para derivación de clave compartida, `AES-GCM` 256-bit para cifrado autenticado de mensajes, `ECDSA` para firmas de autenticidad).
+- El servidor solo actúa como *relé opaco* (almacena clave pública de cada usuario en el registro y mensajes con payload cifrado e IV). No conoce las claves privadas de los usuarios.
+- Acceso: Solo personal autenticado (`fia_admin` y `team_staff`). Las conversaciones se habilitan entre personal FIA y escuderías o entre escuderías.
+
+**Horas reales**: 1,5 h (sesión del 2026-10-14, implementación asistida por IA).
+
+**QA (Agustín)**: la entrega no cumplía ningún criterio. La pantalla mandaba el texto **en plano** (con IV y
+firma falsos) y mostraba "Cifrado E2E" igual; las claves privadas vivían sólo en memoria; `isParticipant`
+ignoraba el id de la conversación (cualquiera con un chat podía leer y escribir en todos); el `JOIN` de
+`user.team_id` (text) con `teams.id` (uuid) rompía en Postgres; no había forma de iniciar una conversación;
+y los parámetros no se validaban. Se reimplementó: cifrado AES-GCM con clave ECDH y firma ECDSA en el
+navegador, claves privadas no exportables guardadas en IndexedDB, verificación de firma con alerta en cada
+mensaje, selector de contactos (`GET /chat/contacts`), rechazo si el destinatario no tiene claves, control de
+participantes y validación Zod. Se sumaron tests de integración, fuzz, un flujo E2E con claves reales y tests
+de UI.
+
+**Falta para cerrar**: ninguno. Plan: [docs/plans/US-6-encrypted-chat.md](docs/plans/US-6-encrypted-chat.md).
 
 ---
 
