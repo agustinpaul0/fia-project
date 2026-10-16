@@ -300,12 +300,12 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 
 | ID | Ítem | SP | BV | Est. | Real | Estado | Dueño | Depende de | PR |
 |---|---|---|---|---|---|---|---|---|---|
-| US-4 | Iniciar sesión mediante credenciales seguras | 13 | 13 | 9 h | 1 h | Hecho | Santiago | T-1 | |
-| US-10 | Cargar la información de los pilotos titulares y suplentes | 5 | 13 | 7 h | 1 h | Hecho | Santiago | US-4, T-2 | |
-| US-13 | Cargar sanciones a pilotos o escuderías | 5 | 13 | 7,5 h | 1 h | Hecho | Santiago | US-4, US-10 | |
-| US-21 | Ingresar fechas, tipos y resultado de controles técnicos por auto | 3 | 13 | 5 h | 1 h | Hecho | Santiago | US-4, US-13 | |
-| US-6 | Chats de mensajería cifrados de extremo a extremo | 13 | 13 | 9 h | 1,5 h | Hecho | Santiago | US-4 | |
-| US-2 | Realizar un testeo del nuevo incremento del producto | 5 | 13 | 7 h | | Pendiente | — | — | |
+| US-4 | Iniciar sesión mediante credenciales seguras | 13 | 13 | 9 h | 1 h | Hecho | Santiago | T-1 | #13 |
+| US-10 | Cargar la información de los pilotos titulares y suplentes | 5 | 13 | 7 h | 1 h | Hecho | Santiago | US-4, T-2 | #14 |
+| US-13 | Cargar sanciones a pilotos o escuderías | 5 | 13 | 7,5 h | 1 h | Hecho | Santiago | US-4, US-10 | #15 |
+| US-21 | Ingresar fechas, tipos y resultado de controles técnicos por auto | 3 | 13 | 5 h | 1 h | Hecho | Santiago | US-4, US-13 | #16 |
+| US-6 | Chats de mensajería cifrados de extremo a extremo | 13 | 13 | 9 h | 1,5 h | Hecho | Santiago | US-4 | #17 |
+| US-2 | Realizar un testeo del nuevo incremento del producto | 5 | 13 | 7 h | 1 h | Hecho | Santiago | US-4, US-10, US-13, US-21, US-6 | #18 |
 
 **Nueva escala de equivalencia de Naranja**: 1 SP = 1–4 h · 3 SP = 4–6 h · 5 SP = 6–8 h · 13 SP = 8–10 h.  
 **Orden sugerido [equipo]**: US-4 → US-10 → US-13 → US-21 → US-6. US-2 acompaña todo el sprint con la suite de pruebas.
@@ -498,6 +498,42 @@ participantes y validación Zod. Se sumaron tests de integración, fuzz, un fluj
 de UI.
 
 **Falta para cerrar**: ninguno. Plan: [docs/plans/US-6-encrypted-chat.md](docs/plans/US-6-encrypted-chat.md).
+
+---
+
+### US-2 — Realizar un testeo del nuevo incremento del producto
+
+> **Como** Miembro del equipo de desarrollo
+> **quiero** Realizar un testeo del nuevo incremento del producto
+> **de forma que** Se ponga a prueba el producto. — SP 5 · BV 13
+
+| Tarea (Naranja) | Est. | Real | Hecha |
+|---|---|---|---|
+| Configurar el framework de pruebas automatizadas y el pipeline de ejecución en el repositorio | 1 h | | [x] |
+| Diseñar la matriz de casos de prueba funcionales e integración para los flujos críticos del incremento | 1,5 h | | [x] |
+| Implementar casos de prueba automatizados (unitarios y de integración en endpoints críticos) | 2 h | | [x] |
+| Ejecutar pruebas de regresión e interfaz de usuario (UI/flujos completos) | 1,5 h | | [x] |
+| Documentar incidencias encontradas y verificar su resolución en una re-ejecución | 1 h | | [x] |
+| **Total** | **7 h** | **1 h** | |
+
+**Criterios de aceptación**
+- [x] La suite de pruebas automatizadas se ejecuta con un único comando/pipeline y concluye sin fallos en el código integrado.
+- [x] Se cubren con pruebas unitarias e integración las reglas de validación y persistencia de las entidades del sprint.
+- [x] Toda discrepancia detectada queda registrada con pasos de reproducción, resultado esperado y resultado obtenido.
+- [x] El incremento desplegado no presenta defectos bloqueantes ni fallos no controlados en los flujos principales.
+
+**Acuerdos con el PO (Grupo Naranja)**
+- Alcance del incremento de Sprint 2: autenticación segura con roles (US-4), registro y gestión de pilotos por escudería (US-10), gestión y consulta de sanciones (US-13), inspecciones y controles técnicos vehiculares (US-21) y mensajería cifrada E2E entre FIA y escuderías (US-6).
+- Automatización: `pnpm test:coverage` y `pnpm test:int` garantizan la suite reproducible e integrada.
+
+**Horas reales**: 1 h (sesión del 2026-10-14, implementación asistida por IA).
+
+**QA (Agustín)**: la matriz daba por aprobados casos que no lo estaban (el chat mandaba texto plano) y el test
+del incremento usaba datos que hoy el contrato rechaza. Se rehízo la matriz apuntando a los tests reales
+(`docs/testing.md`), se reescribió el flujo integral en `sprint2-increment-*.test.ts`, el seed de la demo
+carga licencias y controles vigentes, y la mutación web del shard `rest` pasó de 57,6 % a 83,4 %.
+
+**Falta para cerrar**: ninguno. Plan: [docs/plans/US-2-increment-testing.md](docs/plans/US-2-increment-testing.md).
 
 ---
 

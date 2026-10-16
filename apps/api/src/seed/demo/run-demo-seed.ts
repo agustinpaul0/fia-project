@@ -12,6 +12,7 @@ import { seedBaseData } from '../base-data.seed'
 import { seedCategories } from '../categories.seed'
 import { seedDemoCategories } from './demo-categories.seed'
 import { confirmDemoNotification, publishDemoResults } from './demo-results'
+import { seedDemoSprint2 } from './demo-sprint2'
 import { DEMO_STAFF, seedDemoStaff } from './demo-staff'
 
 const env = loadEnv(process.env)
@@ -52,6 +53,8 @@ const confirmed =
     createNotificationsService({ repository: notifications, clock }),
     mclaren,
   ))
+
+await seedDemoSprint2(connection.db)
 
 await connection.close()
 consoleLogger.info('Datos de la demo listos', {

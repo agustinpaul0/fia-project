@@ -46,6 +46,7 @@ export const seedRoster = async (db: DbExecutor, roster: CategoryRoster): Promis
   const teamMap = new Map((await db.select().from(teams)).map((t) => [t.name, t.id]))
   const driverValues = roster.drivers.map(({ teamName, ...d }) => ({
     ...d,
+    license: `FIA-${d.number}-${d.code}`,
     teamId: teamMap.get(teamName) ?? null,
     role: 'main' as const,
   }))
