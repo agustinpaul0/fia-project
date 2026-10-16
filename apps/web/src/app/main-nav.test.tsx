@@ -38,13 +38,14 @@ describe('MainNav', () => {
     )
   })
 
-  it('suma la bandeja de notificaciones para team_staff', async () => {
+  it('suma la bandeja de notificaciones y pilotos para team_staff', async () => {
     mockFetchRoutes({ 'GET /notifications': () => jsonResponse([]) })
     renderWithRouter(<MainNav userRole="team_staff" />)
     expect(await screen.findByRole('link', { name: 'Notificaciones' })).toHaveAttribute(
       'href',
       '/notifications',
     )
+    expect(screen.getByRole('link', { name: 'Pilotos' })).toHaveAttribute('href', '/team/drivers')
     expect(screen.queryByRole('link', { name: 'Personal' })).not.toBeInTheDocument()
   })
 

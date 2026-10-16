@@ -43,6 +43,18 @@ export const MainNav = ({ userRole }: { readonly userRole: Role | null }): React
       Resultados
     </Link>
     {userRole === 'fia_admin' ? <AdminLinks /> : null}
-    {userRole === 'team_staff' ? <NotificationsNavLink /> : null}
+    {userRole === 'team_staff' ? (
+      <>
+        <Link
+          to="/team/drivers"
+          className={NAV_LINK_CLASS}
+          activeProps={NAV_ACTIVE}
+          inactiveProps={NAV_INACTIVE}
+        >
+          Pilotos
+        </Link>
+        <NotificationsNavLink />
+      </>
+    ) : null}
   </nav>
 )

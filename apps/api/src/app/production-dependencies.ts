@@ -7,6 +7,7 @@ import type { Env } from '../env'
 import { createDrizzleCategoriesRepository } from '../features/categories/categories.repository'
 import { createDrizzleNotificationsRepository } from '../features/notifications/notifications.repository'
 import { createDrizzleRaceResultsRepository } from '../features/race-results/race-results.repository'
+import { createDrizzleTeamDriversRepository } from '../features/team-drivers/team-drivers.repository'
 import { createDrizzleTeamStaffUnitOfWork } from '../features/team-staff/team-staff-unit-of-work'
 import { createDrizzleTeamsRepository } from '../features/teams/teams.repository'
 import type { AppDependencies } from './app-dependencies'
@@ -42,6 +43,7 @@ export const createProductionDependencies = ({
       teamStaffUow: createDrizzleTeamStaffUnitOfWork(db, authConfig),
       raceResults: createDrizzleRaceResultsRepository(db),
       notifications: createDrizzleNotificationsRepository(db),
+      teamDrivers: createDrizzleTeamDriversRepository(db),
     },
     auth,
   }

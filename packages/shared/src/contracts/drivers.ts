@@ -14,6 +14,12 @@ export const driverNumberSchema = z
 
 export const driverRoleSchema = z.enum(['main', 'reserve'])
 
+export const driverLicenseSchema = z
+  .string()
+  .trim()
+  .min(3, 'La licencia deportiva debe tener al menos 3 caracteres.')
+  .max(20, 'La licencia deportiva no puede superar los 20 caracteres.')
+
 export const createDriverBodySchema = z.strictObject({
   firstName: z.string().trim().min(2, 'El nombre debe tener al menos 2 caracteres.').max(60),
   lastName: z.string().trim().min(2, 'El apellido debe tener al menos 2 caracteres.').max(60),
@@ -24,6 +30,16 @@ export const createDriverBodySchema = z.strictObject({
   role: driverRoleSchema.default('main'),
 })
 
+export const createTeamDriverBodySchema = z.strictObject({
+  firstName: z.string().trim().min(2, 'El nombre debe tener al menos 2 caracteres.').max(60),
+  lastName: z.string().trim().min(2, 'El apellido debe tener al menos 2 caracteres.').max(60),
+  code: driverCodeSchema,
+  number: driverNumberSchema,
+  country: z.string().trim().min(2, 'El país debe tener al menos 2 caracteres.').max(60),
+  license: driverLicenseSchema,
+  role: driverRoleSchema.default('main'),
+})
+
 export const driverSchema = z.strictObject({
   id: z.uuid(),
   firstName: z.string(),
@@ -31,6 +47,7 @@ export const driverSchema = z.strictObject({
   code: driverCodeSchema,
   number: driverNumberSchema,
   country: z.string(),
+  license: z.string().nullable(),
   teamId: z.uuid().nullable(),
   role: driverRoleSchema,
   version: versionSchema,
@@ -38,6 +55,11 @@ export const driverSchema = z.strictObject({
   updatedAt: z.iso.datetime(),
 })
 
+export const driverListSchema = z.array(driverSchema).readonly()
+
 export type DriverRole = z.infer<typeof driverRoleSchema>
 export type Driver = z.infer<typeof driverSchema>
 export type CreateDriverBody = z.infer<typeof createDriverBodySchema>
+export type CreateTeamDriverBody = z.infer<typeof createTeamDriverBodySchema>
+export type CreateTeamDriverInput = z.input<typeof createTeamDriverBodySchema>
+export type DriverList = z.infer<typeof driverListSchema>

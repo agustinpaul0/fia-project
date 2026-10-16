@@ -12,6 +12,7 @@ export const drivers = pgTable(
     code: varchar('code', { length: 3 }).notNull(),
     number: integer('number').notNull(),
     country: varchar('country', { length: 60 }).notNull(),
+    license: varchar('license', { length: 20 }),
     teamId: uuid('team_id').references(() => teams.id, { onDelete: 'set null' }),
     role: varchar('role', { length: 20 }).notNull().default('main'),
     ...versionedColumns(),
@@ -22,6 +23,10 @@ export const drivers = pgTable(
     check('drivers_code_format', sql`${table.code} ~ '^[A-Z]{3}$'`),
     check('drivers_number_range', sql`${table.number} >= 1 and ${table.number} <= 99`),
     check('drivers_role_valid', sql`${table.role} in ('main', 'reserve')`),
+    check(
+      'drivers_license_length',
+      sql`${table.license} is null or char_length(${table.license}) >= 3`,
+    ),
     ...versionedChecks('drivers', table),
   ],
 )

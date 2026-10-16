@@ -16,6 +16,7 @@ import { Route as ResultsRouteImport } from './routes/results'
 import { Route as AdminNotificationsRouteImport } from './routes/admin.notifications'
 import { Route as AdminTeamStaffRouteImport } from './routes/admin.team-staff'
 import { Route as RacesRaceIdRouteImport } from './routes/races.$raceId'
+import { Route as TeamDriversRouteImport } from './routes/team.drivers'
 import { Route as AdminResultsIndexRouteImport } from './routes/admin.results.index'
 import { Route as AdminResultsRaceIdRouteImport } from './routes/admin.results.$raceId'
 
@@ -54,6 +55,11 @@ const RacesRaceIdRoute = RacesRaceIdRouteImport.update({
   path: '/races/$raceId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TeamDriversRoute = TeamDriversRouteImport.update({
+  id: '/team/drivers',
+  path: '/team/drivers',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminResultsIndexRoute = AdminResultsIndexRouteImport.update({
   id: '/admin/results/',
   path: '/admin/results/',
@@ -73,6 +79,7 @@ export interface FileRoutesByFullPath {
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/team-staff': typeof AdminTeamStaffRoute
   '/races/$raceId': typeof RacesRaceIdRoute
+  '/team/drivers': typeof TeamDriversRoute
   '/admin/results/$raceId': typeof AdminResultsRaceIdRoute
   '/admin/results/': typeof AdminResultsIndexRoute
 }
@@ -84,6 +91,7 @@ export interface FileRoutesByTo {
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/team-staff': typeof AdminTeamStaffRoute
   '/races/$raceId': typeof RacesRaceIdRoute
+  '/team/drivers': typeof TeamDriversRoute
   '/admin/results/$raceId': typeof AdminResultsRaceIdRoute
   '/admin/results': typeof AdminResultsIndexRoute
 }
@@ -96,6 +104,7 @@ export interface FileRoutesById {
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/team-staff': typeof AdminTeamStaffRoute
   '/races/$raceId': typeof RacesRaceIdRoute
+  '/team/drivers': typeof TeamDriversRoute
   '/admin/results/$raceId': typeof AdminResultsRaceIdRoute
   '/admin/results/': typeof AdminResultsIndexRoute
 }
@@ -109,6 +118,7 @@ export interface FileRouteTypes {
     | '/admin/notifications'
     | '/admin/team-staff'
     | '/races/$raceId'
+    | '/team/drivers'
     | '/admin/results/$raceId'
     | '/admin/results/'
   fileRoutesByTo: FileRoutesByTo
@@ -120,6 +130,7 @@ export interface FileRouteTypes {
     | '/admin/notifications'
     | '/admin/team-staff'
     | '/races/$raceId'
+    | '/team/drivers'
     | '/admin/results/$raceId'
     | '/admin/results'
   id:
@@ -131,6 +142,7 @@ export interface FileRouteTypes {
     | '/admin/notifications'
     | '/admin/team-staff'
     | '/races/$raceId'
+    | '/team/drivers'
     | '/admin/results/$raceId'
     | '/admin/results/'
   fileRoutesById: FileRoutesById
@@ -143,6 +155,7 @@ export interface RootRouteChildren {
   AdminNotificationsRoute: typeof AdminNotificationsRoute
   AdminTeamStaffRoute: typeof AdminTeamStaffRoute
   RacesRaceIdRoute: typeof RacesRaceIdRoute
+  TeamDriversRoute: typeof TeamDriversRoute
   AdminResultsRaceIdRoute: typeof AdminResultsRaceIdRoute
   AdminResultsIndexRoute: typeof AdminResultsIndexRoute
 }
@@ -198,6 +211,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RacesRaceIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/team/drivers': {
+      id: '/team/drivers'
+      path: '/team/drivers'
+      fullPath: '/team/drivers'
+      preLoaderRoute: typeof TeamDriversRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/results/': {
       id: '/admin/results/'
       path: '/admin/results'
@@ -223,6 +243,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminNotificationsRoute: AdminNotificationsRoute,
   AdminTeamStaffRoute: AdminTeamStaffRoute,
   RacesRaceIdRoute: RacesRaceIdRoute,
+  TeamDriversRoute: TeamDriversRoute,
   AdminResultsRaceIdRoute: AdminResultsRaceIdRoute,
   AdminResultsIndexRoute: AdminResultsIndexRoute,
 }
