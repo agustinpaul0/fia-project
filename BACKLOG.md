@@ -1,7 +1,8 @@
 # Backlog — Sistema de gestión de la FIA
 
 Fuente: planificación del **Grupo Naranja** (PO / Analista y Management),
-[`docs/specs/GrupoNaranjaSprint0.pdf`](docs/specs/GrupoNaranjaSprint0.pdf). Las historias se transcriben tal
+[`docs/specs/GrupoNaranjaSprint0.pdf`](docs/specs/GrupoNaranjaSprint0.pdf) y, para el Sprint 2,
+[`docs/specs/GrupoNaranjaSprint1.pdf`](docs/specs/GrupoNaranjaSprint1.pdf). Las historias se transcriben tal
 cual; lo agregado por el equipo implementador está marcado como **[equipo]**.
 
 ## Cómo se usa este archivo
