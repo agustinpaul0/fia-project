@@ -18,10 +18,14 @@ import {
   sendMessageApi,
 } from '../api/chat-api'
 
+export const MESSAGES_POLL_MS = 3_000
+export const CONVERSATIONS_POLL_MS = 10_000
+
 export const useConversations = (): UseQueryResult<readonly ChatConversation[], Error> =>
   useQuery({
     queryKey: CHAT_QUERY_KEYS.conversations,
     queryFn: fetchConversationsApi,
+    refetchInterval: CONVERSATIONS_POLL_MS,
   })
 
 export const useConversationMessages = (
@@ -31,6 +35,7 @@ export const useConversationMessages = (
     queryKey: CHAT_QUERY_KEYS.messages(conversationId ?? ''),
     queryFn: () => (conversationId ? fetchMessagesApi(conversationId) : Promise.resolve([])),
     enabled: Boolean(conversationId),
+    refetchInterval: MESSAGES_POLL_MS,
   })
 
 export const useCreateConversation = (): UseMutationResult<ChatConversation, Error, string> => {

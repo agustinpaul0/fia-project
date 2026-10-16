@@ -498,6 +498,8 @@ mensaje, selector de contactos (`GET /chat/contacts`), rechazo si el destinatari
 participantes y validación Zod. Se sumaron tests de integración, fuzz, un flujo E2E con claves reales y tests
 de UI.
 
+**Mejora [equipo]**: la conversación abierta se actualiza sola cada 3 s y la lista de conversaciones cada 10 s (antes había que recargar).
+
 **Falta para cerrar**: ninguno. Plan: [docs/plans/US-6-encrypted-chat.md](docs/plans/US-6-encrypted-chat.md).
 
 ---
