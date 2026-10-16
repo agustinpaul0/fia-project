@@ -24,6 +24,7 @@ Provee un canal de mensajería segura entre el personal administrativo de la FIA
 | Al mostrar cada mensaje se verifica la firma del emisor; si no coincide se muestra una alerta en lugar del texto | US-6 |
 | No se abre una conversación con alguien que no registró sus claves (`CHAT_KEY_NOT_FOUND`) | US-6 |
 | Sólo los dos participantes leen o escriben en una conversación | US-6 + QA |
+| La conversación abierta consulta mensajes nuevos cada 3 s y la lista de conversaciones cada 10 s (no hay WebSockets) | dev |
 | Si un usuario cambia de navegador, genera claves nuevas y los mensajes anteriores ya no se pueden descifrar (se alertan) | dev |
 
 ## Roles y permisos
