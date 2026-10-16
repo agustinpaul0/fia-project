@@ -374,6 +374,11 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 
 **Horas reales**: 1 h (sesión del 2026-10-14, implementación asistida por IA).
 
+**QA (Agustín)**: faltaba la licencia deportiva que pide el primer criterio; se agregó en schema (migración
+`0007_add_driver_license`), contrato, API, formulario y nómina. Se sumaron test de integración del repositorio
+(con violaciones de unicidad traducidas a 409), fuzz de la ruta y tests de UI. Consultas abiertas al PO en
+[docs/preguntas-po.md](docs/preguntas-po.md) (formato de licencia, dorsal por categoría, foto → US-22).
+
 **Falta para cerrar**: ninguno. Plan: [docs/plans/US-10-team-drivers.md](docs/plans/US-10-team-drivers.md).
 
 ---

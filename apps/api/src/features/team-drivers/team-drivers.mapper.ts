@@ -8,6 +8,7 @@ export const toDriverDto = (row: DriverRow): Driver => ({
   code: row.code,
   number: row.number,
   country: row.country,
+  license: row.license,
   teamId: row.teamId,
   role: row.role as DriverRole,
   version: row.version,

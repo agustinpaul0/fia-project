@@ -34,3 +34,12 @@ Ninguna. El 2026-10-03 el Grupo Naranja ratificó todas las decisiones de implem
 | R21 | US-23 | ¿El listado de la FIA muestra también las cuentas dadas de baja? | Ratificado (2026-10-03): Sí, marcadas como inactivas. |
 | R22 | US-23 | ¿La contraseña inicial se entrega por fuera del sistema hasta que exista la recuperación por email (US-26)? | Ratificado (2026-10-03): Sí, la entrega la FIA por un canal externo. |
 | R23 | US-9 | ¿Notificamos sólo a las escuderías con resultados en esa carrera, o a todas las de la categoría? | Ratificado (2026-10-03): Sólo a las que tienen resultados. |
+
+## Sprint 2 — consultas de QA (US-10)
+
+1. **Licencia deportiva (US-10).** El criterio de aceptación la pide como dato obligatorio. La implementamos
+   como texto libre de 3 a 20 caracteres (por ejemplo `FIA-16-LEC`). ¿Tiene un formato oficial?
+2. **Número de auto (US-10).** El criterio dice "otro piloto de la misma categoría", pero la base exige que el
+   número sea único entre todos los pilotos. ¿Se puede repetir el número en categorías distintas?
+3. **Foto o documentación (US-10).** La tarea de la pantalla menciona subir una foto o documentación, pero
+   no figura en los criterios de aceptación y hay una US aparte para eso (US-22). La dejamos para US-22.
