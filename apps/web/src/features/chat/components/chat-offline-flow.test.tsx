@@ -1,10 +1,11 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { PEER, startFakeChatServer } from '@/testing/fake-chat-server'
+import { CONVERSATION, PEER, startFakeChatServer } from '@/testing/fake-chat-server'
 import { renderWithQuery } from '@/testing/render-with-query'
 import { generateE2EKeyPairs } from '../crypto/e2e-crypto'
 import { OFFLINE_NOTICE } from '../hooks/use-chat-thread'
 import { PENDING_LABEL } from './chat-message-bubble'
+import { ChatOutboxSync } from './chat-outbox-sync'
 import { ChatSection } from './chat-section'
 
 vi.mock('../crypto/key-storage', async (importOriginal) => {
@@ -28,7 +29,12 @@ describe('Chat sin conexión', () => {
 
   it('encola el mensaje cifrado y lo envía cuando vuelve la conexión', async () => {
     const server = await startFakeChatServer(await generateE2EKeyPairs())
-    renderWithQuery(<ChatSection />)
+    renderWithQuery(
+      <>
+        <ChatOutboxSync />
+        <ChatSection />
+      </>,
+    )
     await screen.findByRole('option', { name: /Bob Staff/ })
     fireEvent.change(screen.getByLabelText('Nueva conversación'), { target: { value: PEER.id } })
     fireEvent.click(screen.getByRole('button', { name: 'Iniciar chat cifrado' }))
@@ -49,5 +55,25 @@ describe('Chat sin conexión', () => {
       (c) => c.key.startsWith('POST') && c.key.endsWith('/messages'),
     )
     expect(JSON.stringify(posted.at(-1)?.body)).not.toContain('Mensaje sin red')
+  })
+
+  it('envía los pendientes aunque el usuario esté en otra pantalla', async () => {
+    const server = await startFakeChatServer(null)
+    const { indexedDbOutbox } = await import('../crypto/outbox-storage')
+    const body = { encryptedContent: 'cifrado', iv: 'iv-de-prueba', signature: 'firma-de-prueba' }
+    await indexedDbOutbox.add({
+      id: 'p1',
+      conversationId: CONVERSATION.id,
+      body,
+      createdAt: '2026-10-17T10:00:00.000Z',
+    })
+    renderWithQuery(<ChatOutboxSync />)
+    await waitFor(() =>
+      expect(
+        server.calls.find((c) => c.key === `POST /chat/conversations/${CONVERSATION.id}/messages`)
+          ?.body,
+      ).toEqual(body),
+    )
+    await waitFor(async () => expect(await indexedDbOutbox.list(CONVERSATION.id)).toEqual([]))
   })
 })

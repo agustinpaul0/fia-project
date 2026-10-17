@@ -3,6 +3,7 @@ import type { ReactNode } from 'react'
 import { AppFooter } from '@/components/brand/app-footer'
 import { AppHeader } from '@/components/brand/app-header'
 import { Toaster } from '@/components/ui/sonner'
+import { ChatOutboxSync } from '@/features/chat/components/chat-outbox-sync'
 
 export const RootLayout = (): ReactNode => (
   <div className="flex min-h-screen flex-col bg-surface font-body text-on-surface">
@@ -12,5 +13,6 @@ export const RootLayout = (): ReactNode => (
     </main>
     <AppFooter />
     <Toaster richColors />
+    <ChatOutboxSync />
   </div>
 )
