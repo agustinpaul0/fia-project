@@ -301,17 +301,23 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 
 | ID | Ítem | SP | BV | Est. | Real | Estado | Dueño | Depende de | PR |
 |---|---|---|---|---|---|---|---|---|---|
-| US-4 | Iniciar sesión mediante credenciales seguras | 13 | 13 | 9 h | 0,5 h | Hecho | Santiago | T-1 | #13 |
-| US-10 | Cargar la información de los pilotos titulares y suplentes | 5 | 13 | 7 h | 0,75 h | Hecho | Santiago | US-4, T-2 | #14 |
-| US-13 | Cargar sanciones a pilotos o escuderías | 5 | 13 | 7,5 h | 0,75 h | Hecho | Santiago | US-4, US-10 | #15 |
-| US-21 | Ingresar fechas, tipos y resultado de controles técnicos por auto | 3 | 13 | 5 h | 0,5 h | Hecho | Santiago | US-4, US-13 | #16 |
-| US-6 | Chats de mensajería cifrados de extremo a extremo | 13 | 13 | 9 h | 0,75 h | Hecho | Santiago | US-4 | #17 |
-| US-2 | Realizar un testeo del nuevo incremento del producto | 5 | 13 | 7 h | 0,75 h | Hecho | Santiago | US-4, US-10, US-13, US-21, US-6 | #18 |
-| T-9 | QA del incremento, correcciones y respuestas del PO **[equipo]** | — | — | — | 6 h | Hecho | Agustín | todas | #13–#22 |
+| US-4 | Iniciar sesión mediante credenciales seguras | 13 | 13 | 9 h | 0,5 h | Hecho | Joaquín Santa María | T-1 | #13 |
+| US-10 | Cargar la información de los pilotos titulares y suplentes | 5 | 13 | 7 h | 0,75 h | Hecho | Joaquín Santa María | US-4, T-2 | #14 |
+| US-13 | Cargar sanciones a pilotos o escuderías | 5 | 13 | 7,5 h | 0,75 h | Hecho | Santiago Salamanca | US-4, US-10 | #15 |
+| US-21 | Ingresar fechas, tipos y resultado de controles técnicos por auto | 3 | 13 | 5 h | 0,5 h | Hecho | Santiago Salamanca | US-4, US-13 | #16 |
+| US-6 | Chats de mensajería cifrados de extremo a extremo | 13 | 13 | 9 h | 0,75 h | Hecho | Agustín Paul | US-4 | #17 |
+| US-2 | Realizar un testeo del nuevo incremento del producto | 5 | 13 | 7 h | 0,75 h | Hecho | Agustín Paul | US-4, US-10, US-13, US-21, US-6 | #18 |
+| T-9 | QA de US-4: tests de hash, expiración y cierre de sesión; aviso ante 429 **[equipo]** | — | — | — | 0,5 h | Hecho | Agustín Paul | — | #13–#23 |
+| T-10 | QA de US-10: licencia deportiva, unicidad, tests de integración y de UI **[equipo]** | — | — | — | 0,75 h | Hecho | Agustín Paul | — | #13–#23 |
+| T-11 | QA de US-13: regla de 5 años, sanción a pilotos, filtro por escudería, tests **[equipo]** | — | — | — | 1 h | Hecho | Agustín Paul | — | #13–#23 |
+| T-12 | QA de US-21: vehículo, fecha y vigencia obligatorios, ocultar vencidos, tests **[equipo]** | — | — | — | 1 h | Hecho | Agustín Paul | — | #13–#23 |
+| T-13 | QA de US-6: cifrado real E2E, control de participantes, claves en IndexedDB, tests **[equipo]** | — | — | — | 2 h | Hecho | Agustín Paul | — | #13–#23 |
+| T-14 | QA de US-2: matriz de pruebas, test del incremento y seed de la demo **[equipo]** | — | — | — | 0,25 h | Hecho | Agustín Paul | — | #13–#23 |
+| T-15 | Respuestas del PO: licencia, dorsal por categoría, datos de la sanción **[equipo]** | — | — | — | 0,5 h | Hecho | Agustín Paul | — | #13–#23 |
 
-**Horas reales del sprint: 10 h** (4 h de implementación de Santiago + 6 h de QA de Agustín), contra 44,5 h
-estimadas. Las de Santiago salen de sus commits del 14/10 (15:59–19:32 UTC, unas 3,5 h, más 0,5 h estimadas de la
-US-4 previa al primer commit); reemplazan las 6,5 h que figuraban antes. Las de QA las informó Agustín.
+**Horas reales del sprint: 10 h** (4 h de implementación + 6 h de QA, T-9 a T-15), contra 44,5 h
+estimadas. Las de implementación salen de los commits del 14/10 (15:59–19:32 UTC, unas 3,5 h, más 0,5 h estimadas de la
+US-4 previa al primer commit); reemplazan las 6,5 h que figuraban antes. Las de QA las informó Agustín (6 h); el reparto por tarea es aproximado.
 
 **Nueva escala de equivalencia de Naranja**: 1 SP = 1–4 h · 3 SP = 4–6 h · 5 SP = 6–8 h · 13 SP = 8–10 h.  
 **Orden sugerido [equipo]**: US-4 → US-10 → US-13 → US-21 → US-6. US-2 acompaña todo el sprint con la suite de pruebas.
