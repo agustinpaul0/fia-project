@@ -49,7 +49,7 @@ const asMessage = (item: OutboxItem, userId: string, recipientId: string): ChatM
 
 export const useChatThread = (params: ThreadParams) => {
   const { userId, conversation, messages, cipher, sendMessage } = params
-  const outbox = useOutbox(conversation?.id ?? '', sendMessage)
+  const outbox = useOutbox(conversation?.id ?? '')
   const pending = outbox.pending.map((i) => asMessage(i, userId, conversation?.otherUserId ?? ''))
   const decrypted = useDecryptedMessages({ cipher, messages: [...messages, ...pending], userId })
   const pendingIds = new Set(pending.map((m) => m.id))

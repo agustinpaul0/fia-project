@@ -123,11 +123,16 @@ Matriz de la **US-2** ("Realizar un testeo del nuevo incremento del producto"), 
 
 ### Defectos encontrados en la pasada de QA (todos corregidos)
 
-- **US-6 (bloqueante)**: el chat mandaba el texto en plano con IV y firma falsos; `isParticipant` ignoraba la
-  conversación (cualquiera leía todos los chats); el `JOIN` text/uuid rompía en Postgres.
-- **US-21**: se mostraban controles vencidos y el vehículo, la fecha y la vigencia eran opcionales.
-- **US-13**: no se aplicaban los 5 años, no se podía sancionar a un piloto desde la pantalla y una FK
-  inexistente daba 500.
-- **US-10**: faltaba la licencia deportiva.
-- **Mutación web** (shard `rest`): 57,6 % (por debajo del 70 %) por falta de tests de UI en los cuatro
-  features nuevos.
+| # | US | Pasos para reproducir | Resultado esperado | Resultado obtenido | Corrección |
+|---|---|---|---|---|---|
+| D-1 | US-6 | Enviar un mensaje en el chat y mirar el cuerpo del `POST` | Texto cifrado (AES-GCM) y firma ECDSA | El texto en plano, con IV y firma falsos | Cifrado y firma reales en el navegador (#17) |
+| D-2 | US-6 | Con un usuario que tiene un chat, pedir `GET /chat/conversations/<id ajeno>/messages` | 404 | 200 con los mensajes ajenos | `isParticipant` filtra por conversación (#17) |
+| D-3 | US-6 | Pedir `GET /chat/keys/<id>` o las conversaciones contra Postgres real | 200 | 500 (`text = uuid`) | Nombres de escudería sin `JOIN` text/uuid (#17) |
+| D-4 | US-6 | Recargar la página del chat | Se descifran los mensajes anteriores | Claves nuevas y mensajes ilegibles | Claves no exportables en IndexedDB (#17) |
+| D-5 | US-21 | Cargar un control con vigencia vencida y listar | No aparece | Aparece | El listado filtra por `expiresAt` (#16) |
+| D-6 | US-21 | Cargar un control sin número de auto ni fechas | Rechazo con mensaje | Se guarda | Campos obligatorios y `check` en la base (#16) |
+| D-7 | US-13 | Listar sanciones de hace más de 5 años | No aparecen | Aparecen | Filtro de 5 años en el servicio (#15) |
+| D-8 | US-13 | Querer sancionar a un piloto desde el formulario | Se puede elegir el piloto | No hay selector | Selector con `GET /teams/:id/drivers` (#15) |
+| D-9 | US-13 | `POST /penalties` con una escudería inexistente | 404 | 500 | Traducción de FK (#15) |
+| D-10 | US-10 | Inscribir un piloto | Pide licencia deportiva | No hay campo de licencia | Licencia en schema, API y formulario (#14) |
+| D-11 | US-2 | Correr la mutación del shard `web rest` | ≥ 70 % | 57,6 % | Tests de UI de los cuatro features (#15–#18) |
