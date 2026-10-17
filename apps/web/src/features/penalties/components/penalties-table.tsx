@@ -12,6 +12,7 @@ export const PenaltiesTable = ({
       <thead>
         <tr className="border-b-2 border-black bg-surface-container-high font-bold font-mono text-xs uppercase tracking-wider text-on-surface">
           <th className="px-4 py-3">Fecha / Evento</th>
+          <th className="px-4 py-3">Categoría</th>
           <th className="px-4 py-3">Sancionado</th>
           <th className="px-4 py-3">Tipo</th>
           <th className="px-4 py-3">Sanción</th>

@@ -22,7 +22,7 @@ Permite al personal de comisarios de la FIA (`fia_admin`) registrar el historial
 | La vigencia debe ser posterior al control (contrato y `check` en la base) | US-21 + QA |
 | El listado oculta los controles cuya vigencia ya pasó | US-21 |
 | Las fechas se cargan en hora de Buenos Aires y viajan en UTC | AGENTS.md |
-| Origen de la vigencia: la carga la FIA a mano | dev — consulta P5 al PO |
+| La vigencia la carga la FIA y el control se muestra hasta que vence | PO (P5) |
 
 ## Roles y permisos
 

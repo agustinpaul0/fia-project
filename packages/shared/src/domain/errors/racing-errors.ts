@@ -21,6 +21,10 @@ export const RACING_ERRORS = {
     status: 409,
     message: 'El número de auto ya está asignado a otro piloto de la categoría.',
   },
+  LICENSE_ALREADY_TAKEN: {
+    status: 409,
+    message: 'La licencia deportiva ya está asignada a otro piloto.',
+  },
   DRIVER_CODE_ALREADY_TAKEN: {
     status: 409,
     message: 'El código de tres letras ya está asignado a otro piloto.',

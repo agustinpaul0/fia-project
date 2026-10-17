@@ -2,6 +2,7 @@ import type {
   ChatContact,
   Penalty,
   TeamOption,
+  TeamRaceOption,
   TeamStaff,
   TechnicalControl,
 } from '@fia/shared/contracts'
@@ -32,6 +33,7 @@ export type RepositoriesOptions = {
   readonly teamDrivers?: readonly DriverRow[]
   readonly penalties?: readonly Penalty[]
   readonly chatContacts?: readonly ChatContact[]
+  readonly teamRaces?: ReadonlyMap<string, readonly TeamRaceOption[]>
   readonly technicalControls?: readonly TechnicalControl[]
 }
 
@@ -42,7 +44,11 @@ export const createAllInMemoryRepositories = (options: RepositoriesOptions) => {
   const raceResults = createInMemoryRaceResults(options.races ?? [], options.drivers ?? [])
   const notifications = createInMemoryNotifications(options.notifications ?? [])
   const teamDrivers = createInMemoryTeamDriversRepository(options.teamDrivers ?? [])
-  const teams = createInMemoryTeamsRepository(options.teams ?? [], teamDrivers.items)
+  const teams = createInMemoryTeamsRepository(
+    options.teams ?? [],
+    teamDrivers.items,
+    options.teamRaces,
+  )
   const penalties = createInMemoryPenaltiesRepository(options.penalties ?? [])
   const technicalControls = createInMemoryTechnicalControlsRepository(
     options.technicalControls ?? [],

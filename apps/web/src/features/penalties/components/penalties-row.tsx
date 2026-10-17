@@ -11,6 +11,7 @@ export const PenaltiesRow = ({ penalty }: { readonly penalty: Penalty }): ReactN
         <div className="text-[11px] font-sans font-bold text-primary">{penalty.raceName}</div>
       )}
     </td>
+    <td className="px-4 py-3 font-bold font-mono text-xs">{penalty.categoryCode}</td>
     <td className="px-4 py-3">
       {penalty.driverName ? (
         <div>

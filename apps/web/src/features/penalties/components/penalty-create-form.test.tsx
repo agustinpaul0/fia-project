@@ -1,29 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { jsonResponse } from '@/testing/mock-fetch'
-import { mockFetchRoutes } from '@/testing/mock-fetch-routes'
-import { renderWithQuery } from '@/testing/render-with-query'
-import { PenaltyCreateForm } from './penalty-create-form'
 
-const FERRARI = '00000000-0000-4000-8000-000000000001'
-const LECLERC = '00000000-0000-4000-8000-000000000002'
-
-const renderForm = (onSubmit = vi.fn().mockResolvedValue(undefined), onCancel = vi.fn()) => {
-  mockFetchRoutes({
-    'GET /teams': () => jsonResponse([{ id: FERRARI, name: 'Ferrari' }]),
-    [`GET /teams/${FERRARI}/drivers`]: () =>
-      jsonResponse([{ id: LECLERC, name: 'Charles Leclerc' }]),
-  })
-  renderWithQuery(<PenaltyCreateForm onCancel={onCancel} onSubmit={onSubmit} />)
-  return { onSubmit, onCancel }
-}
-
-const fillCommon = async (): Promise<void> => {
-  fireEvent.change(await screen.findByLabelText('Escudería'), { target: { value: FERRARI } })
-  fireEvent.change(screen.getByLabelText('Tipo de sanción'), { target: { value: 'grid_penalty' } })
-  fireEvent.change(screen.getByLabelText('Sanción aplicada'), { target: { value: '3 puestos' } })
-  fireEvent.change(screen.getByLabelText(/Motivo/), { target: { value: 'Impedir a otro piloto.' } })
-}
+import { FERRARI, fillCommon, LECLERC, renderForm } from '@/testing/penalty-form'
 
 describe('PenaltyCreateForm', () => {
   afterEach(() => {

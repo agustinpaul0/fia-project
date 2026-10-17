@@ -26,4 +26,14 @@ describe('DrizzleTeamsRepository (Postgres real)', () => {
         'Max Verstappen',
       ])
     }))
+
+  it('lista las carreras de la categoría de la escudería en esa temporada', () =>
+    withRollback(connection, async (tx) => {
+      const { teamId, raceId } = await seedRacingFixture(tx)
+      const repo = createDrizzleTeamsRepository(tx)
+      expect(await repo.findRaceOptions(teamId, 2099)).toEqual([
+        { id: raceId, name: 'Gran Premio test', date: '2099-03-01T15:00:00.000Z' },
+      ])
+      expect(await repo.findRaceOptions(teamId, 2098)).toEqual([])
+    }))
 })

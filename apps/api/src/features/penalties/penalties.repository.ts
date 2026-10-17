@@ -1,29 +1,13 @@
 import type { Penalty } from '@fia/shared/contracts'
-import { drivers, penalties, races, teams } from '@fia/shared/db'
+import { categories, drivers, penalties, races, teams } from '@fia/shared/db'
 import { AppError } from '@fia/shared/domain'
 import { and, desc, eq, gte, lte, type SQL } from 'drizzle-orm'
 import type { DbExecutor } from '../../core/db/executor'
 import { translateConstraintViolations } from '../../core/errors/constraint-violations'
 import { toPenaltyDto } from './penalties.mapper'
 import type { PenaltiesListFilter, PenaltiesRepository } from './penalties.port'
+import { penaltySelectFields as selectFields } from './penalties.select'
 import { PENALTY_CONSTRAINT_ERRORS } from './penalties-constraints'
-
-const selectFields = {
-  id: penalties.id,
-  teamId: penalties.teamId,
-  teamName: teams.name,
-  driverId: penalties.driverId,
-  driverFirstName: drivers.firstName,
-  driverLastName: drivers.lastName,
-  raceId: penalties.raceId,
-  raceName: races.name,
-  type: penalties.type,
-  penalty: penalties.penalty,
-  reason: penalties.reason,
-  issuedAt: penalties.issuedAt,
-  version: penalties.version,
-  createdAt: penalties.createdAt,
-}
 
 const buildFilterConditions = (filter: PenaltiesListFilter): SQL[] => {
   const conditions: SQL[] = [gte(penalties.issuedAt, filter.issuedSince)]
@@ -46,6 +30,7 @@ const fetchPenaltyById = async (db: DbExecutor, id: string): Promise<Penalty> =>
     .select(selectFields)
     .from(penalties)
     .innerJoin(teams, eq(penalties.teamId, teams.id))
+    .innerJoin(categories, eq(teams.categoryId, categories.id))
     .leftJoin(drivers, eq(penalties.driverId, drivers.id))
     .leftJoin(races, eq(penalties.raceId, races.id))
     .where(eq(penalties.id, id))
@@ -63,6 +48,7 @@ export const createDrizzlePenaltiesRepository = (db: DbExecutor): PenaltiesRepos
       .select(selectFields)
       .from(penalties)
       .innerJoin(teams, eq(penalties.teamId, teams.id))
+      .innerJoin(categories, eq(teams.categoryId, categories.id))
       .leftJoin(drivers, eq(penalties.driverId, drivers.id))
       .leftJoin(races, eq(penalties.raceId, races.id))
       .where(and(...conditions))

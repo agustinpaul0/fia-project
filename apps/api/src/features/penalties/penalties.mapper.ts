@@ -4,6 +4,7 @@ type RawPenaltyRow = {
   readonly id: string
   readonly teamId: string
   readonly teamName: string
+  readonly categoryCode: string
   readonly driverId: string | null
   readonly driverFirstName: string | null
   readonly driverLastName: string | null
@@ -21,6 +22,7 @@ export const toPenaltyDto = (row: RawPenaltyRow): Penalty => ({
   id: row.id,
   teamId: row.teamId,
   teamName: row.teamName,
+  categoryCode: row.categoryCode,
   driverId: row.driverId,
   driverName: row.driverFirstName ? `${row.driverFirstName} ${row.driverLastName}` : null,
   raceId: row.raceId,

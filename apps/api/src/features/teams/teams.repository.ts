@@ -1,5 +1,5 @@
-import { drivers, teams } from '@fia/shared/db'
-import { asc, eq } from 'drizzle-orm'
+import { drivers, races, seasons, teams } from '@fia/shared/db'
+import { and, asc, eq } from 'drizzle-orm'
 import type { DbExecutor } from '../../core/db/executor'
 import type { TeamsRepository } from './teams.port'
 
@@ -17,5 +17,15 @@ export const createDrizzleTeamsRepository = (db: DbExecutor): TeamsRepository =>
       .where(eq(drivers.teamId, teamId))
       .orderBy(asc(drivers.lastName))
     return rows.map((d) => ({ id: d.id, name: `${d.firstName} ${d.lastName}` }))
+  },
+  findRaceOptions: async (teamId, season) => {
+    const rows = await db
+      .select({ id: races.id, name: races.name, date: races.date })
+      .from(races)
+      .innerJoin(seasons, eq(races.seasonId, seasons.id))
+      .innerJoin(teams, eq(teams.categoryId, races.categoryId))
+      .where(and(eq(teams.id, teamId), eq(seasons.year, season)))
+      .orderBy(asc(races.date))
+    return rows.map((r) => ({ ...r, date: r.date.toISOString() }))
   },
 })

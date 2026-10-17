@@ -32,6 +32,7 @@ export const createInMemoryPenaltiesRepository = (
         id: `00000000-0000-4000-8000-${String(penalties.length + 1).padStart(12, '0')}`,
         teamId: body.teamId,
         teamName: 'Test Team',
+        categoryCode: 'F1',
         driverId: body.driverId ?? null,
         driverName: body.driverId ? 'Test Driver' : null,
         raceId: body.raceId ?? null,

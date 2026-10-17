@@ -37,7 +37,9 @@ export const seedRacingFixture = async (tx: DatabaseTransaction): Promise<Racing
   const teamId = team?.id ?? ''
   const created = await tx
     .insert(drivers)
-    .values(DRIVER_SEEDS.map((d) => ({ ...d, country: 'Argentina', teamId })))
+    .values(
+      DRIVER_SEEDS.map((d) => ({ ...d, country: 'Argentina', teamId, categoryId: category.id })),
+    )
     .returning({ id: drivers.id })
   const [race] = await tx
     .insert(races)

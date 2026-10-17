@@ -6,6 +6,7 @@ const mockPenalty: Penalty = {
   id: '00000000-0000-4000-8000-000000000001',
   teamId: '00000000-0000-4000-8000-000000000010',
   teamName: 'Ferrari',
+  categoryCode: 'F1',
   driverId: '00000000-0000-4000-8000-000000000020',
   driverName: 'Charles Leclerc',
   raceId: null,

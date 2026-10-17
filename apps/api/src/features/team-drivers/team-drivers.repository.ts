@@ -1,4 +1,4 @@
-import { drivers } from '@fia/shared/db'
+import { drivers, teams } from '@fia/shared/db'
 import { AppError } from '@fia/shared/domain'
 import { and, asc, eq } from 'drizzle-orm'
 import type { DbExecutor } from '../../core/db/executor'
@@ -6,11 +6,28 @@ import { translateConstraintViolations } from '../../core/errors/constraint-viol
 import type { TeamDriversRepository } from './team-drivers.port'
 import { DRIVER_CONSTRAINT_ERRORS } from './team-drivers-constraints'
 
+const categoryOf = async (db: DbExecutor, teamId: string): Promise<string | null> => {
+  const [team] = await db
+    .select({ categoryId: teams.categoryId })
+    .from(teams)
+    .where(eq(teams.id, teamId))
+    .limit(1)
+  return team?.categoryId ?? null
+}
+
 export const createDrizzleTeamDriversRepository = (db: DbExecutor): TeamDriversRepository => ({
   listByTeam: async (teamId) =>
     db.select().from(drivers).where(eq(drivers.teamId, teamId)).orderBy(asc(drivers.number)),
-  findByNumber: async (number) => {
-    const [row] = await db.select().from(drivers).where(eq(drivers.number, number)).limit(1)
+  findByNumber: async (teamId, number) => {
+    const categoryId = await categoryOf(db, teamId)
+    if (categoryId === null) {
+      return null
+    }
+    const [row] = await db
+      .select()
+      .from(drivers)
+      .where(and(eq(drivers.number, number), eq(drivers.categoryId, categoryId)))
+      .limit(1)
     return row ?? null
   },
   findByCode: async (code) => {
@@ -28,16 +45,7 @@ export const createDrizzleTeamDriversRepository = (db: DbExecutor): TeamDriversR
     translateConstraintViolations(DRIVER_CONSTRAINT_ERRORS, async () => {
       const [created] = await db
         .insert(drivers)
-        .values({
-          firstName: body.firstName,
-          lastName: body.lastName,
-          code: body.code,
-          number: body.number,
-          country: body.country,
-          license: body.license,
-          teamId,
-          role: body.role,
-        })
+        .values({ ...body, teamId, categoryId: await categoryOf(db, teamId) })
         .returning()
       if (!created) {
         throw new AppError('INTERNAL_ERROR')

@@ -48,6 +48,7 @@ describe('contratos de sanciones (penalties)', () => {
       id: '00000000-0000-4000-8000-000000000010',
       ...valid,
       teamName: 'Ferrari',
+      categoryCode: 'F1',
       driverName: 'Charles Leclerc',
       raceName: 'GP de Mónaco',
       issuedAt: '2026-05-24T14:30:00.000Z',

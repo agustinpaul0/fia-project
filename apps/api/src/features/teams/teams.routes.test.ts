@@ -56,3 +56,31 @@ describe('GET /teams/:id/drivers', () => {
     expect((await app.request(`/teams/${ferrari.id}/drivers`)).status).toBe(403)
   })
 })
+
+describe('GET /teams/:id/races', () => {
+  const ferrari = { id: '00000000-0000-4000-8000-000000000001', name: 'Ferrari' }
+  const race = {
+    id: '00000000-0000-4000-8000-000000000030',
+    name: 'GP de Mónaco',
+    date: '2026-05-24T13:00:00.000Z',
+  }
+  const teamRaces = new Map([[ferrari.id, [race]]])
+
+  it('lista las carreras de la categoría de la escudería en la temporada pedida', async () => {
+    const { app } = createTestApp({ teams: [ferrari], teamRaces, sessionUser: FIA_ADMIN })
+    expect(await (await app.request(`/teams/${ferrari.id}/races?season=2026`)).json()).toEqual([
+      race,
+    ])
+    expect(await (await app.request(`/teams/${ferrari.id}/races?season=2025`)).json()).toEqual([])
+  })
+
+  it('exige temporada válida, escudería existente y rol FIA', async () => {
+    const { app } = createTestApp({ teams: [ferrari], sessionUser: FIA_ADMIN })
+    expect((await app.request(`/teams/${ferrari.id}/races`)).status).toBe(400)
+    expect(
+      (await app.request('/teams/00000000-0000-4000-8000-0000000000ff/races?season=2026')).status,
+    ).toBe(404)
+    const staff = createTestApp({ teams: [ferrari], sessionUser: TEAM_STAFF })
+    expect((await staff.app.request(`/teams/${ferrari.id}/races?season=2026`)).status).toBe(403)
+  })
+})

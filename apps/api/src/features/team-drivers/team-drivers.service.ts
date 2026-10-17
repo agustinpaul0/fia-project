@@ -28,7 +28,7 @@ export const createTeamDriversService = (
   },
   enroll: async (user, body) => {
     const teamId = teamOf(user)
-    if ((await repository.findByNumber(body.number)) !== null) {
+    if ((await repository.findByNumber(teamId, body.number)) !== null) {
       throw new AppError('CAR_NUMBER_ALREADY_TAKEN')
     }
     if ((await repository.findByCode(body.code)) !== null) {
