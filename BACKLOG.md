@@ -369,7 +369,8 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 - [x] Al confirmarse el alta, el piloto queda registrado con estado oficial y visible en la nómina de la escudería para las próximas competencias.
 
 **Acuerdos con el PO (Grupo Naranja)**
-- El número de coche (dorsal) es único dentro de la misma categoría.
+- PO (17/10): la licencia no tiene formato oficial; sólo letras, números y guiones, y única por piloto. El dorsal se puede repetir en categorías distintas. La foto queda para US-22.
+- El número de coche (dorsal) es único dentro de la misma categoría (implementado el 17/10 con `unique(category_id, number)`).
 - Aislamiento estricto: el usuario de escudería sólo puede inscribir y consultar pilotos bajo el identificador de su propia escudería (`team_id`).
 - Límite reglamentario: hasta 2 titulares y 2 suplentes por escudería.
 
@@ -406,6 +407,7 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 - [x] Las sanciones en el listado duran 5 años (alcance histórico acorde a US-5).
 
 **Acuerdos con el PO (Grupo Naranja)**
+- PO (17/10): la sanción lleva categoría, escudería, piloto (opcional), tipo, sanción, motivo, carrera (opcional) y fecha.
 - Roles: Sólo el personal administrativo de la FIA (`fia_admin`) puede cargar y registrar sanciones. Escuderías y público en general tienen acceso de solo lectura.
 - Tipos de sanción: recargo de tiempo, puestos en grilla, quita de puntos, descalificación, multa económica y apercibimiento.
 - Alcance: sanciones aplicadas tanto a un piloto específico (asociado a su escudería) como a una escudería directamente.
@@ -442,6 +444,7 @@ faltaba el filtro por escudería. Escudería o carrera inexistente daban 500 (ah
 - [x] Disponible para escuderías y público general además de la administración FIA (sólo la FIA puede cargar/actualizar).
 
 **Acuerdos con el PO (Grupo Naranja)**
+- PO (17/10): el control se muestra hasta que vence; la vigencia la carga la FIA.
 - Roles: Sólo `fia_admin` puede crear y gestionar controles técnicos. Escuderías y público en general tienen acceso de solo lectura.
 - Tipos de control técnico: pesaje (`weight`), combustible (`fuel`), dimensiones y alerones (`dimensions`), motor y potencia (`engine`), seguridad (`safety`), inspección post-carrera (`post_race`).
 - Resultados: Aprobado (`passed`) o Rechazado (`rejected`).

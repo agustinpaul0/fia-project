@@ -24,6 +24,7 @@ export const penaltySchema = z.strictObject({
   id: z.uuid(),
   teamId: z.uuid(),
   teamName: z.string(),
+  categoryCode: z.string(),
   driverId: z.uuid().nullable(),
   driverName: z.string().nullable(),
   raceId: z.uuid().nullable(),

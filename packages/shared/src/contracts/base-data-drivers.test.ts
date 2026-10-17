@@ -86,6 +86,7 @@ describe('contratos de pilotos', () => {
     [undefined, 'Invalid input: expected string, received undefined'],
     ['AB', 'La licencia deportiva debe tener al menos 3 caracteres.'],
     ['A'.repeat(21), 'La licencia deportiva no puede superar los 20 caracteres.'],
+    ['FIA 16/LEC', 'La licencia sólo puede tener letras, números y guiones.'],
   ])('rechaza el alta por escudería con licencia %s', (license, message) => {
     const result = createTeamDriverBodySchema.safeParse({ ...valid, license })
     expect(result.error?.issues[0]?.message).toBe(message)

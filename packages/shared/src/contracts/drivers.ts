@@ -19,6 +19,7 @@ export const driverLicenseSchema = z
   .trim()
   .min(3, 'La licencia deportiva debe tener al menos 3 caracteres.')
   .max(20, 'La licencia deportiva no puede superar los 20 caracteres.')
+  .regex(/^[A-Za-z0-9-]+$/, 'La licencia sólo puede tener letras, números y guiones.')
 
 export const createDriverBodySchema = z.strictObject({
   firstName: z.string().trim().min(2, 'El nombre debe tener al menos 2 caracteres.').max(60),

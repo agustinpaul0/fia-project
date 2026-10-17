@@ -48,6 +48,7 @@ export const seedRoster = async (db: DbExecutor, roster: CategoryRoster): Promis
     ...d,
     license: `FIA-${d.number}-${d.code}`,
     teamId: teamMap.get(teamName) ?? null,
+    categoryId: category.id,
     role: 'main' as const,
   }))
   await db.insert(drivers).values(driverValues).onConflictDoNothing()

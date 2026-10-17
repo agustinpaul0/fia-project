@@ -7,6 +7,7 @@ const TEAM_FINE = aPenalty({
   id: '00000000-0000-4000-8000-000000000002',
   teamId: '00000000-0000-4000-8000-000000000011',
   teamName: 'Alpine',
+  categoryCode: 'F2',
   driverId: null,
   driverName: null,
   raceId: '00000000-0000-4000-8000-000000000030',
@@ -20,17 +21,25 @@ const rowTexts = (): string[] =>
   screen
     .getAllByRole('row')
     .slice(1)
-    .map((row) => within(row).getAllByRole('cell')[1]?.textContent ?? '')
+    .map((row) => within(row).getAllByRole('cell')[2]?.textContent ?? '')
 
 describe('PenaltiesList', () => {
   it('muestra a quién, cuándo, en qué carrera y por qué se sancionó', () => {
     render(<PenaltiesList penalties={[aPenalty(), TEAM_FINE]} />)
     const headers = screen.getAllByRole('columnheader').map((h) => h.textContent)
-    expect(headers).toEqual(['Fecha / Evento', 'Sancionado', 'Tipo', 'Sanción', 'Motivo'])
+    expect(headers).toEqual([
+      'Fecha / Evento',
+      'Categoría',
+      'Sancionado',
+      'Tipo',
+      'Sanción',
+      'Motivo',
+    ])
     expect(rowTexts()).toEqual(['Charles Leclerc(Ferrari)', 'Alpine (Escudería)'])
     expect(screen.getAllByText('24/5/26, 11:30')).toHaveLength(2)
     expect(screen.getByText('Gran Premio de Mónaco')).toBeInTheDocument()
     expect(screen.getByText('USD 10.000')).toBeInTheDocument()
+    expect(screen.getByText('F2')).toBeInTheDocument()
     expect(screen.getByText('Liberación insegura en boxes.')).toBeInTheDocument()
     expect(screen.getByText('Total de sanciones registradas: 2')).toBeInTheDocument()
   })

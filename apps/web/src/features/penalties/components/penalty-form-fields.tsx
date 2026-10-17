@@ -3,6 +3,7 @@ import type { ReactNode } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 import { FIELD_CLASS, LABEL_CLASS } from '@/features/team-staff/components/field-message'
 import { PenaltyTargetFields } from './penalty-target-fields'
+import { PenaltyWhenFields } from './penalty-when-fields'
 
 type Props = {
   readonly form: UseFormReturn<CreatePenaltyInput, unknown, CreatePenaltyBody>
@@ -17,6 +18,7 @@ export const PenaltyFormFields = ({ form }: Props): ReactNode => {
   return (
     <div className="flex flex-col gap-3">
       <PenaltyTargetFields form={form} />
+      <PenaltyWhenFields form={form} />
       <div className="grid grid-cols-2 gap-3">
         <div className="flex flex-col gap-1">
           <label htmlFor="type" className={LABEL_CLASS}>

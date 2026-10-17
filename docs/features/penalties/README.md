@@ -19,7 +19,8 @@ Permite al personal administrativo de la FIA (`fia_admin`) cargar sanciones ofic
 | Carga exclusiva: sólo `fia_admin` registra sanciones | US-13 |
 | Listado público para escuderías y público en general | US-13 |
 | Tipos: `time_penalty`, `grid_penalty`, `points_deduction`, `disqualification`, `fine`, `reprimand` (con `check` en la base) | PO |
-| Se sanciona a una escudería y, opcionalmente, a uno de sus pilotos (el formulario ofrece los pilotos de la escudería elegida vía `GET /teams/:id/drivers`) | US-13 + QA |
+| Datos de la sanción: categoría (la de la escudería), escudería, piloto (opcional), tipo, sanción, motivo, carrera (opcional) y fecha | PO (P4) |
+| El formulario ofrece los pilotos (`GET /teams/:id/drivers`) y las carreras de la temporada de la fecha (`GET /teams/:id/races?season=`) de la categoría de la escudería elegida; si la fecha queda vacía se usa la actual | US-13 + PO |
 | Retención: el listado muestra sólo las sanciones emitidas en los últimos 5 años (lo calcula el servicio) | US-13 |
 | Filtros: temporada y tipo (en el servidor) y escudería (sobre el listado) | US-13 |
 

@@ -34,6 +34,7 @@ describe('DrizzlePenaltiesRepository (Postgres real)', () => {
       })
       expect(created).toMatchObject({
         teamName: 'Escudería test',
+        categoryCode: 'CT',
         driverName: 'Lando Norris',
         raceName: 'Gran Premio test',
         issuedAt: '2099-03-01T16:00:00.000Z',

@@ -14,7 +14,7 @@ export const createInMemoryTeamDriversRepository = (
     items: drivers,
     listByTeam: async (teamId) =>
       drivers.filter((d) => d.teamId === teamId).sort((a, b) => a.number - b.number),
-    findByNumber: async (number) => drivers.find((d) => d.number === number) ?? null,
+    findByNumber: async (_teamId, number) => drivers.find((d) => d.number === number) ?? null,
     findByCode: async (code) => drivers.find((d) => d.code === code) ?? null,
     countByTeamAndRole: async (teamId, role) =>
       drivers.filter((d) => d.teamId === teamId && d.role === role).length,
@@ -29,6 +29,7 @@ export const createInMemoryTeamDriversRepository = (
         country: body.country,
         license: body.license,
         teamId,
+        categoryId: null,
         role: body.role,
         version: 1,
         createdAt: now,

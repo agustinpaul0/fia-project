@@ -17,8 +17,11 @@ Permite al personal autenticado de una escudería (`team_staff`) inscribir y con
 | Regla | Fuente |
 |---|---|
 | Aislamiento: sólo se inscriben y listan pilotos de la escudería del usuario (`teamId` de la sesión; el cuerpo no acepta `teamId`) | US-10 |
-| Datos obligatorios: nombre y apellido (2–60), código de 3 letras mayúsculas, número de auto (1–99), nacionalidad (2–60), licencia deportiva (3–20) y condición (titular/suplente) | US-10 |
-| Número de auto y código únicos entre todos los pilotos (la base lo garantiza con `unique`) | dev — consulta P2 al PO |
+| Datos obligatorios: nombre y apellido (2–60), código de 3 letras mayúsculas, número de auto (1–99), nacionalidad (2–60), licencia deportiva (3–20, sólo letras, números y guiones) y condición (titular/suplente) | US-10 + PO |
+| El número de auto es único dentro de cada categoría (se puede repetir en otra); `unique(category_id, number)`, con la categoría tomada de la escudería | PO (P2) |
+| El código de 3 letras es único entre todos los pilotos | dev |
+| La licencia es única por piloto (`unique(license)`) | PO (P1) |
+| La foto o documentación del piloto queda para US-22 | PO (P3) |
 | Tope reglamentario: máximo 2 titulares y 2 suplentes por escudería | PO |
 | La licencia es obligatoria al inscribir; los pilotos cargados por el seed la traen como `FIA-<número>-<código>` | US-10 + QA |
 
@@ -42,6 +45,7 @@ Permite al personal autenticado de una escudería (`team_staff`) inscribir y con
 |---|---|---|---|
 | Usuario sin escudería asociada | `TEAM_REQUIRED` | 403 | Tu cuenta no está asociada a ninguna escudería. Pedile a la FIA que revise tu cuenta. |
 | Número de auto repetido | `CAR_NUMBER_ALREADY_TAKEN` | 409 | El número de auto ya está asignado a otro piloto de la categoría. |
+| Licencia repetida | `LICENSE_ALREADY_TAKEN` | 409 | La licencia deportiva ya está asignada a otro piloto. |
 | Código de 3 letras repetido | `DRIVER_CODE_ALREADY_TAKEN` | 409 | El código de tres letras ya está asignado a otro piloto. |
 | Se superó el tope de titulares o suplentes | `DRIVER_LIMIT_EXCEEDED` | 422 | Se alcanzó el límite reglamentario de pilotos para esta condición. |
 | Datos faltantes o con formato inválido | `VALIDATION_FAILED` | 400 | Hay datos inválidos. Revisá los campos marcados y volvé a intentar. |
