@@ -314,10 +314,11 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 | T-13 | QA de US-6: cifrado real E2E, control de participantes, claves en IndexedDB, tests **[equipo]** | — | — | — | 2 h | Hecho | Agustín Paul | — | #13–#23 |
 | T-14 | QA de US-2: matriz de pruebas, test del incremento y seed de la demo **[equipo]** | — | — | — | 0,25 h | Hecho | Agustín Paul | — | #13–#23 |
 | T-15 | Respuestas del PO: licencia, dorsal por categoría, datos de la sanción **[equipo]** | — | — | — | 0,5 h | Hecho | Agustín Paul | — | #13–#23 |
+| T-16 | Chat: actualización automática, bandeja sin conexión y envío desde cualquier pantalla **[equipo]** | — | — | — | 2 h | Hecho | Agustín Paul | — | #20, #26, #28 |
 
-**Horas reales del sprint: 10 h** (4 h de implementación + 6 h de QA, T-9 a T-15), contra 44,5 h
+**Horas reales del sprint: 12 h** (4 h de implementación + 8 h de QA y mejoras, T-9 a T-16), contra 44,5 h
 estimadas. Las de implementación salen de los commits del 14/10 (15:59–19:32 UTC, unas 3,5 h, más 0,5 h estimadas de la
-US-4 previa al primer commit); reemplazan las 6,5 h que figuraban antes. Las de QA las informó Agustín (6 h); el reparto por tarea es aproximado.
+US-4 previa al primer commit); reemplazan las 6,5 h que figuraban antes. Las de QA y mejoras las informó Agustín (8 h); el reparto por tarea es aproximado.
 
 **Nueva escala de equivalencia de Naranja**: 1 SP = 1–4 h · 3 SP = 4–6 h · 5 SP = 6–8 h · 13 SP = 8–10 h.  
 **Orden sugerido [equipo]**: US-4 → US-10 → US-13 → US-21 → US-6. US-2 acompaña todo el sprint con la suite de pruebas.
