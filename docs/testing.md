@@ -119,6 +119,7 @@ Matriz de la **US-2** ("Realizar un testeo del nuevo incremento del producto"), 
 | TC-S2-11 | US-6 | Firma alterada ⇒ alerta en lugar del texto | `chat-e2e-flow.test.tsx` |
 | TC-S2-12 | US-6 | Claves privadas no exportables persistidas en IndexedDB | `key-manager.test.ts`, `key-storage.test.ts` |
 | TC-S2-13 | US-6 | Un tercero no lee ni escribe en una conversación ajena | `chat.routes.test.ts`, `chat.repository.int.test.ts` |
+| TC-S2-15 | US-4 | Bloqueo con 429 tras intentos fallidos e intentos de inyección sin sesión | `core/auth/better-auth-security.int.test.ts` |
 | TC-S2-14 | US-2 | Flujo integral: piloto → control → sanción → consulta pública → chat | `sprint2-increment-racing.test.ts`, `sprint2-increment-chat.test.ts` |
 
 ### Defectos encontrados en la pasada de QA (todos corregidos)
