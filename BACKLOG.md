@@ -565,7 +565,7 @@ carga licencias y controles vigentes, y la mutación web del shard `rest` pasó 
 | US-17 | Usuario | Consultar perfiles de pilotos titulares y suplentes de todas las escuderías | 3 | 8 |
 | US-18 | Usuario | Compartir contenido en redes sociales (WhatsApp, Instagram) | 5 | 2 |
 | US-19 | Personal Administrativo de la FIA | Modificar o dar de baja eventos deportivos programados | 5 | 13 |
-| US-22 | Miembro del equipo de desarrollo | Cargar fotos de pilotos y autos | 2 | 3 |
+| US-22 | Miembro del equipo de desarrollo | Cargar fotos de pilotos y autos. **[equipo]** Incluye la foto o documentación del piloto que mencionaba la tarea de la pantalla de US-10 (PO, 17/10) | 2 | 3 |
 | US-24 | Personal de las escuderías | Visualizar resultados y observaciones de controles técnicos | 2 | 13 |
 | US-25 | Usuario | Visualizar reportes de controles técnicos por gran premio | 2 | 5 |
 | US-26 | Usuario | Solicitar un cambio de contraseña desde la app (email con pasos) | 5 | 2 |
