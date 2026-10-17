@@ -1,10 +1,12 @@
-import { CheckCircle2, ShieldAlert } from 'lucide-react'
+import { CheckCircle2, Clock, ShieldAlert } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { formatDateTime } from '@/lib/format-date-time'
 import type { DecryptedMessage } from '../hooks/use-chat-crypto'
 
 export const UNVERIFIED_MESSAGE =
   'No se pudo verificar este mensaje: la firma no coincide o las claves cambiaron.'
+
+export const PENDING_LABEL = 'Pendiente de envío: se manda al volver la conexión'
 
 export const ChatMessageBubble = ({
   message,
@@ -35,10 +37,17 @@ export const ChatMessageBubble = ({
         >
           {message.text}
         </div>
-        <div className="flex items-center gap-1 font-mono text-[10px] text-emerald-800">
-          <CheckCircle2 className="size-3 text-emerald-700" />
-          <span>Cifrado E2E y firma verificada</span>
-        </div>
+        {message.pending ? (
+          <div className="flex items-center gap-1 font-mono text-[10px] text-amber-800">
+            <Clock className="size-3" />
+            <span>{PENDING_LABEL}</span>
+          </div>
+        ) : (
+          <div className="flex items-center gap-1 font-mono text-[10px] text-emerald-800">
+            <CheckCircle2 className="size-3 text-emerald-700" />
+            <span>Cifrado E2E y firma verificada</span>
+          </div>
+        )}
       </>
     )}
   </div>

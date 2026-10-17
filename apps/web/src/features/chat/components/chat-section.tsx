@@ -1,31 +1,11 @@
-import type { CreateEncryptedMessageBody } from '@fia/shared/contracts'
 import { type ReactNode, useState } from 'react'
-import { toast } from 'sonner'
 import { useSession } from '@/lib/auth-client'
-import type { ConversationCipher } from '../crypto/conversation-cipher'
 import { useConversationMessages, useConversations, useSendMessage } from '../hooks/use-chat'
-import {
-  useConversationCipher,
-  useDecryptedMessages,
-  useMyKeysReady,
-} from '../hooks/use-chat-crypto'
+import { useConversationCipher, useMyKeysReady } from '../hooks/use-chat-crypto'
+import { useChatThread } from '../hooks/use-chat-thread'
 import { ChatConversationList } from './chat-conversation-list'
 import { ChatMessagesPane } from './chat-messages-pane'
 import { ChatNewConversation } from './chat-new-conversation'
-
-type Sender = {
-  readonly cipher: ConversationCipher
-  readonly sendMessage: (body: CreateEncryptedMessageBody) => Promise<unknown>
-}
-
-const sendWith =
-  ({ cipher, sendMessage }: Sender) =>
-  async (text: string): Promise<void> => {
-    await sendMessage(await cipher.encrypt(text)).catch((error: unknown) => {
-      toast.error('Error al enviar el mensaje cifrado')
-      throw error
-    })
-  }
 
 export const MY_KEYS_ERROR = 'No pudimos preparar tus claves de cifrado. Recargá la página.'
 
@@ -39,11 +19,14 @@ export const ChatSection = (): ReactNode => {
   const myKeys = useMyKeysReady(userId)
   const activeConv = conversations.find((c) => c.id === selectedConvId)
   const cipher = useConversationCipher(userId, activeConv)
-  const decrypted = useDecryptedMessages({ cipher: cipher.data, messages, userId: userId ?? '' })
+  const { thread, send } = useChatThread({
+    userId: userId ?? '',
+    conversation: activeConv,
+    messages,
+    cipher: cipher.data,
+    sendMessage: sendMutation.mutateAsync,
+  })
   const cryptoError = myKeys.error ? MY_KEYS_ERROR : (cipher.error?.message ?? null)
-  const send = cipher.data
-    ? sendWith({ cipher: cipher.data, sendMessage: sendMutation.mutateAsync })
-    : null
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-8">
@@ -72,7 +55,7 @@ export const ChatSection = (): ReactNode => {
         <div className="md:col-span-2">
           <ChatMessagesPane
             conversation={activeConv}
-            messages={decrypted}
+            messages={thread}
             cryptoError={cryptoError}
             onSend={send}
           />
