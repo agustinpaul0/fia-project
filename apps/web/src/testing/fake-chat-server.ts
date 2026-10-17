@@ -27,6 +27,7 @@ export type FakeChatServer = {
   readonly calls: readonly RecordedCall[]
   readonly myPublicKeys: () => RegisterPublicKeysBody | null
   readonly deliver: (senderId: string, body: CreateEncryptedMessageBody) => void
+  readonly setOffline: (offline: boolean) => void
 }
 
 const KEY_NOT_FOUND = {
@@ -70,6 +71,7 @@ export const startFakeChatServer = async (peer: ClientKeyStore | null): Promise<
   const { messages, deliver } = createMailbox()
   const peerKeys = await peerKeysOf(peer)
   let opened = false
+  let offline = false
   const calls: readonly RecordedCall[] = mockFetchRoutes({
     'POST /chat/keys': () => jsonResponse(lastBody(calls, 'POST /chat/keys')),
     'GET /chat/contacts': () => jsonResponse([{ ...PEER, role: 'team_staff' }]),
@@ -82,11 +84,17 @@ export const startFakeChatServer = async (peer: ClientKeyStore | null): Promise<
     },
     [`GET ${MESSAGES_PATH}`]: () => jsonResponse(messages),
     [`POST ${MESSAGES_PATH}`]: () => {
+      if (offline) {
+        throw new TypeError('Failed to fetch')
+      }
       const body = lastBody<CreateEncryptedMessageBody>(calls, `POST ${MESSAGES_PATH}`)
       deliver(ME, body ?? { encryptedContent: '', iv: '', signature: '' })
       return jsonResponse(messages.at(-1), 201)
     },
   })
   const myPublicKeys = () => lastBody<RegisterPublicKeysBody>(calls, 'POST /chat/keys')
-  return { calls, myPublicKeys, deliver }
+  const setOffline = (value: boolean): void => {
+    offline = value
+  }
+  return { calls, myPublicKeys, deliver, setOffline }
 }

@@ -10,6 +10,7 @@ export type DecryptedMessage = {
   readonly sentAt: string
   readonly isMine: boolean
   readonly text: string | null
+  readonly pending?: boolean
 }
 
 export const useMyKeysReady = (userId: string | null): UseQueryResult<true, Error> =>

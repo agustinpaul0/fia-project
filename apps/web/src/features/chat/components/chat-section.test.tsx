@@ -7,6 +7,10 @@ import { mockFetchRoutes } from '@/testing/mock-fetch-routes'
 import { renderWithQuery } from '@/testing/render-with-query'
 import { ChatSection, MY_KEYS_ERROR } from './chat-section'
 
+vi.mock('../crypto/outbox-storage', async (importOriginal) => {
+  const real = await importOriginal<typeof import('../crypto/outbox-storage')>()
+  return { ...real, indexedDbOutbox: real.createMemoryOutbox() }
+})
 vi.mock('@/lib/auth-client', () => ({
   useSession: () => ({ data: { user: { id: 'alice', role: 'fia_admin' } } }),
 }))
