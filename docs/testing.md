@@ -58,9 +58,9 @@ Reglas:
 - Integración: cada test dentro de `withRollback(connection, async (tx) => …)`; nunca quedan datos.
 - Cada test prueba **un** comportamiento y su nombre lo describe en español.
 - Los archivos de test también respetan el tope de 100 líneas: se dividen por aspecto
-  (`categories.routes.read.test.ts`, `…write…`, `…concurrency…`, `…fuzz…`).
+  (`*.routes.read.test.ts`, `*.routes.write.test.ts`, `*.routes.errors.test.ts`).
 
-## Cuándo se corre cada suite
+## Cuándo se corre cada cosa
 
 | Momento | Comando | Incluye |
 |---|---|---|
@@ -98,3 +98,36 @@ Reglas:
 - Cobertura HTML: `coverage/index.html`.
 - Mutación HTML: `<paquete>/reports/mutation/index.html` (en la web, un archivo por shard: `results.html`,
   `staff.html`, …). Mutantes sobrevivientes = tests a mejorar.
+
+## Matriz de pruebas del incremento — Sprint 2 (US-2)
+
+Matriz de la **US-2** ("Realizar un testeo del nuevo incremento del producto"), revisada en la pasada de QA del
+2026-10-16. Cada caso apunta al test que lo prueba; todos corren con `pnpm test:coverage` / `pnpm test:int`.
+
+| ID | US | Caso | Test que lo prueba |
+|---|---|---|---|
+| TC-S2-01 | US-4 | Contraseña guardada con hash y sal; rechazo de contraseña incorrecta | `core/auth/better-auth.int.test.ts` |
+| TC-S2-02 | US-4 | Sesión vence a las 8 h sin actividad e invalida al cerrar sesión | `core/auth/better-auth.int.test.ts` |
+| TC-S2-03 | US-4 | Mensaje genérico ante error y aviso propio ante 429 | `features/auth/components/login-form.test.tsx` |
+| TC-S2-04 | US-10 | Inscripción con licencia y aislamiento por escudería | `team-drivers.routes.write.test.ts`, `team-drivers-enroll-flow.test.tsx` |
+| TC-S2-05 | US-10 | Dorsal o código repetidos ⇒ 409 aunque se saltee el servicio | `team-drivers.repository.int.test.ts` |
+| TC-S2-06 | US-13 | Sanción a escudería o a uno de sus pilotos; sólo la FIA carga | `penalties-section-flow.test.tsx`, `sprint2-increment-racing.test.ts` |
+| TC-S2-07 | US-13 | Listado de los últimos 5 años con filtros de temporada, tipo y escudería | `penalties.repository.int.test.ts`, `penalties-list.test.tsx` |
+| TC-S2-08 | US-21 | Control con auto, fecha, hora, dictamen y vigencia obligatorios | `technical-controls-required.test.ts`, `technical-control-create-form.test.tsx` |
+| TC-S2-09 | US-21 | El listado oculta los controles vencidos | `technical-controls.repository.int.test.ts`, `technical-controls.routes.read.test.ts` |
+| TC-S2-10 | US-6 | El servidor recibe sólo texto cifrado y firmado | `chat-e2e-flow.test.tsx` |
+| TC-S2-11 | US-6 | Firma alterada ⇒ alerta en lugar del texto | `chat-e2e-flow.test.tsx` |
+| TC-S2-12 | US-6 | Claves privadas no exportables persistidas en IndexedDB | `key-manager.test.ts`, `key-storage.test.ts` |
+| TC-S2-13 | US-6 | Un tercero no lee ni escribe en una conversación ajena | `chat.routes.test.ts`, `chat.repository.int.test.ts` |
+| TC-S2-14 | US-2 | Flujo integral: piloto → control → sanción → consulta pública → chat | `sprint2-increment-racing.test.ts`, `sprint2-increment-chat.test.ts` |
+
+### Defectos encontrados en la pasada de QA (todos corregidos)
+
+- **US-6 (bloqueante)**: el chat mandaba el texto en plano con IV y firma falsos; `isParticipant` ignoraba la
+  conversación (cualquiera leía todos los chats); el `JOIN` text/uuid rompía en Postgres.
+- **US-21**: se mostraban controles vencidos y el vehículo, la fecha y la vigencia eran opcionales.
+- **US-13**: no se aplicaban los 5 años, no se podía sancionar a un piloto desde la pantalla y una FK
+  inexistente daba 500.
+- **US-10**: faltaba la licencia deportiva.
+- **Mutación web** (shard `rest`): 57,6 % (por debajo del 70 %) por falta de tests de UI en los cuatro
+  features nuevos.

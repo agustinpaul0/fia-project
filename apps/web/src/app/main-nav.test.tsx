@@ -12,14 +12,16 @@ describe('MainNav', () => {
     vi.unstubAllGlobals()
   })
 
-  it('ofrece a todos el acceso a inicio y a resultados', async () => {
+  it('ofrece a todos el acceso a inicio, a resultados y a sanciones', async () => {
     renderWithRouter(<MainNav userRole={null} />)
     expect(await screen.findByRole('link', { name: 'Resultados' })).toHaveAttribute(
       'href',
       '/results',
     )
+    expect(screen.getByRole('link', { name: 'Sanciones' })).toHaveAttribute('href', '/sanctions')
+    expect(screen.getByRole('link', { name: 'Técnica' })).toHaveAttribute('href', '/scrutineering')
     expect(screen.getByRole('link', { name: 'Inicio' })).toHaveAttribute('href', '/')
-    expect(linkNames()).toEqual(['Inicio', 'Resultados'])
+    expect(linkNames()).toEqual(['Inicio', 'Resultados', 'Sanciones', 'Técnica'])
   })
 
   it('suma las secciones administrativas para fia_admin', async () => {
@@ -36,15 +38,18 @@ describe('MainNav', () => {
       'href',
       '/admin/notifications',
     )
+    expect(screen.getByRole('link', { name: 'Mensajes' })).toHaveAttribute('href', '/chat')
   })
 
-  it('suma la bandeja de notificaciones para team_staff', async () => {
+  it('suma la bandeja de notificaciones y pilotos para team_staff', async () => {
     mockFetchRoutes({ 'GET /notifications': () => jsonResponse([]) })
     renderWithRouter(<MainNav userRole="team_staff" />)
     expect(await screen.findByRole('link', { name: 'Notificaciones' })).toHaveAttribute(
       'href',
       '/notifications',
     )
+    expect(screen.getByRole('link', { name: 'Pilotos' })).toHaveAttribute('href', '/team/drivers')
+    expect(screen.getByRole('link', { name: 'Mensajes' })).toHaveAttribute('href', '/chat')
     expect(screen.queryByRole('link', { name: 'Personal' })).not.toBeInTheDocument()
   })
 

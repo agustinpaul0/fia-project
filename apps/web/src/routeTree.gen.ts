@@ -10,18 +10,27 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ChatRouteImport } from './routes/chat'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as ResultsRouteImport } from './routes/results'
+import { Route as SanctionsRouteImport } from './routes/sanctions'
+import { Route as ScrutineeringRouteImport } from './routes/scrutineering'
 import { Route as AdminNotificationsRouteImport } from './routes/admin.notifications'
 import { Route as AdminTeamStaffRouteImport } from './routes/admin.team-staff'
 import { Route as RacesRaceIdRouteImport } from './routes/races.$raceId'
+import { Route as TeamDriversRouteImport } from './routes/team.drivers'
 import { Route as AdminResultsIndexRouteImport } from './routes/admin.results.index'
 import { Route as AdminResultsRaceIdRouteImport } from './routes/admin.results.$raceId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChatRoute = ChatRouteImport.update({
+  id: '/chat',
+  path: '/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -39,6 +48,16 @@ const ResultsRoute = ResultsRouteImport.update({
   path: '/results',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SanctionsRoute = SanctionsRouteImport.update({
+  id: '/sanctions',
+  path: '/sanctions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ScrutineeringRoute = ScrutineeringRouteImport.update({
+  id: '/scrutineering',
+  path: '/scrutineering',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminNotificationsRoute = AdminNotificationsRouteImport.update({
   id: '/admin/notifications',
   path: '/admin/notifications',
@@ -54,6 +73,11 @@ const RacesRaceIdRoute = RacesRaceIdRouteImport.update({
   path: '/races/$raceId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TeamDriversRoute = TeamDriversRouteImport.update({
+  id: '/team/drivers',
+  path: '/team/drivers',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminResultsIndexRoute = AdminResultsIndexRouteImport.update({
   id: '/admin/results/',
   path: '/admin/results/',
@@ -67,35 +91,47 @@ const AdminResultsRaceIdRoute = AdminResultsRaceIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/chat': typeof ChatRoute
   '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/results': typeof ResultsRoute
+  '/sanctions': typeof SanctionsRoute
+  '/scrutineering': typeof ScrutineeringRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/team-staff': typeof AdminTeamStaffRoute
   '/races/$raceId': typeof RacesRaceIdRoute
+  '/team/drivers': typeof TeamDriversRoute
   '/admin/results/$raceId': typeof AdminResultsRaceIdRoute
   '/admin/results/': typeof AdminResultsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/chat': typeof ChatRoute
   '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/results': typeof ResultsRoute
+  '/sanctions': typeof SanctionsRoute
+  '/scrutineering': typeof ScrutineeringRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/team-staff': typeof AdminTeamStaffRoute
   '/races/$raceId': typeof RacesRaceIdRoute
+  '/team/drivers': typeof TeamDriversRoute
   '/admin/results/$raceId': typeof AdminResultsRaceIdRoute
   '/admin/results': typeof AdminResultsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/chat': typeof ChatRoute
   '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/results': typeof ResultsRoute
+  '/sanctions': typeof SanctionsRoute
+  '/scrutineering': typeof ScrutineeringRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/team-staff': typeof AdminTeamStaffRoute
   '/races/$raceId': typeof RacesRaceIdRoute
+  '/team/drivers': typeof TeamDriversRoute
   '/admin/results/$raceId': typeof AdminResultsRaceIdRoute
   '/admin/results/': typeof AdminResultsIndexRoute
 }
@@ -103,46 +139,62 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/chat'
     | '/login'
     | '/notifications'
     | '/results'
+    | '/sanctions'
+    | '/scrutineering'
     | '/admin/notifications'
     | '/admin/team-staff'
     | '/races/$raceId'
+    | '/team/drivers'
     | '/admin/results/$raceId'
     | '/admin/results/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/chat'
     | '/login'
     | '/notifications'
     | '/results'
+    | '/sanctions'
+    | '/scrutineering'
     | '/admin/notifications'
     | '/admin/team-staff'
     | '/races/$raceId'
+    | '/team/drivers'
     | '/admin/results/$raceId'
     | '/admin/results'
   id:
     | '__root__'
     | '/'
+    | '/chat'
     | '/login'
     | '/notifications'
     | '/results'
+    | '/sanctions'
+    | '/scrutineering'
     | '/admin/notifications'
     | '/admin/team-staff'
     | '/races/$raceId'
+    | '/team/drivers'
     | '/admin/results/$raceId'
     | '/admin/results/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ChatRoute: typeof ChatRoute
   LoginRoute: typeof LoginRoute
   NotificationsRoute: typeof NotificationsRoute
   ResultsRoute: typeof ResultsRoute
+  SanctionsRoute: typeof SanctionsRoute
+  ScrutineeringRoute: typeof ScrutineeringRoute
   AdminNotificationsRoute: typeof AdminNotificationsRoute
   AdminTeamStaffRoute: typeof AdminTeamStaffRoute
   RacesRaceIdRoute: typeof RacesRaceIdRoute
+  TeamDriversRoute: typeof TeamDriversRoute
   AdminResultsRaceIdRoute: typeof AdminResultsRaceIdRoute
   AdminResultsIndexRoute: typeof AdminResultsIndexRoute
 }
@@ -154,6 +206,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/chat': {
+      id: '/chat'
+      path: '/chat'
+      fullPath: '/chat'
+      preLoaderRoute: typeof ChatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -177,6 +236,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResultsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sanctions': {
+      id: '/sanctions'
+      path: '/sanctions'
+      fullPath: '/sanctions'
+      preLoaderRoute: typeof SanctionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/scrutineering': {
+      id: '/scrutineering'
+      path: '/scrutineering'
+      fullPath: '/scrutineering'
+      preLoaderRoute: typeof ScrutineeringRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/notifications': {
       id: '/admin/notifications'
       path: '/admin/notifications'
@@ -198,6 +271,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RacesRaceIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/team/drivers': {
+      id: '/team/drivers'
+      path: '/team/drivers'
+      fullPath: '/team/drivers'
+      preLoaderRoute: typeof TeamDriversRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/results/': {
       id: '/admin/results/'
       path: '/admin/results'
@@ -217,12 +297,16 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ChatRoute: ChatRoute,
   LoginRoute: LoginRoute,
   NotificationsRoute: NotificationsRoute,
   ResultsRoute: ResultsRoute,
+  SanctionsRoute: SanctionsRoute,
+  ScrutineeringRoute: ScrutineeringRoute,
   AdminNotificationsRoute: AdminNotificationsRoute,
   AdminTeamStaffRoute: AdminTeamStaffRoute,
   RacesRaceIdRoute: RacesRaceIdRoute,
+  TeamDriversRoute: TeamDriversRoute,
   AdminResultsRaceIdRoute: AdminResultsRaceIdRoute,
   AdminResultsIndexRoute: AdminResultsIndexRoute,
 }

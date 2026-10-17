@@ -42,7 +42,45 @@ export const MainNav = ({ userRole }: { readonly userRole: Role | null }): React
     >
       Resultados
     </Link>
+    <Link
+      to="/sanctions"
+      className={NAV_LINK_CLASS}
+      activeProps={NAV_ACTIVE}
+      inactiveProps={NAV_INACTIVE}
+    >
+      Sanciones
+    </Link>
+    <Link
+      to="/scrutineering"
+      className={NAV_LINK_CLASS}
+      activeProps={NAV_ACTIVE}
+      inactiveProps={NAV_INACTIVE}
+    >
+      Técnica
+    </Link>
     {userRole === 'fia_admin' ? <AdminLinks /> : null}
-    {userRole === 'team_staff' ? <NotificationsNavLink /> : null}
+    {userRole === 'team_staff' ? (
+      <>
+        <Link
+          to="/team/drivers"
+          className={NAV_LINK_CLASS}
+          activeProps={NAV_ACTIVE}
+          inactiveProps={NAV_INACTIVE}
+        >
+          Pilotos
+        </Link>
+        <NotificationsNavLink />
+      </>
+    ) : null}
+    {userRole !== null ? (
+      <Link
+        to="/chat"
+        className={NAV_LINK_CLASS}
+        activeProps={NAV_ACTIVE}
+        inactiveProps={NAV_INACTIVE}
+      >
+        Mensajes
+      </Link>
+    ) : null}
   </nav>
 )

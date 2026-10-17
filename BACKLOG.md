@@ -1,7 +1,8 @@
 # Backlog — Sistema de gestión de la FIA
 
 Fuente: planificación del **Grupo Naranja** (PO / Analista y Management),
-[`docs/specs/GrupoNaranjaSprint0.pdf`](docs/specs/GrupoNaranjaSprint0.pdf). Las historias se transcriben tal
+[`docs/specs/GrupoNaranjaSprint0.pdf`](docs/specs/GrupoNaranjaSprint0.pdf) y, para el Sprint 2,
+[`docs/specs/GrupoNaranjaSprint1.pdf`](docs/specs/GrupoNaranjaSprint1.pdf). Las historias se transcriben tal
 cual; lo agregado por el equipo implementador está marcado como **[equipo]**.
 
 ## Cómo se usa este archivo
@@ -294,35 +295,282 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 
 ---
 
+## Sprint 2 — 06/10/2026 → 20/10/2026 (demo: martes 20/10/2026)
+
+### Resumen
+
+| ID | Ítem | SP | BV | Est. | Real | Estado | Dueño | Depende de | PR |
+|---|---|---|---|---|---|---|---|---|---|
+| US-4 | Iniciar sesión mediante credenciales seguras | 13 | 13 | 9 h | 0,5 h | Hecho | Santiago | T-1 | #13 |
+| US-10 | Cargar la información de los pilotos titulares y suplentes | 5 | 13 | 7 h | 0,75 h | Hecho | Santiago | US-4, T-2 | #14 |
+| US-13 | Cargar sanciones a pilotos o escuderías | 5 | 13 | 7,5 h | 0,75 h | Hecho | Santiago | US-4, US-10 | #15 |
+| US-21 | Ingresar fechas, tipos y resultado de controles técnicos por auto | 3 | 13 | 5 h | 0,5 h | Hecho | Santiago | US-4, US-13 | #16 |
+| US-6 | Chats de mensajería cifrados de extremo a extremo | 13 | 13 | 9 h | 0,75 h | Hecho | Santiago | US-4 | #17 |
+| US-2 | Realizar un testeo del nuevo incremento del producto | 5 | 13 | 7 h | 0,75 h | Hecho | Santiago | US-4, US-10, US-13, US-21, US-6 | #18 |
+| T-9 | QA del incremento, correcciones y respuestas del PO **[equipo]** | — | — | — | 6 h | Hecho | Agustín | todas | #13–#22 |
+
+**Horas reales del sprint: 10 h** (4 h de implementación de Santiago + 6 h de QA de Agustín), contra 44,5 h
+estimadas. Las de Santiago salen de sus commits del 14/10 (15:59–19:32 UTC, unas 3,5 h, más 0,5 h estimadas de la
+US-4 previa al primer commit); reemplazan las 6,5 h que figuraban antes. Las de QA las informó Agustín.
+
+**Nueva escala de equivalencia de Naranja**: 1 SP = 1–4 h · 3 SP = 4–6 h · 5 SP = 6–8 h · 13 SP = 8–10 h.  
+**Orden sugerido [equipo]**: US-4 → US-10 → US-13 → US-21 → US-6. US-2 acompaña todo el sprint con la suite de pruebas.
+
+---
+
+### US-4 — Iniciar sesión mediante credenciales seguras
+
+> **Como** Personal Administrativo de la FIA **quiero** iniciar sesión en el sistema mediante credenciales seguras
+> **de forma que** pueda acceder a las funciones de administración y configuración de la plataforma. — SP 13 · BV 13
+
+| Tarea (Naranja) | Est. | Real | Hecha |
+|---|---|---|---|
+| Diseñar el esquema de base de datos para credenciales, roles y hash seguro de contraseñas (bcrypt/Argon2 con sal) | 1 h | | [x] |
+| Implementar servicio de autenticación de backend (validación de credenciales y generación de token de sesión/JWT) | 2 h | | [x] |
+| Implementar middleware de autorización y control de acceso para proteger rutas del rol administrativo de la FIA | 1,5 h | | [x] |
+| Desarrollar la pantalla de inicio de sesión con validaciones de formulario y manejo de mensajes de error | 1,5 h | | [x] |
+| Implementar expiración de sesión por inactividad y mecanismo de cierre de sesión seguro | 1 h | | [x] |
+| Pruebas funcionales de seguridad: Bloqueo ante intentos fallidos, inyección y acceso no autorizado por URL | 2 h | | [x] |
+| **Total** | **9 h** | **0,5 h** | |
+
+**Criterios de aceptación**
+- [x] Un administrador registrado ingresa sus credenciales válidas y el sistema lo redirige a la vista de administración de la FIA.
+- [x] Ante un email o contraseña incorrectos, el sistema muestra un mensaje genérico (ej: <<Credenciales inválidas>>) sin revelar si el usuario existe.
+- [x] Las contraseñas nunca viajan ni se almacenan en texto plano, guardándose siempre mediante hash seguro con sal.
+- [x] Si un usuario no autenticado o con otro rol intenta acceder a un endpoint o URL administrativa, el servidor deniega el acceso con código HTTP correspondiente (401/403).
+- [x] Al cerrar sesión o vencer el tiempo de inactividad, el token/sesión queda invalidado de forma efectiva.
+
+**Acuerdos con el PO (Grupo Naranja)**
+- Mensajes genéricos de error ante fallo de autenticación para prevenir enumeración de cuentas.
+- Redirección post-login: administradores FIA (`fia_admin`) redirigen a su panel administrativo (`/admin/team-staff`); el resto de los roles (`team_staff`, `public`) va al inicio (`/`), desde donde navega a su área.
+- Ante el límite de intentos (429) se muestra el mensaje de `RATE_LIMITED` en lugar del genérico.
+- Sesión con expiración por inactividad e invalidación al cerrar sesión.
+- Rate limiting activo para prevenir fuerza bruta (máximo 10 intentos por minuto por IP).
+
+**Horas reales**: 0,5 h (estimadas a partir de los commits del 2026-10-14, implementación asistida por IA).
+
+**Falta para cerrar**: ninguno. Plan: [docs/plans/US-4-authentication.md](docs/plans/US-4-authentication.md).
+
+---
+
+### US-10 — Cargar la información de los pilotos titulares y suplentes
+
+> **Como** Personal de las escuderías **quiero** cargar la información de los pilotos titulares y suplentes de mi equipo
+> **de forma que** queden oficialmente inscriptos para las competencias. — SP 5 · BV 13
+
+| Tarea (Naranja) | Est. | Real | Hecha |
+|---|---|---|---|
+| Modelar la entidad Piloto y sus relaciones en la base de datos | 1,5 h | | [x] |
+| Implementar la lógica de negocio y endpoints en la API | 1,5 h | | [x] |
+| Diseñar e implementar el formulario de inscripción en el panel de la escudería | 1,5 h | | [x] |
+| Implementar el control de acceso y aislamiento por escudería | 1 h | | [x] |
+| Pruebas unitarias, de validación y de integración | 1,5 h | | [x] |
+| **Total** | **7 h** | **0,75 h** | |
+
+**Criterios de aceptación**
+- [x] El representante de la escudería puede inscribir pilotos completando todos los datos obligatorios (nombre, apellido, número de auto, licencia y condición de titular o suplente).
+- [x] El sistema rechaza la inscripción si el número de coche ya está asignado a otro piloto de la misma categoría o si faltan datos requeridos.
+- [x] Cada escudería solo puede gestionar los pilotos de su propio equipo; el servidor rechaza cualquier intento de asociar o registrar pilotos en escuderías ajenas.
+- [x] Al confirmarse el alta, el piloto queda registrado con estado oficial y visible en la nómina de la escudería para las próximas competencias.
+
+**Acuerdos con el PO (Grupo Naranja)**
+- PO (17/10): la licencia no tiene formato oficial; sólo letras, números y guiones, y única por piloto. El dorsal se puede repetir en categorías distintas. La foto queda para US-22.
+- El número de coche (dorsal) es único dentro de la misma categoría (implementado el 17/10 con `unique(category_id, number)`).
+- Aislamiento estricto: el usuario de escudería sólo puede inscribir y consultar pilotos bajo el identificador de su propia escudería (`team_id`).
+- Límite reglamentario: hasta 2 titulares y 2 suplentes por escudería.
+
+**Horas reales**: 0,75 h (estimadas a partir de los commits del 2026-10-14, implementación asistida por IA).
+
+**QA (Agustín)**: faltaba la licencia deportiva que pide el primer criterio; se agregó en schema (migración
+`0007_add_driver_license`), contrato, API, formulario y nómina. Se sumaron test de integración del repositorio
+(con violaciones de unicidad traducidas a 409), fuzz de la ruta y tests de UI. Consultas abiertas al PO en
+[docs/preguntas-po.md](docs/preguntas-po.md) (formato de licencia, dorsal por categoría, foto → US-22).
+
+**Falta para cerrar**: ninguno. Plan: [docs/plans/US-10-team-drivers.md](docs/plans/US-10-team-drivers.md).
+
+---
+
+### US-13 — Cargar sanciones a pilotos o escuderías
+
+> **Como** Personal Administrativo de la FIA **quiero** cargar sanciones a pilotos o escuderías por incidentes de pista o infracciones técnicas y horarias
+> **de forma que** queden asentadas de manera oficial e inmediata en el sistema. — SP 5 · BV 13
+
+| Tarea (Naranja) | Est. | Real | Hecha |
+|---|---|---|---|
+| Diseñar y desarrollar la opción para cargar sanciones en el área administrativa de la FIA | 1,5 h | | [x] |
+| Crear la tabla en la base de datos para registrar las sanciones (fecha, sancionado, motivo, penalización y duración) | 1 h | | [x] |
+| Crear el formulario con validaciones para cargar los datos de la sanción | 1,5 h | | [x] |
+| Crear la conexión necesaria para que el listado de sanciones esté disponible para las escuderías y público en general | 1,5 h | | [x] |
+| Diseñar e implementar el listado de sanciones para las escuderías y público en general | 2 h | | [x] |
+| **Total** | **7,5 h** | **0,75 h** | |
+
+**Criterios de aceptación**
+- [x] En menos de 10 minutos tiene que estar disponible la actualización del listado de las sanciones para las escuderías y público en general (en la web es en tiempo real/inmediato).
+- [x] La opción para ver el listado debe estar disponible para escuderías y público general además de la administración FIA (sólo la FIA puede actualizarlo o cargarlo).
+- [x] El listado debe mostrar todos los datos necesarios para saber a qué piloto o escudería se le otorgó.
+- [x] Debe contar con filtros por fecha/temporada, tipo de sanción, escudería y cualquier otra relevante.
+- [x] Las sanciones en el listado duran 5 años (alcance histórico acorde a US-5).
+
+**Acuerdos con el PO (Grupo Naranja)**
+- PO (17/10): la sanción lleva categoría, escudería, piloto (opcional), tipo, sanción, motivo, carrera (opcional) y fecha.
+- Roles: Sólo el personal administrativo de la FIA (`fia_admin`) puede cargar y registrar sanciones. Escuderías y público en general tienen acceso de solo lectura.
+- Tipos de sanción: recargo de tiempo, puestos en grilla, quita de puntos, descalificación, multa económica y apercibimiento.
+- Alcance: sanciones aplicadas tanto a un piloto específico (asociado a su escudería) como a una escudería directamente.
+
+**Horas reales**: 0,75 h (estimadas a partir de los commits del 2026-10-14, implementación asistida por IA).
+
+**QA (Agustín)**: el listado no aplicaba los 5 años (ahora el servicio filtra por `issuedAt` de los últimos
+5 años), el formulario no permitía sancionar a un piloto (se agregó el selector con `GET /teams/:id/drivers`) y
+faltaba el filtro por escudería. Escudería o carrera inexistente daban 500 (ahora 404) y el tipo no tenía
+`check` en la base. Se sumaron tests de integración, fuzz y de UI (mutación web 33 % → 85 %).
+
+**Falta para cerrar**: ninguno. Plan: [docs/plans/US-13-penalties.md](docs/plans/US-13-penalties.md).
+
+---
+
+### US-21 — Ingresar fechas, tipos y resultado de controles técnicos por auto
+
+> **Como** Personal Administrativo de la FIA **quiero** ingresar fechas, tipos de controles técnicos y el resultado (aprobado o rechazado) para cada auto
+> **de forma que** se evalúe el cumplimiento de los reglamentos técnicos vigentes. — SP 3 · BV 13
+
+| Tarea (Naranja) | Est. | Real | Hecha |
+|---|---|---|---|
+| Diseñar y desarrollar la opción para cargar controles técnicos en el área correspondiente al personal administrativo de la FIA | 1 h | | [x] |
+| Crear la tabla correspondiente a los controles técnicos en la base de datos | 1 h | | [x] |
+| Crear el formulario para cargar los datos de los controles técnicos | 1 h | | [x] |
+| Crear la conexión necesaria para que el listado de controles técnicos esté disponible para las escuderías y público en general | 1 h | | [x] |
+| Diseñar e implementar el listado de controles técnicos para las escuderías y público en general | 1 h | | [x] |
+| **Total** | **5 h** | **0,5 h** | |
+
+**Criterios de aceptación**
+- [x] El listado de controles técnicos debe actualizarse en menos de 10 minutos (en la web es en tiempo real).
+- [x] Los controles técnicos deben tener fecha, hora, vehículo inspeccionado y dictamen final (aprobado / rechazado).
+- [x] Los controles técnicos duran en el listado hasta su fecha y hora de expiración que coincide con la del control / evento.
+- [x] Disponible para escuderías y público general además de la administración FIA (sólo la FIA puede cargar/actualizar).
+
+**Acuerdos con el PO (Grupo Naranja)**
+- PO (17/10): el control se muestra hasta que vence; la vigencia la carga la FIA.
+- Roles: Sólo `fia_admin` puede crear y gestionar controles técnicos. Escuderías y público en general tienen acceso de solo lectura.
+- Tipos de control técnico: pesaje (`weight`), combustible (`fuel`), dimensiones y alerones (`dimensions`), motor y potencia (`engine`), seguridad (`safety`), inspección post-carrera (`post_race`).
+- Resultados: Aprobado (`passed`) o Rechazado (`rejected`).
+- Vehículo inspeccionado: asociado a una escudería (`team_id`) y opcionalmente a un auto/piloto (`driver_id` y su número de auto) y/o carrera (`race_id`).
+
+**Horas reales**: 0,5 h (estimadas a partir de los commits del 2026-10-14, implementación asistida por IA).
+
+**QA (Agustín)**: el listado mostraba también los controles vencidos (ahora oculta los que pasaron su
+`expiresAt`), el vehículo inspeccionado (número de auto) era opcional y el formulario no permitía cargar la
+fecha y hora del control ni su vigencia. Número de auto, fecha del control y vigencia pasan a ser obligatorios
+(con `check` en la base: rango del auto, tipo, dictamen y vigencia posterior al control), y una FK inexistente
+ahora responde 404 en lugar de 500. Se sumaron tests de integración, fuzz y de UI (mutación web 46 % → 83 %).
+
+**Falta para cerrar**: ninguno. Plan: [docs/plans/US-21-technical-controls.md](docs/plans/US-21-technical-controls.md).
+
+---
+
+### US-6 — Chats de mensajería cifrados de extremo a extremo
+
+> **Como** Personal Administrativo de la FIA y/o de las escuderías
+> **quiero** que los chats de mensajería estén cifrados de extremo a extremo
+> **de forma que** se valore la privacidad y la seguridad de los datos compartidos. — SP 13 · BV 13
+
+| Tarea (Naranja) | Est. | Real | Hecha |
+|---|---|---|---|
+| Diseñar el protocolo de intercambio de claves públicas/privadas y almacenamiento seguro de llaves en el cliente | 2 h | | [x] |
+| Implementar servicio de cifrado y descifrado de mensajes en el lado cliente antes del envío | 2 h | | [x] |
+| Desarrollar backend de retransmisión de mensajes cifrados (almacenamiento como payload opaco en servidor) | 1,5 h | | [x] |
+| Adaptar la interfaz del chat para mostrar estado de seguridad y verificación de claves de la conversación | 1,5 h | | [x] |
+| Manejar escenarios de desconexión, almacenamiento local seguro y sincronización de mensajes fuera de línea | 1 h | | [x] |
+| Pruebas de seguridad e interceptación: verificar que el servidor o un tercero no puedan leer el contenido de los mensajes | 1 h | | [x] |
+| **Total** | **9 h** | **0,75 h** | |
+
+**Criterios de aceptación**
+- [x] Los mensajes se cifran en el dispositivo del emisor y solo pueden ser descifrados en el dispositivo del receptor destinatario.
+- [x] La base de datos y los registros del servidor únicamente persisten el contenido cifrado (texto plano inaccesible para los administradores del servidor).
+- [x] La interfaz del chat indica con un indicador visible que la conversación cuenta con cifrado extremo a extremo activo.
+- [x] El sistema rechaza o alerta si una de las partes no tiene un par de claves válido o si la firma criptográfica del mensaje no coincide.
+
+**Acuerdos con el PO (Grupo Naranja)**
+- Criptografía estándar: Web Crypto API (`ECDH` P-256 para derivación de clave compartida, `AES-GCM` 256-bit para cifrado autenticado de mensajes, `ECDSA` para firmas de autenticidad).
+- El servidor solo actúa como *relé opaco* (almacena clave pública de cada usuario en el registro y mensajes con payload cifrado e IV). No conoce las claves privadas de los usuarios.
+- Acceso: Solo personal autenticado (`fia_admin` y `team_staff`). Las conversaciones se habilitan entre personal FIA y escuderías o entre escuderías.
+
+**Horas reales**: 0,75 h (estimadas a partir de los commits del 2026-10-14, implementación asistida por IA).
+
+**QA (Agustín)**: la entrega no cumplía ningún criterio. La pantalla mandaba el texto **en plano** (con IV y
+firma falsos) y mostraba "Cifrado E2E" igual; las claves privadas vivían sólo en memoria; `isParticipant`
+ignoraba el id de la conversación (cualquiera con un chat podía leer y escribir en todos); el `JOIN` de
+`user.team_id` (text) con `teams.id` (uuid) rompía en Postgres; no había forma de iniciar una conversación;
+y los parámetros no se validaban. Se reimplementó: cifrado AES-GCM con clave ECDH y firma ECDSA en el
+navegador, claves privadas no exportables guardadas en IndexedDB, verificación de firma con alerta en cada
+mensaje, selector de contactos (`GET /chat/contacts`), rechazo si el destinatario no tiene claves, control de
+participantes y validación Zod. Se sumaron tests de integración, fuzz, un flujo E2E con claves reales y tests
+de UI.
+
+**Mejora [equipo]**: la conversación abierta se actualiza sola cada 3 s y la lista de conversaciones cada 10 s (antes había que recargar).
+
+**Falta para cerrar**: ninguno. Plan: [docs/plans/US-6-encrypted-chat.md](docs/plans/US-6-encrypted-chat.md).
+
+---
+
+### US-2 — Realizar un testeo del nuevo incremento del producto
+
+> **Como** Miembro del equipo de desarrollo
+> **quiero** Realizar un testeo del nuevo incremento del producto
+> **de forma que** Se ponga a prueba el producto. — SP 5 · BV 13
+
+| Tarea (Naranja) | Est. | Real | Hecha |
+|---|---|---|---|
+| Configurar el framework de pruebas automatizadas y el pipeline de ejecución en el repositorio | 1 h | | [x] |
+| Diseñar la matriz de casos de prueba funcionales e integración para los flujos críticos del incremento | 1,5 h | | [x] |
+| Implementar casos de prueba automatizados (unitarios y de integración en endpoints críticos) | 2 h | | [x] |
+| Ejecutar pruebas de regresión e interfaz de usuario (UI/flujos completos) | 1,5 h | | [x] |
+| Documentar incidencias encontradas y verificar su resolución en una re-ejecución | 1 h | | [x] |
+| **Total** | **7 h** | **0,75 h** | |
+
+**Criterios de aceptación**
+- [x] La suite de pruebas automatizadas se ejecuta con un único comando/pipeline y concluye sin fallos en el código integrado.
+- [x] Se cubren con pruebas unitarias e integración las reglas de validación y persistencia de las entidades del sprint.
+- [x] Toda discrepancia detectada queda registrada con pasos de reproducción, resultado esperado y resultado obtenido.
+- [x] El incremento desplegado no presenta defectos bloqueantes ni fallos no controlados en los flujos principales.
+
+**Acuerdos con el PO (Grupo Naranja)**
+- Alcance del incremento de Sprint 2: autenticación segura con roles (US-4), registro y gestión de pilotos por escudería (US-10), gestión y consulta de sanciones (US-13), inspecciones y controles técnicos vehiculares (US-21) y mensajería cifrada E2E entre FIA y escuderías (US-6).
+- Automatización: `pnpm test:coverage` y `pnpm test:int` garantizan la suite reproducible e integrada.
+
+**Horas reales**: 0,75 h (estimadas a partir de los commits del 2026-10-14, implementación asistida por IA).
+
+**QA (Agustín)**: la matriz daba por aprobados casos que no lo estaban (el chat mandaba texto plano) y el test
+del incremento usaba datos que hoy el contrato rechaza. Se rehízo la matriz apuntando a los tests reales
+(`docs/testing.md`), se reescribió el flujo integral en `sprint2-increment-*.test.ts`, el seed de la demo
+carga licencias y controles vigentes, y la mutación web del shard `rest` pasó de 57,6 % a 83,4 %.
+
+**Falta para cerrar**: ninguno. Plan: [docs/plans/US-2-increment-testing.md](docs/plans/US-2-increment-testing.md).
+
+---
+
 ## Diferido
 
 | ID | Ítem | Motivo | Estado |
 |---|---|---|---|
 | T-3 | Tests e2e con Playwright de los flujos principales **[equipo]** | Se dejan para el final del proyecto (decisión del equipo). | Pendiente |
 
-## Product backlog (no seleccionado para el Sprint 1)
+## Product backlog (no seleccionado para el Sprint 1 ni 2)
 
 | ID | Como | Quiero | SP | BV |
 |---|---|---|---|---|
 | US-1 | Miembro del equipo de desarrollo | Que la aplicación tenga el mismo desempeño en móvil y en web | 8 | 8 |
-| US-2 | Miembro del equipo de desarrollo | Realizar un testeo del nuevo incremento del producto | 5 | 13 |
 | US-3 | Usuario | Aplicar filtros (fecha, año, relevancia, tipo de control técnico, identificador, etc.) | 5 | 8 |
-| US-4 | Personal Administrativo de la FIA | Iniciar sesión mediante credenciales seguras | 13 | 13 |
-| US-6 | Personal Administrativo de la FIA y/o de las escuderías | Chats de mensajería cifrados de extremo a extremo | 13 | 13 |
 | US-7 | Usuario | Acceder a la app móvil con datos biométricos o el PIN del celular | 13 | 5 |
 | US-8 | Personal Administrativo de la FIA | Cargar una fecha de carrera o evento (categoría, circuito y fecha) | 5 | 5 |
-| US-10 | Personal de las escuderías | Cargar la información de los pilotos titulares y suplentes | 5 | 13 |
 | US-11 | Personal de las escuderías | Modificar la información de los pilotos y su condición de titular/suplente | 5 | 8 |
 | US-12 | Miembro del equipo de desarrollo | Alta disponibilidad y escalabilidad en número de usuarios | 13 | 8 |
-| US-13 | Personal Administrativo de la FIA | Cargar sanciones a pilotos o escuderías | 5 | 13 |
 | US-14 | Usuario | Crear un nuevo usuario desde la app | 3 | 1 |
 | US-15 | Personal de las escuderías | Asentar la confirmación de notificación de una sanción | 3 | 8 |
 | US-16 | Usuario | Consultar el listado histórico y en vivo de sanciones de la temporada | 3 | 8 |
 | US-17 | Usuario | Consultar perfiles de pilotos titulares y suplentes de todas las escuderías | 3 | 8 |
 | US-18 | Usuario | Compartir contenido en redes sociales (WhatsApp, Instagram) | 5 | 2 |
 | US-19 | Personal Administrativo de la FIA | Modificar o dar de baja eventos deportivos programados | 5 | 13 |
-| US-21 | Personal Administrativo de la FIA | Ingresar fechas, tipos y resultado de controles técnicos por auto | 3 | 13 |
-| US-22 | Miembro del equipo de desarrollo | Cargar fotos de pilotos y autos | 2 | 3 |
+| US-22 | Miembro del equipo de desarrollo | Cargar fotos de pilotos y autos. **[equipo]** Incluye la foto o documentación del piloto que mencionaba la tarea de la pantalla de US-10 (PO, 17/10) | 2 | 3 |
 | US-24 | Personal de las escuderías | Visualizar resultados y observaciones de controles técnicos | 2 | 13 |
 | US-25 | Usuario | Visualizar reportes de controles técnicos por gran premio | 2 | 5 |
 | US-26 | Usuario | Solicitar un cambio de contraseña desde la app (email con pasos) | 5 | 2 |

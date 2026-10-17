@@ -1,0 +1,53 @@
+import { z } from 'zod'
+import { versionSchema } from './common'
+
+export const penaltyTypeSchema = z.enum([
+  'time_penalty',
+  'grid_penalty',
+  'points_deduction',
+  'disqualification',
+  'fine',
+  'reprimand',
+])
+
+export const createPenaltyBodySchema = z.strictObject({
+  teamId: z.uuid('Elegí una escudería válida.'),
+  driverId: z.uuid('El piloto debe ser un UUID válido.').nullable().optional(),
+  raceId: z.uuid('La carrera debe ser un UUID válido.').nullable().optional(),
+  type: penaltyTypeSchema,
+  penalty: z.string().trim().min(2, 'La penalización debe tener al menos 2 caracteres.').max(100),
+  reason: z.string().trim().min(5, 'El motivo debe tener al menos 5 caracteres.').max(255),
+  issuedAt: z.iso.datetime().optional(),
+})
+
+export const penaltySchema = z.strictObject({
+  id: z.uuid(),
+  teamId: z.uuid(),
+  teamName: z.string(),
+  categoryCode: z.string(),
+  driverId: z.uuid().nullable(),
+  driverName: z.string().nullable(),
+  raceId: z.uuid().nullable(),
+  raceName: z.string().nullable(),
+  type: penaltyTypeSchema,
+  penalty: z.string(),
+  reason: z.string(),
+  issuedAt: z.iso.datetime(),
+  version: versionSchema,
+  createdAt: z.iso.datetime(),
+})
+
+export const penaltyListSchema = z.array(penaltySchema).readonly()
+
+export const penaltiesQuerySchema = z.strictObject({
+  season: z.coerce.number().int().min(2000).max(2100).optional(),
+  teamId: z.uuid().optional(),
+  type: penaltyTypeSchema.optional(),
+})
+
+export type PenaltyType = z.infer<typeof penaltyTypeSchema>
+export type CreatePenaltyBody = z.infer<typeof createPenaltyBodySchema>
+export type CreatePenaltyInput = z.input<typeof createPenaltyBodySchema>
+export type Penalty = z.infer<typeof penaltySchema>
+export type PenaltyList = z.infer<typeof penaltyListSchema>
+export type PenaltiesQuery = z.infer<typeof penaltiesQuerySchema>

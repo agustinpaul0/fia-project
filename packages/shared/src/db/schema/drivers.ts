@@ -1,5 +1,6 @@
 import { sql } from 'drizzle-orm'
 import { check, integer, pgTable, unique, uuid, varchar } from 'drizzle-orm/pg-core'
+import { categories } from './categories'
 import { idColumn, versionedChecks, versionedColumns } from './columns'
 import { teams } from './teams'
 
@@ -12,16 +13,23 @@ export const drivers = pgTable(
     code: varchar('code', { length: 3 }).notNull(),
     number: integer('number').notNull(),
     country: varchar('country', { length: 60 }).notNull(),
+    license: varchar('license', { length: 20 }),
     teamId: uuid('team_id').references(() => teams.id, { onDelete: 'set null' }),
+    categoryId: uuid('category_id').references(() => categories.id, { onDelete: 'restrict' }),
     role: varchar('role', { length: 20 }).notNull().default('main'),
     ...versionedColumns(),
   },
   (table) => [
     unique('drivers_code_unique').on(table.code),
-    unique('drivers_number_unique').on(table.number),
+    unique('drivers_category_number_unique').on(table.categoryId, table.number),
+    unique('drivers_license_unique').on(table.license),
     check('drivers_code_format', sql`${table.code} ~ '^[A-Z]{3}$'`),
     check('drivers_number_range', sql`${table.number} >= 1 and ${table.number} <= 99`),
     check('drivers_role_valid', sql`${table.role} in ('main', 'reserve')`),
+    check(
+      'drivers_license_format',
+      sql`${table.license} is null or ${table.license} ~ '^[A-Za-z0-9-]{3,20}$'`,
+    ),
     ...versionedChecks('drivers', table),
   ],
 )

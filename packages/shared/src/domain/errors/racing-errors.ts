@@ -17,4 +17,48 @@ export const RACING_ERRORS = {
     status: 422,
     message: 'Uno de los pilotos elegidos no corre en la categoría de esta carrera.',
   },
+  CAR_NUMBER_ALREADY_TAKEN: {
+    status: 409,
+    message: 'El número de auto ya está asignado a otro piloto de la categoría.',
+  },
+  LICENSE_ALREADY_TAKEN: {
+    status: 409,
+    message: 'La licencia deportiva ya está asignada a otro piloto.',
+  },
+  DRIVER_CODE_ALREADY_TAKEN: {
+    status: 409,
+    message: 'El código de tres letras ya está asignado a otro piloto.',
+  },
+  DRIVER_LIMIT_EXCEEDED: {
+    status: 422,
+    message: 'Se alcanzó el límite reglamentario de pilotos para esta condición.',
+  },
+  PENALTY_NOT_FOUND: {
+    status: 404,
+    message: 'La sanción solicitada no existe o fue eliminada.',
+  },
+  INVALID_PENALTY_TARGET: {
+    status: 400,
+    message: 'El piloto seleccionado no pertenece a la escudería indicada.',
+  },
+  TECHNICAL_CONTROL_NOT_FOUND: {
+    status: 404,
+    message: 'El control técnico solicitado no existe o fue eliminado.',
+  },
+  INVALID_TECHNICAL_CONTROL_TARGET: {
+    status: 400,
+    message: 'El piloto o vehículo seleccionado no pertenece a la escudería.',
+  },
+  CHAT_KEY_NOT_FOUND: {
+    status: 404,
+    message: 'El destinatario aún no ha registrado sus claves de cifrado de extremo a extremo.',
+  },
+  CONVERSATION_NOT_FOUND: {
+    status: 404,
+    message: 'La conversación solicitada no existe o no tenés permiso para acceder a ella.',
+  },
+  INVALID_CHAT_RECIPIENT: {
+    status: 400,
+    message: 'No podés iniciar una conversación con vos mismo o con un usuario inválido.',
+  },
 } as const satisfies Record<string, ErrorDefinition>

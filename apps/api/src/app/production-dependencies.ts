@@ -5,10 +5,14 @@ import { createDatabasePing } from '../core/db/ping'
 import type { Logger } from '../core/logger'
 import type { Env } from '../env'
 import { createDrizzleCategoriesRepository } from '../features/categories/categories.repository'
+import { createDrizzleChatRepository } from '../features/chat/chat.repository'
 import { createDrizzleNotificationsRepository } from '../features/notifications/notifications.repository'
+import { createDrizzlePenaltiesRepository } from '../features/penalties/penalties.repository'
 import { createDrizzleRaceResultsRepository } from '../features/race-results/race-results.repository'
+import { createDrizzleTeamDriversRepository } from '../features/team-drivers/team-drivers.repository'
 import { createDrizzleTeamStaffUnitOfWork } from '../features/team-staff/team-staff-unit-of-work'
 import { createDrizzleTeamsRepository } from '../features/teams/teams.repository'
+import { createDrizzleTechnicalControlsRepository } from '../features/technical-controls/technical-controls.repository'
 import type { AppDependencies } from './app-dependencies'
 
 export type ProductionContext = {
@@ -42,6 +46,10 @@ export const createProductionDependencies = ({
       teamStaffUow: createDrizzleTeamStaffUnitOfWork(db, authConfig),
       raceResults: createDrizzleRaceResultsRepository(db),
       notifications: createDrizzleNotificationsRepository(db),
+      teamDrivers: createDrizzleTeamDriversRepository(db),
+      penalties: createDrizzlePenaltiesRepository(db),
+      technicalControls: createDrizzleTechnicalControlsRepository(db),
+      chat: createDrizzleChatRepository(db),
     },
     auth,
   }

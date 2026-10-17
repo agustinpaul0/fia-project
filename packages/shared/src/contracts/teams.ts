@@ -14,6 +14,25 @@ export const teamOptionSchema = z.strictObject({
 
 export const teamOptionListSchema = z.array(teamOptionSchema).readonly()
 
+export const driverOptionSchema = z.strictObject({
+  id: z.uuid(),
+  name: z.string(),
+})
+
+export const driverOptionListSchema = z.array(driverOptionSchema).readonly()
+
+export const teamRacesQuerySchema = z.strictObject({
+  season: z.coerce.number().int().min(2000).max(2100),
+})
+
+export const teamRaceOptionSchema = z.strictObject({
+  id: z.uuid(),
+  name: z.string(),
+  date: z.iso.datetime(),
+})
+
+export const teamRaceOptionListSchema = z.array(teamRaceOptionSchema).readonly()
+
 export const teamSchema = z.strictObject({
   id: z.uuid(),
   name: z.string(),
@@ -27,3 +46,5 @@ export const teamSchema = z.strictObject({
 export type Team = z.infer<typeof teamSchema>
 export type CreateTeamBody = z.infer<typeof createTeamBodySchema>
 export type TeamOption = z.infer<typeof teamOptionSchema>
+export type DriverOption = z.infer<typeof driverOptionSchema>
+export type TeamRaceOption = z.infer<typeof teamRaceOptionSchema>
