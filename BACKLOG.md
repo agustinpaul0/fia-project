@@ -393,6 +393,8 @@ US-4 previa al primer commit); reemplazan las 6,5 h que figuraban antes. Las de 
 (con violaciones de unicidad traducidas a 409), fuzz de la ruta y tests de UI. Consultas abiertas al PO en
 [docs/preguntas-po.md](docs/preguntas-po.md) (formato de licencia, dorsal por categoría, foto → US-22).
 
+**Alcance [equipo]**: la tarea de Naranja menciona endpoints POST/PUT; la edición de pilotos (PUT) es la US-11 del product backlog y no entra en este sprint.
+
 **Falta para cerrar**: ninguno. Plan: [docs/plans/US-10-team-drivers.md](docs/plans/US-10-team-drivers.md).
 
 ---
