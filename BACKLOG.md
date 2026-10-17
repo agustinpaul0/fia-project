@@ -301,12 +301,17 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 
 | ID | Ítem | SP | BV | Est. | Real | Estado | Dueño | Depende de | PR |
 |---|---|---|---|---|---|---|---|---|---|
-| US-4 | Iniciar sesión mediante credenciales seguras | 13 | 13 | 9 h | 1 h | Hecho | Santiago | T-1 | #13 |
-| US-10 | Cargar la información de los pilotos titulares y suplentes | 5 | 13 | 7 h | 1 h | Hecho | Santiago | US-4, T-2 | #14 |
-| US-13 | Cargar sanciones a pilotos o escuderías | 5 | 13 | 7,5 h | 1 h | Hecho | Santiago | US-4, US-10 | #15 |
-| US-21 | Ingresar fechas, tipos y resultado de controles técnicos por auto | 3 | 13 | 5 h | 1 h | Hecho | Santiago | US-4, US-13 | #16 |
-| US-6 | Chats de mensajería cifrados de extremo a extremo | 13 | 13 | 9 h | 1,5 h | Hecho | Santiago | US-4 | #17 |
-| US-2 | Realizar un testeo del nuevo incremento del producto | 5 | 13 | 7 h | 1 h | Hecho | Santiago | US-4, US-10, US-13, US-21, US-6 | #18 |
+| US-4 | Iniciar sesión mediante credenciales seguras | 13 | 13 | 9 h | 0,5 h | Hecho | Santiago | T-1 | #13 |
+| US-10 | Cargar la información de los pilotos titulares y suplentes | 5 | 13 | 7 h | 0,75 h | Hecho | Santiago | US-4, T-2 | #14 |
+| US-13 | Cargar sanciones a pilotos o escuderías | 5 | 13 | 7,5 h | 0,75 h | Hecho | Santiago | US-4, US-10 | #15 |
+| US-21 | Ingresar fechas, tipos y resultado de controles técnicos por auto | 3 | 13 | 5 h | 0,5 h | Hecho | Santiago | US-4, US-13 | #16 |
+| US-6 | Chats de mensajería cifrados de extremo a extremo | 13 | 13 | 9 h | 0,75 h | Hecho | Santiago | US-4 | #17 |
+| US-2 | Realizar un testeo del nuevo incremento del producto | 5 | 13 | 7 h | 0,75 h | Hecho | Santiago | US-4, US-10, US-13, US-21, US-6 | #18 |
+| T-9 | QA del incremento, correcciones y respuestas del PO **[equipo]** | — | — | — | 6 h | Hecho | Agustín | todas | #13–#22 |
+
+**Horas reales del sprint: 10 h** (4 h de implementación de Santiago + 6 h de QA de Agustín), contra 44,5 h
+estimadas. Las de Santiago salen de sus commits del 14/10 (15:59–19:32 UTC, unas 3,5 h, más 0,5 h estimadas de la
+US-4 previa al primer commit); reemplazan las 6,5 h que figuraban antes. Las de QA las informó Agustín.
 
 **Nueva escala de equivalencia de Naranja**: 1 SP = 1–4 h · 3 SP = 4–6 h · 5 SP = 6–8 h · 13 SP = 8–10 h.  
 **Orden sugerido [equipo]**: US-4 → US-10 → US-13 → US-21 → US-6. US-2 acompaña todo el sprint con la suite de pruebas.
@@ -326,7 +331,7 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 | Desarrollar la pantalla de inicio de sesión con validaciones de formulario y manejo de mensajes de error | 1,5 h | | [x] |
 | Implementar expiración de sesión por inactividad y mecanismo de cierre de sesión seguro | 1 h | | [x] |
 | Pruebas funcionales de seguridad: Bloqueo ante intentos fallidos, inyección y acceso no autorizado por URL | 2 h | | [x] |
-| **Total** | **9 h** | **1 h** | |
+| **Total** | **9 h** | **0,5 h** | |
 
 **Criterios de aceptación**
 - [x] Un administrador registrado ingresa sus credenciales válidas y el sistema lo redirige a la vista de administración de la FIA.
@@ -342,7 +347,7 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 - Sesión con expiración por inactividad e invalidación al cerrar sesión.
 - Rate limiting activo para prevenir fuerza bruta (máximo 10 intentos por minuto por IP).
 
-**Horas reales**: 1 h (sesión del 2026-10-14, implementación asistida por IA).
+**Horas reales**: 0,5 h (estimadas a partir de los commits del 2026-10-14, implementación asistida por IA).
 
 **Falta para cerrar**: ninguno. Plan: [docs/plans/US-4-authentication.md](docs/plans/US-4-authentication.md).
 
@@ -360,7 +365,7 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 | Diseñar e implementar el formulario de inscripción en el panel de la escudería | 1,5 h | | [x] |
 | Implementar el control de acceso y aislamiento por escudería | 1 h | | [x] |
 | Pruebas unitarias, de validación y de integración | 1,5 h | | [x] |
-| **Total** | **7 h** | **1 h** | |
+| **Total** | **7 h** | **0,75 h** | |
 
 **Criterios de aceptación**
 - [x] El representante de la escudería puede inscribir pilotos completando todos los datos obligatorios (nombre, apellido, número de auto, licencia y condición de titular o suplente).
@@ -374,7 +379,7 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 - Aislamiento estricto: el usuario de escudería sólo puede inscribir y consultar pilotos bajo el identificador de su propia escudería (`team_id`).
 - Límite reglamentario: hasta 2 titulares y 2 suplentes por escudería.
 
-**Horas reales**: 1 h (sesión del 2026-10-14, implementación asistida por IA).
+**Horas reales**: 0,75 h (estimadas a partir de los commits del 2026-10-14, implementación asistida por IA).
 
 **QA (Agustín)**: faltaba la licencia deportiva que pide el primer criterio; se agregó en schema (migración
 `0007_add_driver_license`), contrato, API, formulario y nómina. Se sumaron test de integración del repositorio
@@ -397,7 +402,7 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 | Crear el formulario con validaciones para cargar los datos de la sanción | 1,5 h | | [x] |
 | Crear la conexión necesaria para que el listado de sanciones esté disponible para las escuderías y público en general | 1,5 h | | [x] |
 | Diseñar e implementar el listado de sanciones para las escuderías y público en general | 2 h | | [x] |
-| **Total** | **7,5 h** | **1 h** | |
+| **Total** | **7,5 h** | **0,75 h** | |
 
 **Criterios de aceptación**
 - [x] En menos de 10 minutos tiene que estar disponible la actualización del listado de las sanciones para las escuderías y público en general (en la web es en tiempo real/inmediato).
@@ -412,7 +417,7 @@ Feature: [docs/features/race-results](docs/features/race-results/README.md).
 - Tipos de sanción: recargo de tiempo, puestos en grilla, quita de puntos, descalificación, multa económica y apercibimiento.
 - Alcance: sanciones aplicadas tanto a un piloto específico (asociado a su escudería) como a una escudería directamente.
 
-**Horas reales**: 1 h (sesión del 2026-10-14, implementación asistida por IA).
+**Horas reales**: 0,75 h (estimadas a partir de los commits del 2026-10-14, implementación asistida por IA).
 
 **QA (Agustín)**: el listado no aplicaba los 5 años (ahora el servicio filtra por `issuedAt` de los últimos
 5 años), el formulario no permitía sancionar a un piloto (se agregó el selector con `GET /teams/:id/drivers`) y
@@ -435,7 +440,7 @@ faltaba el filtro por escudería. Escudería o carrera inexistente daban 500 (ah
 | Crear el formulario para cargar los datos de los controles técnicos | 1 h | | [x] |
 | Crear la conexión necesaria para que el listado de controles técnicos esté disponible para las escuderías y público en general | 1 h | | [x] |
 | Diseñar e implementar el listado de controles técnicos para las escuderías y público en general | 1 h | | [x] |
-| **Total** | **5 h** | **1 h** | |
+| **Total** | **5 h** | **0,5 h** | |
 
 **Criterios de aceptación**
 - [x] El listado de controles técnicos debe actualizarse en menos de 10 minutos (en la web es en tiempo real).
@@ -450,7 +455,7 @@ faltaba el filtro por escudería. Escudería o carrera inexistente daban 500 (ah
 - Resultados: Aprobado (`passed`) o Rechazado (`rejected`).
 - Vehículo inspeccionado: asociado a una escudería (`team_id`) y opcionalmente a un auto/piloto (`driver_id` y su número de auto) y/o carrera (`race_id`).
 
-**Horas reales**: 1 h (sesión del 2026-10-14, implementación asistida por IA).
+**Horas reales**: 0,5 h (estimadas a partir de los commits del 2026-10-14, implementación asistida por IA).
 
 **QA (Agustín)**: el listado mostraba también los controles vencidos (ahora oculta los que pasaron su
 `expiresAt`), el vehículo inspeccionado (número de auto) era opcional y el formulario no permitía cargar la
@@ -476,7 +481,7 @@ ahora responde 404 en lugar de 500. Se sumaron tests de integración, fuzz y de 
 | Adaptar la interfaz del chat para mostrar estado de seguridad y verificación de claves de la conversación | 1,5 h | | [x] |
 | Manejar escenarios de desconexión, almacenamiento local seguro y sincronización de mensajes fuera de línea | 1 h | | [x] |
 | Pruebas de seguridad e interceptación: verificar que el servidor o un tercero no puedan leer el contenido de los mensajes | 1 h | | [x] |
-| **Total** | **9 h** | **1,5 h** | |
+| **Total** | **9 h** | **0,75 h** | |
 
 **Criterios de aceptación**
 - [x] Los mensajes se cifran en el dispositivo del emisor y solo pueden ser descifrados en el dispositivo del receptor destinatario.
@@ -489,7 +494,7 @@ ahora responde 404 en lugar de 500. Se sumaron tests de integración, fuzz y de 
 - El servidor solo actúa como *relé opaco* (almacena clave pública de cada usuario en el registro y mensajes con payload cifrado e IV). No conoce las claves privadas de los usuarios.
 - Acceso: Solo personal autenticado (`fia_admin` y `team_staff`). Las conversaciones se habilitan entre personal FIA y escuderías o entre escuderías.
 
-**Horas reales**: 1,5 h (sesión del 2026-10-14, implementación asistida por IA).
+**Horas reales**: 0,75 h (estimadas a partir de los commits del 2026-10-14, implementación asistida por IA).
 
 **QA (Agustín)**: la entrega no cumplía ningún criterio. La pantalla mandaba el texto **en plano** (con IV y
 firma falsos) y mostraba "Cifrado E2E" igual; las claves privadas vivían sólo en memoria; `isParticipant`
@@ -520,7 +525,7 @@ de UI.
 | Implementar casos de prueba automatizados (unitarios y de integración en endpoints críticos) | 2 h | | [x] |
 | Ejecutar pruebas de regresión e interfaz de usuario (UI/flujos completos) | 1,5 h | | [x] |
 | Documentar incidencias encontradas y verificar su resolución en una re-ejecución | 1 h | | [x] |
-| **Total** | **7 h** | **1 h** | |
+| **Total** | **7 h** | **0,75 h** | |
 
 **Criterios de aceptación**
 - [x] La suite de pruebas automatizadas se ejecuta con un único comando/pipeline y concluye sin fallos en el código integrado.
@@ -532,7 +537,7 @@ de UI.
 - Alcance del incremento de Sprint 2: autenticación segura con roles (US-4), registro y gestión de pilotos por escudería (US-10), gestión y consulta de sanciones (US-13), inspecciones y controles técnicos vehiculares (US-21) y mensajería cifrada E2E entre FIA y escuderías (US-6).
 - Automatización: `pnpm test:coverage` y `pnpm test:int` garantizan la suite reproducible e integrada.
 
-**Horas reales**: 1 h (sesión del 2026-10-14, implementación asistida por IA).
+**Horas reales**: 0,75 h (estimadas a partir de los commits del 2026-10-14, implementación asistida por IA).
 
 **QA (Agustín)**: la matriz daba por aprobados casos que no lo estaban (el chat mandaba texto plano) y el test
 del incremento usaba datos que hoy el contrato rechaza. Se rehízo la matriz apuntando a los tests reales
