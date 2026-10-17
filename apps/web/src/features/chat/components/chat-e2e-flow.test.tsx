@@ -7,6 +7,10 @@ import { generateE2EKeyPairs } from '../crypto/e2e-crypto'
 import { UNVERIFIED_MESSAGE } from './chat-message-bubble'
 import { ChatSection } from './chat-section'
 
+vi.mock('../crypto/outbox-storage', async (importOriginal) => {
+  const real = await importOriginal<typeof import('../crypto/outbox-storage')>()
+  return { ...real, indexedDbOutbox: real.createMemoryOutbox() }
+})
 vi.mock('@/lib/auth-client', () => ({
   useSession: () => ({ data: { user: { id: 'alice', role: 'fia_admin' } } }),
 }))

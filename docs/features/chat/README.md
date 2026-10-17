@@ -25,6 +25,7 @@ Provee un canal de mensajería segura entre el personal administrativo de la FIA
 | No se abre una conversación con alguien que no registró sus claves (`CHAT_KEY_NOT_FOUND`) | US-6 |
 | Sólo los dos participantes leen o escriben en una conversación | US-6 + QA |
 | La conversación abierta consulta mensajes nuevos cada 3 s y la lista de conversaciones cada 10 s (no hay WebSockets) | dev |
+| Sin conexión, el mensaje ya cifrado y firmado queda en una bandeja de salida en IndexedDB (`fia-chat-outbox`), se muestra como "pendiente" y se envía solo al volver la conexión (evento `online`) o al reabrir el chat. Con la pestaña cerrada no se envía: sale la próxima vez que se abre el chat | US-6 |
 | Si un usuario cambia de navegador, genera claves nuevas y los mensajes anteriores ya no se pueden descifrar (se alertan) | dev |
 
 ## Roles y permisos

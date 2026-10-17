@@ -513,6 +513,7 @@ participantes y validación Zod. Se sumaron tests de integración, fuzz, un fluj
 de UI.
 
 **Mejora [equipo]**: la conversación abierta se actualiza sola cada 3 s y la lista de conversaciones cada 10 s (antes había que recargar).
+**Mejora [equipo]**: bandeja de salida sin conexión (tarea de Naranja "escenarios de desconexión y sincronización fuera de línea"): el mensaje cifrado queda pendiente y se envía al volver la red.
 
 **Falta para cerrar**: ninguno. Plan: [docs/plans/US-6-encrypted-chat.md](docs/plans/US-6-encrypted-chat.md).
 
