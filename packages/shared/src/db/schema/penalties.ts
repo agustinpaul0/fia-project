@@ -18,6 +18,8 @@ export const penalties = pgTable(
     penalty: varchar('penalty', { length: 100 }).notNull(),
     reason: text('reason').notNull(),
     issuedAt: timestamp('issued_at', { withTimezone: true, mode: 'date' }).notNull(),
+    confirmedAt: timestamp('confirmed_at', { withTimezone: true, mode: 'date' }),
+    confirmedByUserId: text('confirmed_by_user_id'),
     ...versionedColumns(),
   },
   (table) => [

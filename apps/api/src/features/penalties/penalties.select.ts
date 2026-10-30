@@ -14,6 +14,8 @@ export const penaltySelectFields = {
   penalty: penalties.penalty,
   reason: penalties.reason,
   issuedAt: penalties.issuedAt,
+  confirmedAt: penalties.confirmedAt,
+  confirmedByUserId: penalties.confirmedByUserId,
   version: penalties.version,
   createdAt: penalties.createdAt,
 }

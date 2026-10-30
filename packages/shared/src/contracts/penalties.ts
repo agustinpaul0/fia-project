@@ -20,6 +20,8 @@ export const createPenaltyBodySchema = z.strictObject({
   issuedAt: z.iso.datetime().optional(),
 })
 
+export const penaltyNotificationStatusSchema = z.enum(['pending', 'confirmed'])
+
 export const penaltySchema = z.strictObject({
   id: z.uuid(),
   teamId: z.uuid(),
@@ -33,6 +35,9 @@ export const penaltySchema = z.strictObject({
   penalty: z.string(),
   reason: z.string(),
   issuedAt: z.iso.datetime(),
+  confirmedAt: z.iso.datetime().nullable().optional(),
+  confirmedByUserId: z.string().nullable().optional(),
+  notificationStatus: penaltyNotificationStatusSchema.nullable().optional(),
   version: versionSchema,
   createdAt: z.iso.datetime(),
 })

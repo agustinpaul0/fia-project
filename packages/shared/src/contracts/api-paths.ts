@@ -33,6 +33,7 @@ export const raceClassificationPath = (id: string): string =>
 export const raceDriversPath = (id: string): string => `${API_PATHS.races}/${id}/drivers`
 export const confirmNotificationPath = (id: string): string =>
   `${API_PATHS.notifications}/${id}/confirm`
+export const confirmPenaltyPath = (id: string): string => `${API_PATHS.penalties}/${id}/confirm`
 export const NOTIFICATIONS_AUDIT_PATH = `${API_PATHS.notifications}/audit`
 export const seasonStandingsPath = (season: number, category: string | null = null): string =>
   `${API_PATHS.races}/standings?${seasonQuery(season, category)}`

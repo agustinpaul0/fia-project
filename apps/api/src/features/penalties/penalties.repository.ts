@@ -1,7 +1,7 @@
-import type { Penalty } from '@fia/shared/contracts'
+import type { CreatePenaltyBody, Penalty } from '@fia/shared/contracts'
 import { categories, drivers, penalties, races, teams } from '@fia/shared/db'
 import { AppError } from '@fia/shared/domain'
-import { and, desc, eq, gte, lte, type SQL } from 'drizzle-orm'
+import { and, desc, eq, gte, isNull, lte, type SQL } from 'drizzle-orm'
 import type { DbExecutor } from '../../core/db/executor'
 import { translateConstraintViolations } from '../../core/errors/constraint-violations'
 import { toPenaltyDto } from './penalties.mapper'
@@ -25,7 +25,7 @@ const buildFilterConditions = (filter: PenaltiesListFilter): SQL[] => {
   return conditions
 }
 
-const fetchPenaltyById = async (db: DbExecutor, id: string): Promise<Penalty> => {
+const findPenaltyRow = async (db: DbExecutor, id: string): Promise<Penalty | null> => {
   const [row] = await db
     .select(selectFields)
     .from(penalties)
@@ -35,15 +35,32 @@ const fetchPenaltyById = async (db: DbExecutor, id: string): Promise<Penalty> =>
     .leftJoin(races, eq(penalties.raceId, races.id))
     .where(eq(penalties.id, id))
     .limit(1)
-  if (!row) {
-    throw new AppError('INTERNAL_ERROR')
-  }
-  return toPenaltyDto(row)
+  return row ? toPenaltyDto(row) : null
 }
+
+const insertPenaltyRow = (db: DbExecutor, body: CreatePenaltyBody): Promise<Penalty> =>
+  translateConstraintViolations(PENALTY_CONSTRAINT_ERRORS, async () => {
+    const [inserted] = await db
+      .insert(penalties)
+      .values({
+        teamId: body.teamId,
+        driverId: body.driverId ?? null,
+        raceId: body.raceId ?? null,
+        type: body.type,
+        penalty: body.penalty,
+        reason: body.reason,
+        issuedAt: body.issuedAt ? new Date(body.issuedAt) : new Date(),
+      })
+      .returning({ id: penalties.id })
+    const created = inserted ? await findPenaltyRow(db, inserted.id) : null
+    if (!created) {
+      throw new AppError('INTERNAL_ERROR')
+    }
+    return created
+  })
 
 export const createDrizzlePenaltiesRepository = (db: DbExecutor): PenaltiesRepository => ({
   list: async (filter) => {
-    const conditions = buildFilterConditions(filter)
     const rows = await db
       .select(selectFields)
       .from(penalties)
@@ -51,29 +68,20 @@ export const createDrizzlePenaltiesRepository = (db: DbExecutor): PenaltiesRepos
       .innerJoin(categories, eq(teams.categoryId, categories.id))
       .leftJoin(drivers, eq(penalties.driverId, drivers.id))
       .leftJoin(races, eq(penalties.raceId, races.id))
-      .where(and(...conditions))
+      .where(and(...buildFilterConditions(filter)))
       .orderBy(desc(penalties.issuedAt))
     return rows.map(toPenaltyDto)
   },
-  create: async (body) =>
-    translateConstraintViolations(PENALTY_CONSTRAINT_ERRORS, async () => {
-      const [inserted] = await db
-        .insert(penalties)
-        .values({
-          teamId: body.teamId,
-          driverId: body.driverId ?? null,
-          raceId: body.raceId ?? null,
-          type: body.type,
-          penalty: body.penalty,
-          reason: body.reason,
-          issuedAt: body.issuedAt ? new Date(body.issuedAt) : new Date(),
-        })
-        .returning({ id: penalties.id })
-      if (!inserted) {
-        throw new AppError('INTERNAL_ERROR')
-      }
-      return fetchPenaltyById(db, inserted.id)
-    }),
+  findById: (id) => findPenaltyRow(db, id),
+  create: (body) => insertPenaltyRow(db, body),
+  confirm: async ({ id, userId, confirmedAt }) => {
+    const [updated] = await db
+      .update(penalties)
+      .set({ confirmedAt, confirmedByUserId: userId, updatedAt: confirmedAt })
+      .where(and(eq(penalties.id, id), isNull(penalties.confirmedAt)))
+      .returning({ id: penalties.id })
+    return updated ? findPenaltyRow(db, updated.id) : null
+  },
   driverBelongsToTeam: async (driverId, teamId) => {
     const [row] = await db
       .select({ teamId: drivers.teamId })
