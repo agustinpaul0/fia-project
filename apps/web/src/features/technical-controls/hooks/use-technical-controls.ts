@@ -7,8 +7,9 @@ import {
 
 export const useTechnicalControls = (
   filter?: TechnicalControlsQuery,
+  onlyMine = false,
 ): UseQueryResult<readonly TechnicalControl[], Error> =>
   useQuery({
-    queryKey: [...TECHNICAL_CONTROLS_QUERY_KEY, filter],
-    queryFn: () => fetchTechnicalControls(filter),
+    queryKey: [...TECHNICAL_CONTROLS_QUERY_KEY, filter, onlyMine],
+    queryFn: () => fetchTechnicalControls(filter, onlyMine),
   })

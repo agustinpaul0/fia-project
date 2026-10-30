@@ -1,12 +1,12 @@
 # Feature: controles e inspecciones técnicas vehiculares
 
-- **US relacionadas**: US-21 (Ingresar fechas, tipos y resultado de controles técnicos por auto — Sprint 2).
+- **US relacionadas**: US-21 (Ingresar fechas, tipos y resultado de controles técnicos por auto — Sprint 2), US-24 (Visualizar resultados y observaciones de controles técnicos de los autos — Sprint 3).
 - **Código**:
   - `packages/shared/src/contracts/technical-controls.ts`
   - `packages/shared/src/db/schema/technical-controls.ts`
   - `apps/api/src/features/technical-controls/`
   - `apps/web/src/features/technical-controls/`
-- **Plan**: [`docs/plans/US-21-technical-controls.md`](../../plans/US-21-technical-controls.md)
+- **Plan**: [`docs/plans/US-21-technical-controls.md`](../../plans/US-21-technical-controls.md), [`docs/plans/US-24-technical-controls-observations.md`](../../plans/US-24-technical-controls-observations.md)
 
 ## Qué hace
 

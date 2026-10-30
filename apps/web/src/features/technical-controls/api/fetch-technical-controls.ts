@@ -1,5 +1,6 @@
 import {
   API_PATHS,
+  MY_TECHNICAL_CONTROLS_PATH,
   type TechnicalControl,
   type TechnicalControlsQuery,
   technicalControlListSchema,
@@ -31,8 +32,11 @@ const toQueryString = (filter?: TechnicalControlsQuery): string => {
 
 export const fetchTechnicalControls = (
   filter?: TechnicalControlsQuery,
-): Promise<readonly TechnicalControl[]> =>
-  apiRequest({
-    path: `${API_PATHS.technicalControls}${toQueryString(filter)}`,
+  onlyMine = false,
+): Promise<readonly TechnicalControl[]> => {
+  const basePath = onlyMine ? MY_TECHNICAL_CONTROLS_PATH : API_PATHS.technicalControls
+  return apiRequest({
+    path: `${basePath}${toQueryString(filter)}`,
     schema: technicalControlListSchema,
   })
+}

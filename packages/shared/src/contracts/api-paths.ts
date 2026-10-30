@@ -16,6 +16,7 @@ export const categoryPath = (id: string): string => `${API_PATHS.categories}/${i
 export const teamStaffPath = (id: string): string => `${API_PATHS.teamStaff}/${id}`
 export const teamDriverPath = (id: string): string => `${API_PATHS.teamDrivers}/${id}`
 export const PUBLIC_DRIVERS_PATH = `${API_PATHS.teamDrivers}/public`
+export const MY_TECHNICAL_CONTROLS_PATH = `${API_PATHS.technicalControls}/mine`
 export const teamDriverOptionsPath = (teamId: string): string =>
   `${API_PATHS.teams}/${teamId}/drivers`
 export const teamRaceOptionsPath = (teamId: string, season: number): string =>
