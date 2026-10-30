@@ -5,11 +5,7 @@ import type { SessionUser } from '../../core/auth/session'
 import type { TeamDriversRepository } from './team-drivers.port'
 import { createTeamDriversService } from './team-drivers.service'
 
-const mockUser: SessionUser = {
-  id: 'user-1',
-  role: 'team_staff',
-  teamId: 'team-ferrari',
-}
+const mockUser: SessionUser = { id: 'user-1', role: 'team_staff', teamId: 'team-ferrari' }
 
 const mockRow: DriverRow = {
   id: '00000000-0000-4000-8000-000000000001',
@@ -38,11 +34,14 @@ const mockBody: CreateTeamDriverBody = {
 }
 
 const createRepo = (overrides: Partial<TeamDriversRepository> = {}): TeamDriversRepository => ({
+  listAll: vi.fn().mockResolvedValue([mockRow]),
   listByTeam: vi.fn().mockResolvedValue([mockRow]),
+  findById: vi.fn().mockResolvedValue(mockRow),
   findByNumber: vi.fn().mockResolvedValue(null),
   findByCode: vi.fn().mockResolvedValue(null),
   countByTeamAndRole: vi.fn().mockResolvedValue(0),
   create: vi.fn().mockResolvedValue(mockRow),
+  update: vi.fn().mockResolvedValue(mockRow),
   ...overrides,
 })
 
@@ -55,27 +54,26 @@ describe('TeamDriversService', () => {
       code: 'TEAM_REQUIRED',
     })
   })
-
-  it('lista los pilotos de la escudería del usuario', async () => {
+  it('lista los pilotos de la escudería y el listado público', async () => {
     const repo = createRepo()
     const service = createTeamDriversService(repo)
     const result = await service.listMine(mockUser)
     expect(repo.listByTeam).toHaveBeenCalledWith('team-ferrari')
-    expect(result).toHaveLength(1)
     expect(result[0]?.code).toBe('LEC')
+    expect(await service.listPublic()).toHaveLength(1)
   })
-
   it('rechaza inscripción si el número ya existe', async () => {
-    const repo = createRepo({ findByNumber: vi.fn().mockResolvedValue(mockRow) })
-    const service = createTeamDriversService(repo)
+    const service = createTeamDriversService(
+      createRepo({ findByNumber: vi.fn().mockResolvedValue(mockRow) }),
+    )
     await expect(service.enroll(mockUser, mockBody)).rejects.toMatchObject({
       code: 'CAR_NUMBER_ALREADY_TAKEN',
     })
   })
-
   it('rechaza inscripción si el código ya existe', async () => {
-    const repo = createRepo({ findByCode: vi.fn().mockResolvedValue(mockRow) })
-    const service = createTeamDriversService(repo)
+    const service = createTeamDriversService(
+      createRepo({ findByCode: vi.fn().mockResolvedValue(mockRow) }),
+    )
     await expect(service.enroll(mockUser, mockBody)).rejects.toMatchObject({
       code: 'DRIVER_CODE_ALREADY_TAKEN',
     })

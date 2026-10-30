@@ -53,4 +53,13 @@ describe('rutas de lectura team-drivers', () => {
     expect(body).toHaveLength(1)
     expect(body[0]?.code).toBe('LEC')
   })
+
+  it('permite consultar la nómina pública sin sesión en GET /team-drivers/public', async () => {
+    const { app } = createTestApp({ sessionUser: null, teamDrivers: [mockRow] })
+    const res = await app.request('/team-drivers/public')
+    expect(res.status).toBe(200)
+    const body = (await res.json()) as Array<{ code: string }>
+    expect(body).toHaveLength(1)
+    expect(body[0]?.code).toBe('LEC')
+  })
 })

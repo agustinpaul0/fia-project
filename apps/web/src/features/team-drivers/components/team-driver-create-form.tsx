@@ -12,6 +12,8 @@ import { DialogFooter } from '@/components/ui/dialog'
 import { TeamDriverFormFields } from './team-driver-form-fields'
 
 type Props = {
+  readonly initialValues?: CreateTeamDriverInput
+  readonly submitLabel?: string
   readonly onCancel: () => void
   readonly onSubmit: (data: CreateTeamDriverBody) => Promise<void>
 }
@@ -26,10 +28,15 @@ const EMPTY: CreateTeamDriverInput = {
   role: 'main',
 }
 
-export const TeamDriverCreateForm = ({ onCancel, onSubmit }: Props): ReactNode => {
+export const TeamDriverCreateForm = ({
+  initialValues,
+  submitLabel = 'Inscribir piloto',
+  onCancel,
+  onSubmit,
+}: Props): ReactNode => {
   const form = useForm<CreateTeamDriverInput, unknown, CreateTeamDriverBody>({
     resolver: zodResolver(createTeamDriverBodySchema),
-    defaultValues: EMPTY,
+    defaultValues: initialValues ?? EMPTY,
   })
   const [error, setError] = useState<string | null>(null)
 
@@ -62,7 +69,7 @@ export const TeamDriverCreateForm = ({ onCancel, onSubmit }: Props): ReactNode =
           className="shadow-brutal-sm"
           disabled={form.formState.isSubmitting}
         >
-          {form.formState.isSubmitting ? 'Inscribiendo...' : 'Inscribir piloto'}
+          {form.formState.isSubmitting ? 'Guardando...' : submitLabel}
         </Button>
       </DialogFooter>
     </form>

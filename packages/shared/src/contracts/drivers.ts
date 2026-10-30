@@ -41,6 +41,10 @@ export const createTeamDriverBodySchema = z.strictObject({
   role: driverRoleSchema.default('main'),
 })
 
+export const updateTeamDriverBodySchema = createTeamDriverBodySchema.extend({
+  version: versionSchema,
+})
+
 export const driverSchema = z.strictObject({
   id: z.uuid(),
   firstName: z.string(),
@@ -63,4 +67,6 @@ export type Driver = z.infer<typeof driverSchema>
 export type CreateDriverBody = z.infer<typeof createDriverBodySchema>
 export type CreateTeamDriverBody = z.infer<typeof createTeamDriverBodySchema>
 export type CreateTeamDriverInput = z.input<typeof createTeamDriverBodySchema>
+export type UpdateTeamDriverBody = z.infer<typeof updateTeamDriverBodySchema>
+export type UpdateTeamDriverInput = z.input<typeof updateTeamDriverBodySchema>
 export type DriverList = z.infer<typeof driverListSchema>

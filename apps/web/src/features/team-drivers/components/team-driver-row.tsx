@@ -6,7 +6,13 @@ const ROLE_LABELS: Record<string, string> = {
   reserve: 'Suplente',
 }
 
-export const TeamDriverRow = ({ driver }: { readonly driver: Driver }): ReactNode => (
+export const TeamDriverRow = ({
+  driver,
+  onEdit,
+}: {
+  readonly driver: Driver
+  readonly onEdit?: ((driver: Driver) => void) | undefined
+}): ReactNode => (
   <tr className="transition-colors hover:bg-surface-container-high/40">
     <td className="px-4 py-3 font-bold font-mono text-base">
       <span className="inline-block border border-black bg-yellow-400 px-2 py-0.5 text-black">
@@ -30,5 +36,16 @@ export const TeamDriverRow = ({ driver }: { readonly driver: Driver }): ReactNod
         {ROLE_LABELS[driver.role] ?? driver.role}
       </span>
     </td>
+    {onEdit ? (
+      <td className="px-4 py-3">
+        <button
+          type="button"
+          onClick={() => onEdit(driver)}
+          className="border border-black bg-white px-2.5 py-1 font-bold font-mono text-xs uppercase hover:bg-primary-container"
+        >
+          Editar
+        </button>
+      </td>
+    ) : null}
   </tr>
 )

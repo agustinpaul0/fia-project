@@ -1,6 +1,6 @@
 # Feature: gestión e inscripción de pilotos por escudería
 
-- **US relacionadas**: US-10 (Cargar la información de los pilotos titulares y suplentes — Sprint 2).
+- **US relacionadas**: US-10 (Cargar la información de los pilotos titulares y suplentes — Sprint 2), US-11 (Modificar la información de los pilotos y su condición de titular o suplente — Sprint 3).
 - **Código**:
   - `packages/shared/src/contracts/team-drivers.ts`
   - `packages/shared/src/db/schema/base-data.ts` (`drivers`, `teams`, `categories`)
@@ -36,8 +36,10 @@ Permite al personal autenticado de una escudería (`team_staff`) inscribir y con
 
 | Método | Ruta | Acceso | Body | Respuesta |
 |---|---|---|---|---|
+| GET | `/team-drivers/public` | `publicAccess` | — | 200 `Driver[]` |
 | GET | `/team-drivers` | `team_staff` | — | 200 `DriverRow[]` |
 | POST | `/team-drivers` | `team_staff` | `CreateTeamDriverBody` | 201 `DriverRow` |
+| PUT | `/team-drivers/:id` | `team_staff` | `UpdateTeamDriverBody` | 200 `DriverRow` |
 
 ## Errores
 
