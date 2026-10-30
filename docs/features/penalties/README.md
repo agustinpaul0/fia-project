@@ -1,12 +1,12 @@
 # Feature: sanciones oficiales a pilotos y escuderías
 
-- **US relacionadas**: US-13 (Cargar sanciones a pilotos o escuderías — Sprint 2).
+- **US relacionadas**: US-13 (Cargar sanciones a pilotos o escuderías — Sprint 2), US-15 (Asentar la confirmación de notificación de una sanción — Sprint 3), US-16 (Consultar el listado histórico y en vivo de sanciones emitidas — Sprint 3).
 - **Código**:
   - `packages/shared/src/contracts/penalties.ts`
   - `packages/shared/src/db/schema/penalties.ts`
   - `apps/api/src/features/penalties/`
   - `apps/web/src/features/penalties/`
-- **Plan**: [`docs/plans/US-13-penalties.md`](../../plans/US-13-penalties.md)
+- **Plan**: [`docs/plans/US-13-penalties.md`](../../plans/US-13-penalties.md), [`docs/plans/US-15-penalty-notifications.md`](../../plans/US-15-penalty-notifications.md), [`docs/plans/US-16-penalties-history-live.md`](../../plans/US-16-penalties-history-live.md)
 
 ## Qué hace
 

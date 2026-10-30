@@ -12,8 +12,10 @@ export const NO_TEAM_PENALTIES = 'La escudería elegida no tiene sanciones con e
 
 export const PenaltiesList = ({
   penalties,
+  onConfirm,
 }: {
   readonly penalties: readonly Penalty[]
+  readonly onConfirm?: ((id: string) => void) | undefined
 }): ReactNode => {
   const [teamId, setTeamId] = useState('')
   const visible = teamId === '' ? penalties : penalties.filter((p) => p.teamId === teamId)
@@ -27,7 +29,7 @@ export const PenaltiesList = ({
       {visible.length === 0 ? (
         <p className="font-mono text-on-surface-variant text-sm">{NO_TEAM_PENALTIES}</p>
       ) : (
-        <PenaltiesTable penalties={visible} />
+        <PenaltiesTable penalties={visible} onConfirm={onConfirm} />
       )}
     </div>
   )
