@@ -3,6 +3,7 @@ import { Link } from '@tanstack/react-router'
 import { ChevronRight, Trophy } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { formatNumericDate } from '@/lib/format-date-time'
+import { RaceStatusBadge } from './race-status-badge'
 import { RaceTypeBadge } from './race-type-badge'
 
 export type RaceLinkTarget = 'public' | 'admin'
@@ -44,6 +45,7 @@ const RaceCard = ({ race, target }: { readonly race: RaceSummary } & Pick<Props,
     <div className="flex items-start justify-between gap-3">
       <div className="flex items-center gap-2">
         <RaceTypeBadge type={race.type} />
+        <RaceStatusBadge status={race.status} />
         <span className="font-label font-medium text-[11px] text-on-surface-variant">
           Ronda {String(race.round).padStart(2, '0')}
           {race.type === 'sprint' ? ' · Sprint' : ''}

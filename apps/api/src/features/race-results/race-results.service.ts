@@ -1,11 +1,4 @@
-import type {
-  DriverStanding,
-  EligibleDriver,
-  RaceClassification,
-  RaceClassificationBody,
-  RaceListQuery,
-  RaceSummary,
-} from '@fia/shared/contracts'
+import type * as C from '@fia/shared/contracts'
 import { AppError } from '@fia/shared/domain'
 import { toRaceClassification, toRaceSummary } from './race-results.mapper'
 import type { RaceHeader, RaceResultsRepository } from './race-results.port'
@@ -13,14 +6,20 @@ import { scoreEntries } from './race-results.scoring'
 import { buildStandings } from './race-results.standings'
 
 export type RaceResultsService = {
-  readonly listSeason: (query: RaceListQuery) => Promise<readonly RaceSummary[]>
-  readonly seasonStandings: (query: RaceListQuery) => Promise<readonly DriverStanding[]>
-  readonly getClassification: (raceId: string) => Promise<RaceClassification>
-  readonly listEligibleDrivers: (raceId: string) => Promise<readonly EligibleDriver[]>
+  readonly listSeason: (query: C.RaceListQuery) => Promise<readonly C.RaceSummary[]>
+  readonly seasonStandings: (query: C.RaceListQuery) => Promise<readonly C.DriverStanding[]>
+  readonly getClassification: (raceId: string) => Promise<C.RaceClassification>
+  readonly listEligibleDrivers: (raceId: string) => Promise<readonly C.EligibleDriver[]>
   readonly saveClassification: (
     raceId: string,
-    body: RaceClassificationBody,
-  ) => Promise<RaceClassification>
+    body: C.RaceClassificationBody,
+  ) => Promise<C.RaceClassification>
+  readonly updateRace: (
+    raceId: string,
+    body: C.UpdateRaceBody,
+    userId: string,
+  ) => Promise<C.RaceSummary>
+  readonly cancelRace: (raceId: string, version: number, userId: string) => Promise<C.RaceSummary>
 }
 
 export type RaceResultsServiceDeps = {
@@ -28,44 +27,70 @@ export type RaceResultsServiceDeps = {
   readonly clock: () => Date
 }
 
-const findOrFail = async (repository: RaceResultsRepository, id: string): Promise<RaceHeader> => {
-  const race = await repository.findRace(id)
-  if (race === null) {
+const findOrFail = async (repo: RaceResultsRepository, id: string): Promise<RaceHeader> => {
+  const race = await repo.findRace(id)
+  if (!race) {
     throw new AppError('RACE_NOT_FOUND')
   }
   return race
 }
 
+const findActiveOrFail = async (repo: RaceResultsRepository, id: string): Promise<RaceHeader> => {
+  const race = await findOrFail(repo, id)
+  if (race.status === 'cancelled') {
+    throw new AppError('RACE_ALREADY_CANCELLED')
+  }
+  return race
+}
+
+const runRaceMutation = async (
+  repo: RaceResultsRepository,
+  id: string,
+  run: () => Promise<boolean | undefined>,
+): Promise<C.RaceSummary> => {
+  await findActiveOrFail(repo, id)
+  if (!(await run())) {
+    throw new AppError('STALE_VERSION')
+  }
+  return toRaceSummary(await findOrFail(repo, id))
+}
+
 export const createRaceResultsService = ({
-  repository,
+  repository: repo,
   clock,
 }: RaceResultsServiceDeps): RaceResultsService => {
-  const getClassification = async (raceId: string): Promise<RaceClassification> => {
-    const race = await findOrFail(repository, raceId)
-    return toRaceClassification(race, await repository.findClassification(raceId))
-  }
+  const getClassification = async (id: string): Promise<C.RaceClassification> =>
+    toRaceClassification(await findOrFail(repo, id), await repo.findClassification(id))
+
   return {
-    listSeason: async (query) => (await repository.listSeason(query)).map(toRaceSummary),
-    seasonStandings: async (query) => buildStandings(await repository.listSeasonResults(query)),
+    listSeason: async (q) => (await repo.listSeason(q)).map(toRaceSummary),
+    seasonStandings: async (q) => buildStandings(await repo.listSeasonResults(q)),
     getClassification,
-    listEligibleDrivers: async (raceId) =>
-      repository.listCategoryDrivers((await findOrFail(repository, raceId)).categoryId),
+    listEligibleDrivers: async (id) =>
+      repo.listCategoryDrivers((await findOrFail(repo, id)).categoryId),
     saveClassification: async (raceId, body) => {
-      const race = await findOrFail(repository, raceId)
+      const race = await findActiveOrFail(repo, raceId)
       if (race.date.getTime() > clock().getTime()) {
         throw new AppError('RACE_NOT_FINISHED')
       }
-      const drivers = await repository.findDrivers(body.entries.map((entry) => entry.driverId))
+      const drivers = await repo.findDrivers(body.entries.map((e) => e.driverId))
       const entries = scoreEntries(race, body, drivers)
-      const input = { raceId, expectedVersion: body.version, entries }
-      const saved = await repository.replaceClassification({
-        ...input,
-        nextRevision: race.resultsRevision + 1,
+      const nextRevision = race.resultsRevision + 1
+      const expectedVersion = body.version
+      const saved = await repo.replaceClassification({
+        raceId,
+        expectedVersion,
+        nextRevision,
+        entries,
       })
       if (!saved) {
         throw new AppError('STALE_VERSION')
       }
       return getClassification(raceId)
     },
+    updateRace: (id, body, userId) =>
+      runRaceMutation(repo, id, async () => repo.updateRace?.(id, body, userId)),
+    cancelRace: (id, version, userId) =>
+      runRaceMutation(repo, id, async () => repo.cancelRace?.(id, version, userId)),
   }
 }

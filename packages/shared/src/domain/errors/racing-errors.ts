@@ -5,6 +5,10 @@ export const RACING_ERRORS = {
     status: 404,
     message: 'La carrera no existe o fue eliminada.',
   },
+  RACE_ALREADY_CANCELLED: {
+    status: 400,
+    message: 'No podés modificar un evento que ya fue cancelado.',
+  },
   RACE_NOT_FINISHED: {
     status: 422,
     message: 'Todavía no se puede cargar el resultado: la carrera no se corrió.',

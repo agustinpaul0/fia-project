@@ -1,7 +1,9 @@
 import { z } from 'zod'
-import { RACE_TYPES } from '../domain/scoring'
 import { CATEGORY_CODE_PATTERN } from './categories'
 import { versionSchema } from './common'
+import { raceStatusSchema, raceTypeSchema } from './races'
+
+export { raceTypeSchema }
 
 export const MAX_CLASSIFIED_DRIVERS = 30
 
@@ -21,8 +23,6 @@ export const raceClassificationBodySchema = z.strictObject({
     .refine(hasUniqueDrivers, 'Un piloto no puede aparecer dos veces en la clasificación.'),
 })
 
-export const raceTypeSchema = z.enum(RACE_TYPES)
-
 export const raceSummarySchema = z.strictObject({
   id: z.uuid(),
   name: z.string(),
@@ -32,6 +32,8 @@ export const raceSummarySchema = z.strictObject({
   seasonYear: z.int(),
   categoryCode: z.string(),
   circuitName: z.string(),
+  status: raceStatusSchema.optional(),
+  updatedByUserId: z.string().nullable().optional(),
   version: versionSchema,
   resultsRevision: z.int().nonnegative(),
   winnerName: z.string().nullable(),

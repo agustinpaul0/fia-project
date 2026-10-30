@@ -10,6 +10,8 @@ export const toRaceSummary = (race: RaceHeader): RaceSummary => ({
   seasonYear: race.seasonYear,
   categoryCode: race.categoryCode,
   circuitName: race.circuitName,
+  ...(race.status !== undefined ? { status: race.status } : {}),
+  ...(race.updatedByUserId !== undefined ? { updatedByUserId: race.updatedByUserId } : {}),
   version: race.version,
   resultsRevision: race.resultsRevision,
   winnerName: race.winnerName,

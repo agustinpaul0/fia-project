@@ -28,6 +28,7 @@ const seasonQuery = (season: number, category: string | null): string =>
 
 export const racesOfSeasonPath = (season: number, category: string | null = null): string =>
   `${API_PATHS.races}?${seasonQuery(season, category)}`
+export const racePath = (id: string): string => `${API_PATHS.races}/${id}`
 export const raceClassificationPath = (id: string): string =>
   `${API_PATHS.races}/${id}/classification`
 export const raceDriversPath = (id: string): string => `${API_PATHS.races}/${id}/drivers`

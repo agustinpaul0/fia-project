@@ -1,10 +1,10 @@
 # Feature: resultados y puntajes de carreras
 
-- **US relacionadas**: US-20 (carga y modificación del puntaje), US-5 (resultados de los últimos años) y base
+- **US relacionadas**: US-20 (carga y modificación del puntaje), US-5 (resultados de los últimos años), US-19 (modificar o dar de baja eventos deportivos programados — Sprint 3) y base
   para US-9 (notificaciones).
 - **Código**: `packages/shared/src/domain/scoring.ts`, `packages/shared/src/contracts/race-classification.ts`,
   `apps/api/src/features/race-results/`, `apps/web/src/features/race-results/`
-- **Plan**: [`docs/plans/US-20-race-points.md`](../../plans/US-20-race-points.md) · **ADR**: 0008
+- **Plan**: [`docs/plans/US-20-race-points.md`](../../plans/US-20-race-points.md), [`docs/plans/US-19-modify-cancel-races.md`](../../plans/US-19-modify-cancel-races.md) · **ADR**: 0008
 
 ## Qué hace
 
