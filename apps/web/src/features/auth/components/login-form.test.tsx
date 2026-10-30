@@ -12,6 +12,14 @@ vi.mock('@/lib/auth-client', () => ({
   signIn: { email: vi.fn() },
 }))
 
+const submitLogin = async (): Promise<void> => {
+  const user = userEvent.setup()
+  render(<LoginForm />)
+  await user.type(screen.getByLabelText('Correo electrónico'), 'admin@fia.com')
+  await user.type(screen.getByLabelText('Contraseña'), 'AdminPassword123!')
+  await user.click(screen.getByRole('button', { name: '[ Iniciar sesión ]' }))
+}
+
 describe('LoginForm', () => {
   it('renderiza los campos de email y contraseña', () => {
     render(<LoginForm />)
@@ -32,60 +40,46 @@ describe('LoginForm', () => {
   })
 
   it('muestra mensaje genérico si las credenciales fallan', async () => {
-    const user = userEvent.setup()
     const { signIn } = await import('@/lib/auth-client')
-    vi.mocked(signIn.email).mockResolvedValue({
-      error: { message: 'Cualquier error' },
-    } as never)
-
-    render(<LoginForm />)
-    await user.type(screen.getByLabelText('Correo electrónico'), 'admin@fia.com')
-    await user.type(screen.getByLabelText('Contraseña'), 'AdminPassword123!')
-    await user.click(screen.getByRole('button', { name: '[ Iniciar sesión ]' }))
-
+    vi.mocked(signIn.email).mockResolvedValue({ error: { message: 'Cualquier error' } } as never)
+    await submitLogin()
     expect(await screen.findByText('Credenciales inválidas.')).toBeInTheDocument()
   })
 
   it('avisa que hay que esperar si se superó el límite de intentos', async () => {
-    const user = userEvent.setup()
     const { signIn } = await import('@/lib/auth-client')
     vi.mocked(signIn.email).mockResolvedValue({ error: { status: 429 } } as never)
-    render(<LoginForm />)
-    await user.type(screen.getByLabelText('Correo electrónico'), 'admin@fia.com')
-    await user.type(screen.getByLabelText('Contraseña'), 'AdminPassword123!')
-    await user.click(screen.getByRole('button', { name: '[ Iniciar sesión ]' }))
+    await submitLogin()
     expect(await screen.findByText(/Hiciste demasiados intentos/)).toBeInTheDocument()
   })
 
   it('navega a la vista de administración tras login de fia_admin', async () => {
-    const user = userEvent.setup()
     const { signIn } = await import('@/lib/auth-client')
     vi.mocked(signIn.email).mockResolvedValue({
       data: { user: { role: 'fia_admin' } },
       error: null,
     } as never)
-
-    render(<LoginForm />)
-    await user.type(screen.getByLabelText('Correo electrónico'), 'admin@fia.com')
-    await user.type(screen.getByLabelText('Contraseña'), 'AdminPassword123!')
-    await user.click(screen.getByRole('button', { name: '[ Iniciar sesión ]' }))
-
+    await submitLogin()
     expect(mockNavigate).toHaveBeenCalledWith({ to: '/admin/team-staff' })
   })
 
   it('navega a la raíz tras un inicio de sesión de usuario general', async () => {
-    const user = userEvent.setup()
     const { signIn } = await import('@/lib/auth-client')
     vi.mocked(signIn.email).mockResolvedValue({
       data: { user: { role: 'public' } },
       error: null,
     } as never)
-
-    render(<LoginForm />)
-    await user.type(screen.getByLabelText('Correo electrónico'), 'user@fia.com')
-    await user.type(screen.getByLabelText('Contraseña'), 'UserPassword123!')
-    await user.click(screen.getByRole('button', { name: '[ Iniciar sesión ]' }))
-
+    await submitLogin()
     expect(mockNavigate).toHaveBeenCalledWith({ to: '/' })
+  })
+
+  it('navega a pilotos de escudería tras login de team_staff', async () => {
+    const { signIn } = await import('@/lib/auth-client')
+    vi.mocked(signIn.email).mockResolvedValue({
+      data: { user: { role: 'team_staff' } },
+      error: null,
+    } as never)
+    await submitLogin()
+    expect(mockNavigate).toHaveBeenCalledWith({ to: '/team/drivers' })
   })
 })

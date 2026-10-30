@@ -9,6 +9,9 @@ export const authRoles = {
   team_staff: defaultAc.newRole({
     user: [],
   }),
+  driver: defaultAc.newRole({
+    user: [],
+  }),
   public: defaultAc.newRole({
     user: [],
   }),

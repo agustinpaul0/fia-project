@@ -35,6 +35,10 @@ export const useLogin = (): LoginState => {
       void navigate({ to: '/admin/team-staff' })
       return
     }
+    if (data?.user.role === 'team_staff') {
+      void navigate({ to: '/team/drivers' })
+      return
+    }
     void navigate({ to: '/' })
   }
   return { email, password, error, loading, setEmail, setPassword, submit }

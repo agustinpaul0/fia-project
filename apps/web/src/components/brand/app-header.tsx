@@ -12,9 +12,8 @@ const useRole = (): Role | null => {
   if (!session) {
     return null
   }
-  return session.user.role === 'fia_admin' || session.user.role === 'team_staff'
-    ? session.user.role
-    : 'public'
+  const role = session.user.role
+  return role === 'fia_admin' || role === 'team_staff' || role === 'driver' ? role : 'public'
 }
 
 export const AppHeader = (): ReactNode => (

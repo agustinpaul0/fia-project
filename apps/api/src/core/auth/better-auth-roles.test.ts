@@ -18,9 +18,11 @@ describe('Access Control de Better Auth', () => {
     expect(authRoles.fia_admin.authorize({ user: ['impersonate'] }).success).toBe(false)
   })
 
-  it('team_staff y public no tienen permisos administrativos', () => {
+  it('team_staff, driver y public no tienen permisos administrativos', () => {
     expect(authRoles.team_staff.authorize({ user: ['create'] }).success).toBe(false)
     expect(authRoles.team_staff.authorize({ user: ['ban'] }).success).toBe(false)
+    expect(authRoles.driver.authorize({ user: ['create'] }).success).toBe(false)
+    expect(authRoles.driver.authorize({ user: ['ban'] }).success).toBe(false)
     expect(authRoles.public.authorize({ user: ['create'] }).success).toBe(false)
     expect(authRoles.public.authorize({ user: ['ban'] }).success).toBe(false)
   })

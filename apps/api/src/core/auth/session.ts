@@ -22,9 +22,13 @@ export const createBetterAuthSessionResolver =
     if (!session) {
       return null
     }
+    const rawUser = session.user as Record<string, unknown>
+    if (rawUser['banned'] === true) {
+      return null
+    }
     const parsedRole = roleSchema.safeParse(session.user.role)
     const role: Role = parsedRole.success ? parsedRole.data : 'public'
-    const rawTeamId = (session.user as Record<string, unknown>)['teamId']
+    const rawTeamId = rawUser['teamId']
     const teamId = typeof rawTeamId === 'string' ? rawTeamId : null
     return { id: session.user.id, role, teamId }
   }

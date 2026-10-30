@@ -45,4 +45,18 @@ describe('resolución de sesión', () => {
       user: { id: 'usr_1', role: 'fia_admin', teamId: 'tm_1' },
     })
   })
+
+  it('resuelve null si la cuenta está dada de baja (banned)', async () => {
+    const fakeAuth = {
+      api: {
+        getSession: () =>
+          Promise.resolve({
+            user: { id: 'usr_2', role: 'driver', teamId: 'tm_1', banned: true },
+          }),
+      },
+    }
+    const resolver = createBetterAuthSessionResolver(fakeAuth as unknown as BetterAuthInstance)
+    const app = new Hono<AppEnv>().use(resolveSession(resolver))
+    expect(await (await whoAmI(app)).json()).toEqual({ user: null })
+  })
 })

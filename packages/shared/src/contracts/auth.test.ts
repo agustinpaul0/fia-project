@@ -58,5 +58,14 @@ describe('contratos de autenticación', () => {
     expect(authUserSchema.parse(user)).toEqual(user)
     const session = { user, token: 'token123' }
     expect(sessionResponseSchema.parse(session)).toEqual(session)
+    const driverUser = {
+      id: 'usr_2',
+      name: 'Piloto Oficial',
+      email: 'piloto@f.com',
+      role: 'driver' as const,
+      teamId: 'tm_1',
+      driverId: 'drv_1',
+    }
+    expect(authUserSchema.parse(driverUser)).toEqual(driverUser)
   })
 })

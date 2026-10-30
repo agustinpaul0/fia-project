@@ -5,7 +5,7 @@
 
 ## Qué hace
 
-Permite el inicio de sesión y la resolución de sesiones de usuarios en la plataforma. Identifica el rol (`fia_admin`, `team_staff`, `public`) y la escudería vinculada (`teamId`), protegiendo los endpoints del sistema.
+Permite el inicio de sesión y la resolución de sesiones de usuarios en la plataforma. Identifica el rol (`fia_admin`, `team_staff`, `driver`, `public`) y los vínculos (`teamId`, `driverId`), redirigiendo a la interfaz correspondiente y protegiendo los endpoints del sistema.
 
 ## Reglas de negocio
 
