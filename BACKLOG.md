@@ -558,35 +558,44 @@ carga licencias y controles vigentes, y la mutación web del shard `rest` pasó 
 
 ---
 
+## Sprint 3 — 20/10/2026 → 03/11/2026 (demo: martes 03/11/2026)
+
+### Resumen
+
+| ID | Ítem | SP | BV | Est. | Real | Estado | Dueño | Depende de | Plan |
+|---|---|---|---|---|---|---|---|---|---|
+| US-29 | Detectar tipo de cuenta en login y mostrar interfaz correspondiente | 3 | 13 | 5 h | 0,5 h | Hecho | Equipo | US-4 | [Plan](docs/plans/US-29-role-detection-and-interfaces.md) |
+| US-27 | Crear, modificar y eliminar cuentas de usuario de los pilotos | 5 | 13 | 7 h | 1 h | Hecho | Equipo | US-10, US-29 | [Plan](docs/plans/US-27-driver-accounts.md) |
+| US-11 | Modificar datos de pilotos y condición de titular/suplente | 5 | 8 | 6,5 h | 0,75 h | Hecho | Equipo | US-10 | [Plan](docs/plans/US-11-modify-team-drivers.md) |
+| US-24 | Visualizar resultados y observaciones de controles técnicos | 3 | 13 | 4 h | 0,5 h | Hecho | Equipo | US-21 | [Plan](docs/plans/US-24-technical-controls-observations.md) |
+| US-15 | Asentar confirmación de notificación de sanción | 3 | 8 | 4,5 h | 0,75 h | Hecho | Equipo | US-13, US-9 | [Plan](docs/plans/US-15-penalty-notifications.md) |
+| US-16 | Consultar listado histórico y en vivo de sanciones emitidas | 3 | 8 | 5,5 h | 0,75 h | Hecho | Equipo | US-13 | [Plan](docs/plans/US-16-penalties-history-live.md) |
+| US-19 | Modificar o dar de baja eventos deportivos programados | 5 | 13 | 6 h | 0,75 h | Hecho | Equipo | US-20, T-2 | [Plan](docs/plans/US-19-modify-cancel-races.md) |
+| US-3 | Aplicar filtros reutilizables en listados del sistema | 5 | 8 | 6 h | 0,5 h | Hecho | Equipo | US-13, US-21 | [Plan](docs/plans/US-3-reusable-filters.md) |
+
+---
+
 ## Diferido
 
 | ID | Ítem | Motivo | Estado |
 |---|---|---|---|
 | T-3 | Tests e2e con Playwright de los flujos principales **[equipo]** | Se dejan para el final del proyecto (decisión del equipo). | Pendiente |
 
-## Product backlog (no seleccionado para el Sprint 1 ni 2)
+## Product backlog (no seleccionado para los Sprints 1 a 3)
 
 | ID | Como | Quiero | SP | BV |
 |---|---|---|---|---|
 | US-1 | Miembro del equipo de desarrollo | Que la aplicación tenga el mismo desempeño en móvil y en web | 8 | 8 |
-| US-3 | Usuario | Aplicar filtros (fecha, año, relevancia, tipo de control técnico, identificador, etc.) | 5 | 8 |
 | US-7 | Usuario | Acceder a la app móvil con datos biométricos o el PIN del celular | 13 | 5 |
 | US-8 | Personal Administrativo de la FIA | Cargar una fecha de carrera o evento (categoría, circuito y fecha) | 5 | 5 |
-| US-11 | Personal de las escuderías | Modificar la información de los pilotos y su condición de titular/suplente | 5 | 8 |
 | US-12 | Miembro del equipo de desarrollo | Alta disponibilidad y escalabilidad en número de usuarios | 13 | 8 |
 | US-14 | Usuario | Crear un nuevo usuario desde la app | 3 | 1 |
-| US-15 | Personal de las escuderías | Asentar la confirmación de notificación de una sanción | 3 | 8 |
-| US-16 | Usuario | Consultar el listado histórico y en vivo de sanciones de la temporada | 3 | 8 |
 | US-17 | Usuario | Consultar perfiles de pilotos titulares y suplentes de todas las escuderías | 3 | 8 |
 | US-18 | Usuario | Compartir contenido en redes sociales (WhatsApp, Instagram) | 5 | 2 |
-| US-19 | Personal Administrativo de la FIA | Modificar o dar de baja eventos deportivos programados | 5 | 13 |
 | US-22 | Miembro del equipo de desarrollo | Cargar fotos de pilotos y autos. **[equipo]** Incluye la foto o documentación del piloto que mencionaba la tarea de la pantalla de US-10 (PO, 17/10) | 2 | 3 |
-| US-24 | Personal de las escuderías | Visualizar resultados y observaciones de controles técnicos | 2 | 13 |
 | US-25 | Usuario | Visualizar reportes de controles técnicos por gran premio | 2 | 5 |
 | US-26 | Usuario | Solicitar un cambio de contraseña desde la app (email con pasos) | 5 | 2 |
-| US-27 | Personal Administrativo de la FIA | Crear, modificar y eliminar cuentas de usuario de los pilotos | 5 | 13 |
 | US-28 | Usuario | Descargar el calendario en PDF | 2 | 1 |
-| US-29 | Miembro del equipo de desarrollo | Detectar en el login el tipo de cuenta y mostrar la interfaz correspondiente | 3 | 13 |
 
 ## Observaciones sobre la planificación de Naranja [equipo]
 
