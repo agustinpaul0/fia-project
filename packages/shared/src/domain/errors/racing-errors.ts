@@ -37,6 +37,18 @@ export const RACING_ERRORS = {
     status: 422,
     message: 'Se alcanzó el límite reglamentario de pilotos para esta condición.',
   },
+  DRIVER_ACCOUNT_ALREADY_EXISTS: {
+    status: 409,
+    message: 'El piloto seleccionado ya cuenta con un usuario oficial registrado en el sistema.',
+  },
+  DRIVER_ACCOUNT_NOT_FOUND: {
+    status: 404,
+    message: 'La cuenta oficial del piloto solicitada no existe.',
+  },
+  DRIVER_EMAIL_ALREADY_EXISTS: {
+    status: 409,
+    message: 'Ya existe una cuenta registrada con este correo electrónico.',
+  },
   PENALTY_NOT_FOUND: {
     status: 404,
     message: 'La sanción solicitada no existe o fue eliminada.',

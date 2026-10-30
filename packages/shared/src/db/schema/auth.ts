@@ -13,6 +13,7 @@ export const user = pgTable('user', {
   banReason: text('ban_reason'),
   banExpires: timestamp('ban_expires', { withTimezone: true, mode: 'date' }),
   teamId: text('team_id'),
+  driverId: text('driver_id').unique(),
 })
 
 export const session = pgTable('session', {

@@ -1,6 +1,7 @@
 import type { CreateTeamDriverBody, UpdateTeamDriverBody } from '@fia/shared/contracts'
 import type { DriverRow } from '@fia/shared/db'
 import type { TeamDriversRepository } from '../features/team-drivers/team-drivers.port'
+import { createInMemoryDriverAccountsStore } from './in-memory-driver-accounts'
 
 export type InMemoryTeamDriversRepository = TeamDriversRepository & {
   readonly items: DriverRow[]
@@ -51,6 +52,7 @@ export const createInMemoryTeamDriversRepository = (
 ): InMemoryTeamDriversRepository => {
   const drivers: DriverRow[] = [...initialDrivers]
   return {
+    ...createInMemoryDriverAccountsStore(),
     items: drivers,
     listAll: async () => [...drivers].sort((a, b) => a.number - b.number),
     listByTeam: async (teamId) =>
