@@ -1,7 +1,7 @@
 # Plan: QA-S3 — Auditoría de QA del Sprint 3 y corrección de criterios
 
 - **Ítem del backlog**: US-29, US-27, US-11, US-24, US-15, US-16, US-19, US-3 (Sprint 3)
-- **Autor**: Claude Code (rol QA) para Agustín Paul · **Fecha**: 2026-10-31 · **Estado**: Propuesto (espera aprobación)
+- **Autor**: Claude Code (rol QA) para Agustín Paul · **Fecha**: 2026-10-31 · **Estado**: Aplicado (aprobado por Agustín el 31/10)
 - **Fuente de criterios**: `InformeSprint3GrupoNaranja.pdf`, §4.2 (Grupo Naranja)
 
 ## Estado de los gates al iniciar la auditoría (`e72607b`)
@@ -119,3 +119,27 @@ implemente sin que el typecheck lo detecte.
 9. **US-3**: aplicar filtros comunes (rango de fechas, orden por relevancia, "Sin resultados") en calendario y
    resultados; test de rendimiento con 5 años.
 10. BACKLOG con criterios del Sprint 3, horas reales y estado `En revisión`; `pnpm verify`.
+
+## Resultado de la corrección (31/10)
+
+| US | Commit | Qué se hizo |
+|---|---|---|
+| — | `67eebdd` | Migración `0012` del schema del sprint, `check` de estado de carrera, FKs y consistencia de la confirmación. |
+| US-27 | `e9525ce` | Módulo `driver-accounts` de punta a punta (tabla versionada `driver_accounts`, adapter de US-23, `/admin/drivers`, insignia en perfil/listados/chat, piloto habilitado en el chat). |
+| US-29 | `ff03c9a` | Inicio por rol, redirección de guardas, menú por rol, área `/driver` (`GET /driver-accounts/me`), rechazo de roles desconocidos. |
+| US-11 | `490f033` | `drivers.updated_by_user_id` y nómina pública `/drivers` con escudería e insignia oficial. |
+| US-24 | `123742e` | Polling de controles técnicos cada 60 s. |
+| US-15 | `05603b0` | `GET /penalties/pending`, sección en la bandeja de US-9 y contador, `confirmedByName` visible para la FIA, confirmación con versión. |
+| US-3 + US-16 | `3017c61` | Filtros comunes (contrato, helper Drizzle, dominio y barra web), temporada actual por defecto, rango de fechas, orden por relevancia, filtros en calendario y campeonato, test de 5 años < 2 s. |
+| US-19 | `daa8d69` | Circuito en el PUT, `GET /races/circuits`, estado en el lector, pantalla de modificación y baja con confirmación, polling del calendario. |
+
+Decisiones tomadas durante la corrección:
+
+- **US-27**: la cuenta del piloto vive en `driver_accounts` (con `version`, baja con quién y cuándo) en lugar de
+  `user.driver_id`; se elimina esa columna para no tener dos fuentes de verdad.
+- **US-27/US-6**: el rol `driver` se suma a los roles de chat para que la insignia oficial tenga sentido en el chat.
+- **US-3**: la relevancia de sanciones y controles es "más reciente primero" (en SQL con `orderBy`); la del
+  calendario, "evento más cercano a hoy primero", se resuelve en memoria con `applyClientFilters`, porque
+  ordenar por distancia en SQL requeriría SQL plano (prohibido).
+- **US-15**: la notificación es la sanción pendiente listada en la bandeja de US-9 (acuerdo con el PO);
+  no se crea una tabla aparte porque la confirmación ya vive en `penalties`.
