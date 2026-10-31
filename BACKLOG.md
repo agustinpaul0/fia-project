@@ -576,14 +576,14 @@ sprint: 1 SP = 0–0,5 h · 2 = 0,5–1 h · 3 = 1–1,5 h · 5 = 1,5–2 h · 8
 | US-3 | Aplicar filtros (fecha, año, relevancia, tipo, identificador) | 5 | 8 | 1,5 h | 0,5 h | Hecho | Equipo | US-13, US-21 | [Plan](docs/plans/US-3-reusable-filters.md) · #32 |
 | US-11 | Modificar pilotos y su condición de titular o suplente | 5 | 8 | 2 h | 0,75 h | Hecho | Equipo | US-10 | [Plan](docs/plans/US-11-modify-team-drivers.md) · #32 |
 | US-15 | Asentar la confirmación de notificación de una sanción | 3 | 8 | 1 h | 0,75 h | Hecho | Equipo | US-13, US-9 | [Plan](docs/plans/US-15-penalty-notifications.md) · #32 |
-| QA-S3 | Auditoría de QA del sprint y corrección de criterios **[equipo]** | — | — | — | (completar) | Hecho | Agustín Paul | todas | [Plan](docs/plans/QA-S3-auditoria-sprint-3.md) · #32 |
+| QA-S3 | Auditoría de QA del sprint y corrección de criterios **[equipo]** | — | — | — | 2,5 h | Hecho | Agustín Paul | todas | [Plan](docs/plans/QA-S3-auditoria-sprint-3.md) · #32 |
 
 **Estado**: la implementación inicial se marcó `Hecho` sin PR ni review. La auditoría de QA (31/10) encontró que
 **ninguna US cumplía todos sus criterios** y que la integración contra Postgres estaba rota (faltaban migraciones).
 Las correcciones se mergearon a `develop` en el PR #32 (31/10) y se publicaron en `main` con el release del Sprint 3. Detalle por criterio y evidencia: [docs/plans/QA-S3-auditoria-sprint-3.md](docs/plans/QA-S3-auditoria-sprint-3.md).
 
-**Horas**: estimado de Naranja 11 h. Implementación inicial: 5,5 h (columna "Real impl."). Las horas de QA las
-carga quien la hizo (fila QA-S3).
+**Horas reales del sprint: 8 h** (5,5 h de implementación inicial, columna "Real impl.", + 2,5 h de QA y
+correcciones con Claude Code el 31/10, de 13:55 a 16:25 UTC), contra 11 h estimadas por Naranja.
 
 ---
 
