@@ -14,11 +14,14 @@ import {
   type SeasonScope,
 } from '../api/race-results-api'
 
+export const CALENDAR_POLL_MS = 60_000
+
 export const useSeasonRaces = (scope: SeasonScope): UseQueryResult<readonly RaceSummary[]> =>
   useQuery({
     queryKey: raceQueryKeys.season(scope),
     queryFn: () => fetchSeasonRaces(scope),
     placeholderData: keepPreviousData,
+    refetchInterval: CALENDAR_POLL_MS,
   })
 
 export const useRaceClassification = (raceId: string): UseQueryResult<RaceClassification> =>

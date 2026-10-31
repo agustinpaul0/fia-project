@@ -1,9 +1,12 @@
 import {
   type CancelRaceBody,
+  type CircuitOption,
+  circuitOptionListSchema,
   type DriverStanding,
   driverStandingListSchema,
   type EligibleDriver,
   eligibleDriverListSchema,
+  RACE_CIRCUITS_PATH,
   type RaceClassification,
   type RaceClassificationBody,
   type RaceSummary,
@@ -73,3 +76,6 @@ export const cancelScheduledRace = (raceId: string, body: CancelRaceBody): Promi
     body,
     schema: raceSummarySchema,
   })
+
+export const fetchCircuits = (): Promise<readonly CircuitOption[]> =>
+  apiRequest({ path: RACE_CIRCUITS_PATH, schema: circuitOptionListSchema })

@@ -1,4 +1,9 @@
-import type { RaceListQuery, RaceStatus, UpdateRaceBody } from '@fia/shared/contracts'
+import type {
+  CircuitOption,
+  RaceListQuery,
+  RaceStatus,
+  UpdateRaceBody,
+} from '@fia/shared/contracts'
 import type { RaceType } from '@fia/shared/domain'
 
 export type RaceHeader = {
@@ -10,9 +15,9 @@ export type RaceHeader = {
   readonly seasonYear: number
   readonly categoryId: string
   readonly categoryCode: string
+  readonly circuitId: string
   readonly circuitName: string
-  readonly status?: RaceStatus | undefined
-  readonly updatedByUserId?: string | null | undefined
+  readonly status: RaceStatus
   readonly version: number
   readonly resultsRevision: number
   readonly winnerName: string | null
@@ -72,6 +77,7 @@ export type RaceResultsRepository = {
   readonly listCategoryDrivers: (categoryId: string) => Promise<readonly EligibleDriverRow[]>
   readonly listSeasonResults: (query: RaceListQuery) => Promise<readonly SeasonResultRow[]>
   readonly replaceClassification: (input: ReplaceClassificationInput) => Promise<boolean>
-  readonly updateRace?: (id: string, body: UpdateRaceBody, userId: string) => Promise<boolean>
-  readonly cancelRace?: (id: string, version: number, userId: string) => Promise<boolean>
+  readonly updateRace: (id: string, body: UpdateRaceBody, userId: string) => Promise<boolean>
+  readonly cancelRace: (id: string, version: number, userId: string) => Promise<boolean>
+  readonly listCircuits: () => Promise<readonly CircuitOption[]>
 }
