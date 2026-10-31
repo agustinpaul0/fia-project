@@ -53,3 +53,25 @@ describe('ChatConversationList', () => {
     expect(screen.getByText('(ECDH P-256 · AES-GCM 256 · Firma ECDSA)')).toBeInTheDocument()
   })
 })
+
+describe('ChatConversationList con pilotos (US-27)', () => {
+  it('distingue la cuenta oficial de un piloto con su insignia', () => {
+    const driverChat = {
+      ...CONVERSATION,
+      id: '00000000-0000-4000-8000-000000000003',
+      otherUserName: 'Franco Colapinto',
+      otherUserRole: 'driver',
+      otherTeamName: null,
+    }
+    render(
+      <ChatConversationList
+        isLoading={false}
+        conversations={[CONVERSATION, driverChat]}
+        selectedId={null}
+        onSelect={vi.fn()}
+      />,
+    )
+    expect(screen.getByText('Piloto')).toBeInTheDocument()
+    expect(screen.getAllByText(/Piloto oficial/)).toHaveLength(1)
+  })
+})

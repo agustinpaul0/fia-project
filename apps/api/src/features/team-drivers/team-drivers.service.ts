@@ -1,7 +1,6 @@
 import type { CreateTeamDriverBody, Driver, UpdateTeamDriverBody } from '@fia/shared/contracts'
 import { AppError } from '@fia/shared/domain'
 import type { SessionUser } from '../../core/auth/session'
-import { createDriverAccountsService, type DriverAccountsService } from './driver-accounts.service'
 import { toDriverDto } from './team-drivers.mapper'
 import type { TeamDriversRepository } from './team-drivers.port'
 
@@ -11,7 +10,7 @@ export type UpdateTeamDriverCommand = {
   readonly body: UpdateTeamDriverBody
 }
 
-export type TeamDriversService = DriverAccountsService & {
+export type TeamDriversService = {
   readonly listPublic: () => Promise<readonly Driver[]>
   readonly listMine: (user: SessionUser) => Promise<readonly Driver[]>
   readonly enroll: (user: SessionUser, body: CreateTeamDriverBody) => Promise<Driver>
@@ -61,7 +60,6 @@ const executeDriverUpdate = async (
 export const createTeamDriversService = (
   repository: TeamDriversRepository,
 ): TeamDriversService => ({
-  ...createDriverAccountsService(repository),
   listPublic: async () => (await repository.listAll()).map(toDriverDto),
   listMine: async (user) => (await repository.listByTeam(teamOf(user))).map(toDriverDto),
   enroll: async (user, body) => {

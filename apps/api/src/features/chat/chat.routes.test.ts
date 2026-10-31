@@ -28,6 +28,12 @@ describe('rutas de chat E2E', () => {
     expect((await app.request('/chat/conversations')).status).toBe(403)
   })
 
+  it('un piloto con cuenta oficial puede usar el chat (US-27)', async () => {
+    const driver: SessionUser = { id: 'drv-1', role: 'driver', teamId: null }
+    const { app } = createTestApp({ sessionUser: driver, chatContacts: CHAT_CONTACTS })
+    expect((await app.request('/chat/contacts')).status).toBe(200)
+  })
+
   it('lista los contactos posibles sin incluirse a uno mismo', async () => {
     const { app } = setup()
     const body = (await (await app.request('/chat/contacts')).json()) as Array<{ id: string }>

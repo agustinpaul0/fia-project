@@ -10,7 +10,7 @@ export type FakeAccount = {
   email: string
   name: string
   role: string
-  teamId: string
+  teamId: string | null
   banned: boolean
 }
 

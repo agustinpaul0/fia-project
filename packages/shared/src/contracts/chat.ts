@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { CHAT_ROLES } from '../domain/roles'
 import { versionSchema } from './common'
 
 export const registerPublicKeysBodySchema = z.strictObject({
@@ -24,7 +25,7 @@ export const createConversationBodySchema = z.strictObject({ recipientId: userId
 export const chatContactSchema = z.strictObject({
   id: z.string(),
   name: z.string(),
-  role: z.enum(['fia_admin', 'team_staff']),
+  role: z.enum(CHAT_ROLES),
   teamName: z.string().nullable(),
 })
 

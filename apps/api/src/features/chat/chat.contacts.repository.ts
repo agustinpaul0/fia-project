@@ -1,10 +1,9 @@
 import { user } from '@fia/shared/db'
+import { CHAT_ROLES } from '@fia/shared/domain'
 import { and, asc, eq, inArray, isNull, ne, or } from 'drizzle-orm'
 import type { DbExecutor } from '../../core/db/executor'
 import type { ChatRepository } from './chat.port'
 import { loadTeamNames } from './chat.team-names'
-
-const CHAT_ROLES = ['fia_admin', 'team_staff'] as const
 
 const isChatRole = (role: string): role is (typeof CHAT_ROLES)[number] =>
   CHAT_ROLES.some((r) => r === role)

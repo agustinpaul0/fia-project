@@ -30,7 +30,6 @@ export const authUserSchema = z.strictObject({
   email: z.string(),
   role: roleSchema,
   teamId: z.string().nullable(),
-  driverId: z.string().nullable().optional(),
 })
 
 export const sessionResponseSchema = z.strictObject({

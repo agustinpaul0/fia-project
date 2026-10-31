@@ -1,5 +1,4 @@
-import { boolean, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
-import { drivers } from './drivers'
+import { boolean, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
 
 export const user = pgTable('user', {
   id: text('id').primaryKey(),
@@ -14,9 +13,6 @@ export const user = pgTable('user', {
   banReason: text('ban_reason'),
   banExpires: timestamp('ban_expires', { withTimezone: true, mode: 'date' }),
   teamId: text('team_id'),
-  driverId: uuid('driver_id')
-    .unique()
-    .references(() => drivers.id, { onDelete: 'restrict' }),
 })
 
 export const session = pgTable('session', {

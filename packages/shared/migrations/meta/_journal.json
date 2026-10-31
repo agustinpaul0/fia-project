@@ -92,6 +92,13 @@
       "when": 1793456120713,
       "tag": "0012_sprint3_races_status_penalty_confirmation_driver_account",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1793456249338,
+      "tag": "0013_create_driver_accounts",
+      "breakpoints": true
     }
   ]
 }

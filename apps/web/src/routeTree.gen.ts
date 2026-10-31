@@ -16,6 +16,7 @@ import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as ResultsRouteImport } from './routes/results'
 import { Route as SanctionsRouteImport } from './routes/sanctions'
 import { Route as ScrutineeringRouteImport } from './routes/scrutineering'
+import { Route as AdminDriversRouteImport } from './routes/admin.drivers'
 import { Route as AdminNotificationsRouteImport } from './routes/admin.notifications'
 import { Route as AdminTeamStaffRouteImport } from './routes/admin.team-staff'
 import { Route as RacesRaceIdRouteImport } from './routes/races.$raceId'
@@ -58,6 +59,11 @@ const ScrutineeringRoute = ScrutineeringRouteImport.update({
   path: '/scrutineering',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminDriversRoute = AdminDriversRouteImport.update({
+  id: '/admin/drivers',
+  path: '/admin/drivers',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminNotificationsRoute = AdminNotificationsRouteImport.update({
   id: '/admin/notifications',
   path: '/admin/notifications',
@@ -97,6 +103,7 @@ export interface FileRoutesByFullPath {
   '/results': typeof ResultsRoute
   '/sanctions': typeof SanctionsRoute
   '/scrutineering': typeof ScrutineeringRoute
+  '/admin/drivers': typeof AdminDriversRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/team-staff': typeof AdminTeamStaffRoute
   '/races/$raceId': typeof RacesRaceIdRoute
@@ -112,6 +119,7 @@ export interface FileRoutesByTo {
   '/results': typeof ResultsRoute
   '/sanctions': typeof SanctionsRoute
   '/scrutineering': typeof ScrutineeringRoute
+  '/admin/drivers': typeof AdminDriversRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/team-staff': typeof AdminTeamStaffRoute
   '/races/$raceId': typeof RacesRaceIdRoute
@@ -128,6 +136,7 @@ export interface FileRoutesById {
   '/results': typeof ResultsRoute
   '/sanctions': typeof SanctionsRoute
   '/scrutineering': typeof ScrutineeringRoute
+  '/admin/drivers': typeof AdminDriversRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/team-staff': typeof AdminTeamStaffRoute
   '/races/$raceId': typeof RacesRaceIdRoute
@@ -145,6 +154,7 @@ export interface FileRouteTypes {
     | '/results'
     | '/sanctions'
     | '/scrutineering'
+    | '/admin/drivers'
     | '/admin/notifications'
     | '/admin/team-staff'
     | '/races/$raceId'
@@ -160,6 +170,7 @@ export interface FileRouteTypes {
     | '/results'
     | '/sanctions'
     | '/scrutineering'
+    | '/admin/drivers'
     | '/admin/notifications'
     | '/admin/team-staff'
     | '/races/$raceId'
@@ -175,6 +186,7 @@ export interface FileRouteTypes {
     | '/results'
     | '/sanctions'
     | '/scrutineering'
+    | '/admin/drivers'
     | '/admin/notifications'
     | '/admin/team-staff'
     | '/races/$raceId'
@@ -191,6 +203,7 @@ export interface RootRouteChildren {
   ResultsRoute: typeof ResultsRoute
   SanctionsRoute: typeof SanctionsRoute
   ScrutineeringRoute: typeof ScrutineeringRoute
+  AdminDriversRoute: typeof AdminDriversRoute
   AdminNotificationsRoute: typeof AdminNotificationsRoute
   AdminTeamStaffRoute: typeof AdminTeamStaffRoute
   RacesRaceIdRoute: typeof RacesRaceIdRoute
@@ -250,6 +263,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ScrutineeringRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/drivers': {
+      id: '/admin/drivers'
+      path: '/admin/drivers'
+      fullPath: '/admin/drivers'
+      preLoaderRoute: typeof AdminDriversRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/notifications': {
       id: '/admin/notifications'
       path: '/admin/notifications'
@@ -303,6 +323,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResultsRoute: ResultsRoute,
   SanctionsRoute: SanctionsRoute,
   ScrutineeringRoute: ScrutineeringRoute,
+  AdminDriversRoute: AdminDriversRoute,
   AdminNotificationsRoute: AdminNotificationsRoute,
   AdminTeamStaffRoute: AdminTeamStaffRoute,
   RacesRaceIdRoute: RacesRaceIdRoute,

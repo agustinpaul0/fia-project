@@ -6,6 +6,7 @@ import { NotificationsNavLink } from '@/features/notifications/components/notifi
 
 const ADMIN_LINKS = [
   { to: '/admin/team-staff', label: 'Personal' },
+  { to: '/admin/drivers', label: 'Cuentas de pilotos' },
   { to: '/admin/results', label: 'Carga de resultados' },
   { to: '/admin/notifications', label: 'Confirmaciones' },
 ] as const
