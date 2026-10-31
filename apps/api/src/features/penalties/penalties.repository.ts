@@ -1,29 +1,22 @@
 import type { CreatePenaltyBody, Penalty } from '@fia/shared/contracts'
 import { categories, drivers, penalties, races, teams } from '@fia/shared/db'
 import { AppError } from '@fia/shared/domain'
-import { and, desc, eq, gte, isNull, lte, type SQL } from 'drizzle-orm'
+import { and, eq, gte, isNull, type SQL } from 'drizzle-orm'
 import type { DbExecutor } from '../../core/db/executor'
+import { dateConditions, dateOrder, optionalEq } from '../../core/db/filter-conditions'
 import { translateConstraintViolations } from '../../core/errors/constraint-violations'
 import { toPenaltyDto } from './penalties.mapper'
 import type { PenaltiesListFilter, PenaltiesRepository } from './penalties.port'
 import { penaltySelectFields as selectFields } from './penalties.select'
 import { PENALTY_CONSTRAINT_ERRORS } from './penalties-constraints'
 
-const buildFilterConditions = (filter: PenaltiesListFilter): SQL[] => {
-  const conditions: SQL[] = [gte(penalties.issuedAt, filter.issuedSince)]
-  if (filter.teamId) {
-    conditions.push(eq(penalties.teamId, filter.teamId))
-  }
-  if (filter.type) {
-    conditions.push(eq(penalties.type, filter.type))
-  }
-  if (filter.season) {
-    const start = new Date(Date.UTC(filter.season, 0, 1))
-    const end = new Date(Date.UTC(filter.season, 11, 31, 23, 59, 59))
-    conditions.push(gte(penalties.issuedAt, start), lte(penalties.issuedAt, end))
-  }
-  return conditions
-}
+const buildFilterConditions = (filter: PenaltiesListFilter): SQL[] => [
+  gte(penalties.issuedAt, filter.issuedSince),
+  ...dateConditions(penalties.issuedAt, filter),
+  ...optionalEq(penalties.teamId, filter.teamId),
+  ...optionalEq(penalties.driverId, filter.driverId),
+  ...optionalEq(penalties.type, filter.type),
+]
 
 const findPenaltyRow = async (db: DbExecutor, id: string): Promise<Penalty | null> => {
   const [row] = await db
@@ -69,7 +62,7 @@ export const createDrizzlePenaltiesRepository = (db: DbExecutor): PenaltiesRepos
       .leftJoin(drivers, eq(penalties.driverId, drivers.id))
       .leftJoin(races, eq(penalties.raceId, races.id))
       .where(and(...buildFilterConditions(filter)))
-      .orderBy(desc(penalties.issuedAt))
+      .orderBy(dateOrder(penalties.issuedAt, filter.sort))
     return rows.map(toPenaltyDto)
   },
   findById: (id) => findPenaltyRow(db, id),

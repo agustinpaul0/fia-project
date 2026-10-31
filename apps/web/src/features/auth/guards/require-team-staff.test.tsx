@@ -3,6 +3,9 @@ import { describe, expect, it, vi } from 'vitest'
 import { RequireDriver } from './require-driver'
 import { RequireTeamStaff } from './require-team-staff'
 
+const navigate = vi.fn()
+vi.mock('@tanstack/react-router', () => ({ useNavigate: () => navigate }))
+
 vi.mock('@/lib/auth-client', () => ({ useSession: vi.fn() }))
 
 const sessionWith = (role: string) => ({
@@ -35,5 +38,29 @@ describe('RequireTeamStaff y RequireDriver (matriz rol × área)', () => {
     vi.mocked(useSession).mockReturnValue(sessionWith('public') as never)
     render(<RequireDriver>Panel Piloto</RequireDriver>)
     expect(screen.getByText('No tenés permisos para realizar esta acción.')).toBeInTheDocument()
+  })
+
+  it('redirige a cada rol a su propia área cuando entra por URL a otra (US-29)', async () => {
+    const { useSession } = await import('@/lib/auth-client')
+    const cases = [
+      ['fia_admin', '/admin/team-staff'],
+      ['driver', '/driver'],
+      ['public', '/'],
+    ] as const
+    for (const [role, home] of cases) {
+      navigate.mockClear()
+      vi.mocked(useSession).mockReturnValue(sessionWith(role) as never)
+      const { unmount } = render(<RequireTeamStaff>Bandeja</RequireTeamStaff>)
+      expect(navigate).toHaveBeenCalledWith({ to: home, replace: true })
+      unmount()
+    }
+  })
+
+  it('sin sesión redirige al login', async () => {
+    const { useSession } = await import('@/lib/auth-client')
+    navigate.mockClear()
+    vi.mocked(useSession).mockReturnValue({ data: null, isPending: false, error: null } as never)
+    render(<RequireDriver>Panel</RequireDriver>)
+    expect(navigate).toHaveBeenCalledWith({ to: '/login', replace: true })
   })
 })

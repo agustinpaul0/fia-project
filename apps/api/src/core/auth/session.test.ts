@@ -59,4 +59,13 @@ describe('resolución de sesión', () => {
     const app = new Hono<AppEnv>().use(resolveSession(resolver))
     expect(await (await whoAmI(app)).json()).toEqual({ user: null })
   })
+
+  it('resuelve null si la cuenta tiene un rol desconocido (US-29)', async () => {
+    const fakeAuth = {
+      api: { getSession: () => Promise.resolve({ user: { id: 'usr_3', role: 'superuser' } }) },
+    }
+    const resolver = createBetterAuthSessionResolver(fakeAuth as unknown as BetterAuthInstance)
+    const app = new Hono<AppEnv>().use(resolveSession(resolver))
+    expect(await (await whoAmI(app)).json()).toEqual({ user: null })
+  })
 })

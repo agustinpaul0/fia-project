@@ -82,4 +82,14 @@ describe('LoginForm', () => {
     await submitLogin()
     expect(mockNavigate).toHaveBeenCalledWith({ to: '/team/drivers' })
   })
+
+  it('navega al panel del piloto tras login de una cuenta oficial de piloto (US-29)', async () => {
+    const { signIn } = await import('@/lib/auth-client')
+    vi.mocked(signIn.email).mockResolvedValue({
+      data: { user: { role: 'driver' } },
+      error: null,
+    } as never)
+    await submitLogin()
+    expect(mockNavigate).toHaveBeenCalledWith({ to: '/driver' })
+  })
 })

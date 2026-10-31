@@ -29,6 +29,7 @@ export const createDrizzleDriverAccountsRepository = (db: DbExecutor): DriverAcc
     list: () => listDriverAccounts(db),
     findById,
     findByDriverId: (driverId) => findDriverAccount(db, eq(driverAccounts.driverId, driverId)),
+    findByUserId: (userId) => findDriverAccount(db, eq(driverAccounts.userId, userId)),
     findDriver: (driverId) => findAccountTarget(db, driverId),
     create: (input) =>
       translateConstraintViolations(DRIVER_ACCOUNT_CONSTRAINT_ERRORS, async () => {

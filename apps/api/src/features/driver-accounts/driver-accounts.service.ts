@@ -14,6 +14,7 @@ export type DeactivateDriverAccountCommand = {
 
 export type DriverAccountsService = {
   readonly list: () => Promise<readonly DriverAccount[]>
+  readonly mine: (userId: string) => Promise<DriverAccount>
   readonly create: (body: CreateDriverAccountBody) => Promise<DriverAccount>
   readonly update: (id: string, body: UpdateDriverAccountBody) => Promise<DriverAccount>
   readonly deactivate: (command: DeactivateDriverAccountCommand) => Promise<DriverAccount>
@@ -86,6 +87,13 @@ export const createDriverAccountsService = (
   uow: DriverAccountsUnitOfWork,
 ): DriverAccountsService => ({
   list: () => uow.accounts.list(),
+  mine: async (userId) => {
+    const account = await uow.accounts.findByUserId(userId)
+    if (!account?.isActive) {
+      throw new AppError('DRIVER_ACCOUNT_NOT_FOUND')
+    }
+    return account
+  },
   create: (body) => create(uow, body),
   update: (id, body) => update(uow, id, body),
   deactivate: (command) => deactivate(uow, command),

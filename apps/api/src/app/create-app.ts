@@ -48,7 +48,7 @@ const mountFeatureRoutes = (app: Hono<AppEnv>, deps: AppDependencies): void => {
   if (deps.repositories.penalties) {
     app.route(
       API_PATHS.penalties,
-      createPenaltiesRoutes(createPenaltiesService(deps.repositories.penalties)),
+      createPenaltiesRoutes(createPenaltiesService(deps.repositories.penalties, clock)),
     )
   }
   if (deps.repositories.technicalControls) {

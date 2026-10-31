@@ -1,9 +1,11 @@
 import type { Role } from '@fia/shared/domain'
+import { useNavigate } from '@tanstack/react-router'
 import { Lock } from 'lucide-react'
-import type { ReactNode } from 'react'
+import { type ReactNode, useEffect } from 'react'
 import { PageFrame } from '@/components/common/page-query-view'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useSession } from '@/lib/auth-client'
+import { homeFor } from '../role-home'
 
 type Props = {
   readonly allowedRole: Role
@@ -28,8 +30,32 @@ const AccessNotice = ({
   </PageFrame>
 )
 
+type RedirectTarget = ReturnType<typeof homeFor> | '/login' | null
+
+const useRedirectWhenDenied = (target: RedirectTarget): void => {
+  const navigate = useNavigate()
+  useEffect(() => {
+    if (target !== null) {
+      void navigate({ to: target, replace: true })
+    }
+  }, [navigate, target])
+}
+
+const deniedTarget = (
+  isPending: boolean,
+  role: string | null | undefined,
+  allowedRole: Role,
+): RedirectTarget => {
+  if (isPending || role === allowedRole) {
+    return null
+  }
+  return role === undefined ? '/login' : homeFor(role)
+}
+
 export const RequireRole = ({ allowedRole, children }: Props): ReactNode => {
   const { data: session, isPending } = useSession()
+  const role = session ? (session.user.role ?? null) : undefined
+  useRedirectWhenDenied(deniedTarget(isPending, role, allowedRole))
   if (isPending) {
     return (
       <PageFrame>

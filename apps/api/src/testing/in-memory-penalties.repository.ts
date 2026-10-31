@@ -28,22 +28,32 @@ const buildPenaltyRow = (body: CreatePenaltyBody, seq: number): Penalty => {
   }
 }
 
+const inRange = (iso: string, filter: PenaltiesListFilter): boolean => {
+  const at = new Date(iso)
+  return (
+    at >= filter.issuedSince &&
+    (!filter.from || at >= new Date(filter.from)) &&
+    (!filter.to || at <= new Date(filter.to)) &&
+    (!filter.season || at.getUTCFullYear() === filter.season)
+  )
+}
+
+const byDate = (sort: PenaltiesListFilter['sort']) => (a: Penalty, b: Penalty) =>
+  sort === 'date_asc' ? a.issuedAt.localeCompare(b.issuedAt) : b.issuedAt.localeCompare(a.issuedAt)
+
 const filterPenalties = (
   items: readonly Penalty[],
   filter: PenaltiesListFilter,
-): readonly Penalty[] => {
-  let result = items.filter((p) => new Date(p.issuedAt) >= filter.issuedSince)
-  if (filter.teamId) {
-    result = result.filter((p) => p.teamId === filter.teamId)
-  }
-  if (filter.type) {
-    result = result.filter((p) => p.type === filter.type)
-  }
-  if (filter.season) {
-    result = result.filter((p) => new Date(p.issuedAt).getUTCFullYear() === filter.season)
-  }
-  return result
-}
+): readonly Penalty[] =>
+  [...items]
+    .sort(byDate(filter.sort))
+    .filter(
+      (p) =>
+        inRange(p.issuedAt, filter) &&
+        (!filter.teamId || p.teamId === filter.teamId) &&
+        (!filter.driverId || p.driverId === filter.driverId) &&
+        (!filter.type || p.type === filter.type),
+    )
 
 export const createInMemoryPenaltiesRepository = (
   initial: readonly Penalty[] = [],

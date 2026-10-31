@@ -15,11 +15,15 @@ import { validate } from '../../core/http/validate'
 import type { DriverAccountsService } from './driver-accounts.service'
 
 const onlyFiaAdmin = requireRole('fia_admin')
+const onlyDriver = requireRole('driver')
 const vParam = validate('param', idParamsSchema)
 
 export const createDriverAccountsRoutes = (service: DriverAccountsService): Hono<AppEnv> =>
   new Hono<AppEnv>()
     .get('/', onlyFiaAdmin, async (c) => ok(c, driverAccountListSchema, await service.list()))
+    .get('/me', onlyDriver, async (c) =>
+      ok(c, driverAccountSchema, await service.mine(c.get('sessionUser')?.id ?? '')),
+    )
     .post('/', onlyFiaAdmin, validate('json', createDriverAccountBodySchema), async (c) =>
       created(c, driverAccountSchema, await service.create(c.req.valid('json'))),
     )

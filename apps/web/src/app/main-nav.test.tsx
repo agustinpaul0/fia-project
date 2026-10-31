@@ -59,3 +59,21 @@ describe('MainNav', () => {
     expect(screen.getByRole('link', { name: 'Resultados' })).not.toHaveClass('nav-pill')
   })
 })
+
+describe('MainNav por rol (US-29)', () => {
+  it('el piloto ve su panel y mensajes, sin secciones de FIA ni de escudería', async () => {
+    renderWithRouter(<MainNav userRole="driver" />)
+    expect(await screen.findByRole('link', { name: 'Mi panel' })).toHaveAttribute('href', '/driver')
+    expect(screen.getByRole('link', { name: 'Mensajes' })).toHaveAttribute('href', '/chat')
+    expect(screen.queryByRole('link', { name: 'Personal' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'Pilotos' })).not.toBeInTheDocument()
+  })
+
+  it('la FIA accede a las cuentas de pilotos (US-27)', async () => {
+    renderWithRouter(<MainNav userRole="fia_admin" />)
+    expect(await screen.findByRole('link', { name: 'Cuentas de pilotos' })).toHaveAttribute(
+      'href',
+      '/admin/drivers',
+    )
+  })
+})

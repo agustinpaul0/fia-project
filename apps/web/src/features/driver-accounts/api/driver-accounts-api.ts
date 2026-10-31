@@ -5,6 +5,7 @@ import {
   driverAccountListSchema,
   driverAccountPath,
   driverAccountSchema,
+  MY_DRIVER_ACCOUNT_PATH,
   type UpdateDriverAccountBody,
 } from '@fia/shared/contracts'
 import { apiRequest } from '@/lib/api/http-client'
@@ -34,3 +35,8 @@ export const deactivateDriverAccount = ({ id, version }: AccountVersion): Promis
     method: 'DELETE',
     schema: driverAccountSchema,
   })
+
+export const MY_DRIVER_ACCOUNT_QUERY_KEY = ['driver-accounts', 'me'] as const
+
+export const fetchMyDriverAccount = (): Promise<DriverAccount> =>
+  apiRequest({ path: MY_DRIVER_ACCOUNT_PATH, schema: driverAccountSchema })

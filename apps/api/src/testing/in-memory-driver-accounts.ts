@@ -63,6 +63,7 @@ const createRepository = (
     list: async () => rows.map(toDto),
     findById: async (id) => maybeDto(rows.find((r) => r.id === id)),
     findByDriverId: async (driverId) => maybeDto(rows.find((r) => r.driverId === driverId)),
+    findByUserId: async (userId) => maybeDto(rows.find((r) => r.userId === userId)),
     findDriver: async (driverId) => {
       const driver = drivers.find((d) => d.id === driverId)
       return driver ? { id: driver.id, teamId: driver.teamId } : null

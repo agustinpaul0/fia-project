@@ -16,6 +16,7 @@ export type DriverAccountsRepository = {
   readonly list: () => Promise<readonly DriverAccount[]>
   readonly findById: (id: string) => Promise<DriverAccount | null>
   readonly findByDriverId: (driverId: string) => Promise<DriverAccount | null>
+  readonly findByUserId: (userId: string) => Promise<DriverAccount | null>
   readonly findDriver: (driverId: string) => Promise<DriverAccountTarget | null>
   readonly create: (input: { userId: string; driverId: string }) => Promise<DriverAccount>
   readonly bumpVersion: (id: string, version: number) => Promise<DriverAccount | null>
