@@ -85,6 +85,13 @@
       "when": 1792241761382,
       "tag": "0011_drivers_category_number_and_license",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1793456120713,
+      "tag": "0012_sprint3_races_status_penalty_confirmation_driver_account",
+      "breakpoints": true
     }
   ]
 }
