@@ -568,20 +568,19 @@ sprint: 1 SP = 0–0,5 h · 2 = 0,5–1 h · 3 = 1–1,5 h · 5 = 1,5–2 h · 8
 
 | ID | Ítem | SP | BV | Est. | Real impl. | Estado | Dueño | Depende de | Plan |
 |---|---|---|---|---|---|---|---|---|---|
-| US-19 | Modificar o dar de baja eventos deportivos programados | 5 | 13 | 2 h | 0,75 h | En revisión | Equipo | US-20, T-2 | [Plan](docs/plans/US-19-modify-cancel-races.md) |
-| US-24 | Visualizar resultados y observaciones de controles técnicos | 2 | 13 | 0,75 h | 0,5 h | En revisión | Equipo | US-21 | [Plan](docs/plans/US-24-technical-controls-observations.md) |
-| US-27 | Crear, modificar y eliminar cuentas de usuario de los pilotos | 5 | 13 | 1,5 h | 1 h | En revisión | Equipo | US-10, US-29 | [Plan](docs/plans/US-27-driver-accounts.md) |
-| US-29 | Detectar el tipo de cuenta en el login y mostrar la interfaz de cada rol | 3 | 13 | 1 h | 0,5 h | En revisión | Equipo | US-4 | [Plan](docs/plans/US-29-role-detection-and-interfaces.md) |
-| US-16 | Consultar el listado histórico y en vivo de sanciones | 3 | 8 | 1,25 h | 0,75 h | En revisión | Equipo | US-13 | [Plan](docs/plans/US-16-penalties-history-live.md) |
-| US-3 | Aplicar filtros (fecha, año, relevancia, tipo, identificador) | 5 | 8 | 1,5 h | 0,5 h | En revisión | Equipo | US-13, US-21 | [Plan](docs/plans/US-3-reusable-filters.md) |
-| US-11 | Modificar pilotos y su condición de titular o suplente | 5 | 8 | 2 h | 0,75 h | En revisión | Equipo | US-10 | [Plan](docs/plans/US-11-modify-team-drivers.md) |
-| US-15 | Asentar la confirmación de notificación de una sanción | 3 | 8 | 1 h | 0,75 h | En revisión | Equipo | US-13, US-9 | [Plan](docs/plans/US-15-penalty-notifications.md) |
-| QA-S3 | Auditoría de QA del sprint y corrección de criterios **[equipo]** | — | — | — | (completar) | En revisión | Agustín Paul | todas | [Plan](docs/plans/QA-S3-auditoria-sprint-3.md) |
+| US-19 | Modificar o dar de baja eventos deportivos programados | 5 | 13 | 2 h | 0,75 h | Hecho | Equipo | US-20, T-2 | [Plan](docs/plans/US-19-modify-cancel-races.md) · #32 |
+| US-24 | Visualizar resultados y observaciones de controles técnicos | 2 | 13 | 0,75 h | 0,5 h | Hecho | Equipo | US-21 | [Plan](docs/plans/US-24-technical-controls-observations.md) · #32 |
+| US-27 | Crear, modificar y eliminar cuentas de usuario de los pilotos | 5 | 13 | 1,5 h | 1 h | Hecho | Equipo | US-10, US-29 | [Plan](docs/plans/US-27-driver-accounts.md) · #32 |
+| US-29 | Detectar el tipo de cuenta en el login y mostrar la interfaz de cada rol | 3 | 13 | 1 h | 0,5 h | Hecho | Equipo | US-4 | [Plan](docs/plans/US-29-role-detection-and-interfaces.md) · #32 |
+| US-16 | Consultar el listado histórico y en vivo de sanciones | 3 | 8 | 1,25 h | 0,75 h | Hecho | Equipo | US-13 | [Plan](docs/plans/US-16-penalties-history-live.md) · #32 |
+| US-3 | Aplicar filtros (fecha, año, relevancia, tipo, identificador) | 5 | 8 | 1,5 h | 0,5 h | Hecho | Equipo | US-13, US-21 | [Plan](docs/plans/US-3-reusable-filters.md) · #32 |
+| US-11 | Modificar pilotos y su condición de titular o suplente | 5 | 8 | 2 h | 0,75 h | Hecho | Equipo | US-10 | [Plan](docs/plans/US-11-modify-team-drivers.md) · #32 |
+| US-15 | Asentar la confirmación de notificación de una sanción | 3 | 8 | 1 h | 0,75 h | Hecho | Equipo | US-13, US-9 | [Plan](docs/plans/US-15-penalty-notifications.md) · #32 |
+| QA-S3 | Auditoría de QA del sprint y corrección de criterios **[equipo]** | — | — | — | (completar) | Hecho | Agustín Paul | todas | [Plan](docs/plans/QA-S3-auditoria-sprint-3.md) · #32 |
 
 **Estado**: la implementación inicial se marcó `Hecho` sin PR ni review. La auditoría de QA (31/10) encontró que
 **ninguna US cumplía todos sus criterios** y que la integración contra Postgres estaba rota (faltaban migraciones).
-Las correcciones están en la rama `claude/beautiful-darwin-j55ewu`; pasan a `Hecho` cuando se mergee el PR a
-`develop`. Detalle por criterio y evidencia: [docs/plans/QA-S3-auditoria-sprint-3.md](docs/plans/QA-S3-auditoria-sprint-3.md).
+Las correcciones se mergearon a `develop` en el PR #32 (31/10) y se publicaron en `main` con el release del Sprint 3. Detalle por criterio y evidencia: [docs/plans/QA-S3-auditoria-sprint-3.md](docs/plans/QA-S3-auditoria-sprint-3.md).
 
 **Horas**: estimado de Naranja 11 h. Implementación inicial: 5,5 h (columna "Real impl."). Las horas de QA las
 carga quien la hizo (fila QA-S3).
