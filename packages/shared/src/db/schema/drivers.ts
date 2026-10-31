@@ -1,5 +1,6 @@
 import { sql } from 'drizzle-orm'
-import { check, integer, pgTable, unique, uuid, varchar } from 'drizzle-orm/pg-core'
+import { check, integer, pgTable, text, unique, uuid, varchar } from 'drizzle-orm/pg-core'
+import { user } from './auth'
 import { categories } from './categories'
 import { idColumn, versionedChecks, versionedColumns } from './columns'
 import { teams } from './teams'
@@ -17,6 +18,9 @@ export const drivers = pgTable(
     teamId: uuid('team_id').references(() => teams.id, { onDelete: 'set null' }),
     categoryId: uuid('category_id').references(() => categories.id, { onDelete: 'restrict' }),
     role: varchar('role', { length: 20 }).notNull().default('main'),
+    updatedByUserId: text('updated_by_user_id').references(() => user.id, {
+      onDelete: 'restrict',
+    }),
     ...versionedColumns(),
   },
   (table) => [

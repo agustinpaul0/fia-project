@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ChatRouteImport } from './routes/chat'
 import { Route as DriverRouteImport } from './routes/driver'
+import { Route as DriversRouteImport } from './routes/drivers'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as ResultsRouteImport } from './routes/results'
@@ -38,6 +39,11 @@ const ChatRoute = ChatRouteImport.update({
 const DriverRoute = DriverRouteImport.update({
   id: '/driver',
   path: '/driver',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DriversRoute = DriversRouteImport.update({
+  id: '/drivers',
+  path: '/drivers',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -105,6 +111,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/chat': typeof ChatRoute
   '/driver': typeof DriverRoute
+  '/drivers': typeof DriversRoute
   '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/results': typeof ResultsRoute
@@ -122,6 +129,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/chat': typeof ChatRoute
   '/driver': typeof DriverRoute
+  '/drivers': typeof DriversRoute
   '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/results': typeof ResultsRoute
@@ -140,6 +148,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/chat': typeof ChatRoute
   '/driver': typeof DriverRoute
+  '/drivers': typeof DriversRoute
   '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/results': typeof ResultsRoute
@@ -159,6 +168,7 @@ export interface FileRouteTypes {
     | '/'
     | '/chat'
     | '/driver'
+    | '/drivers'
     | '/login'
     | '/notifications'
     | '/results'
@@ -176,6 +186,7 @@ export interface FileRouteTypes {
     | '/'
     | '/chat'
     | '/driver'
+    | '/drivers'
     | '/login'
     | '/notifications'
     | '/results'
@@ -193,6 +204,7 @@ export interface FileRouteTypes {
     | '/'
     | '/chat'
     | '/driver'
+    | '/drivers'
     | '/login'
     | '/notifications'
     | '/results'
@@ -211,6 +223,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ChatRoute: typeof ChatRoute
   DriverRoute: typeof DriverRoute
+  DriversRoute: typeof DriversRoute
   LoginRoute: typeof LoginRoute
   NotificationsRoute: typeof NotificationsRoute
   ResultsRoute: typeof ResultsRoute
@@ -246,6 +259,13 @@ declare module '@tanstack/react-router' {
       path: '/driver'
       fullPath: '/driver'
       preLoaderRoute: typeof DriverRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/drivers': {
+      id: '/drivers'
+      path: '/drivers'
+      fullPath: '/drivers'
+      preLoaderRoute: typeof DriversRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -339,6 +359,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ChatRoute: ChatRoute,
   DriverRoute: DriverRoute,
+  DriversRoute: DriversRoute,
   LoginRoute: LoginRoute,
   NotificationsRoute: NotificationsRoute,
   ResultsRoute: ResultsRoute,

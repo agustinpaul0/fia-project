@@ -3,6 +3,7 @@ import {
   driverListSchema,
   driverSchema,
   idParamsSchema,
+  publicDriverListSchema,
   updateTeamDriverBodySchema,
 } from '@fia/shared/contracts'
 import { AppError } from '@fia/shared/domain'
@@ -28,7 +29,7 @@ const vUpdateDriver = validate('json', updateTeamDriverBodySchema)
 
 export const createTeamDriversRoutes = (s: TeamDriversService): Hono<AppEnv> =>
   new Hono<AppEnv>()
-    .get('/public', publicAccess, async (c) => ok(c, driverListSchema, await s.listPublic()))
+    .get('/public', publicAccess, async (c) => ok(c, publicDriverListSchema, await s.listPublic()))
     .get('/', onlyStaff, async (c) => ok(c, driverListSchema, await s.listMine(sessionUserOf(c))))
     .post('/', onlyStaff, vCreateDriver, async (c) =>
       created(c, driverSchema, await s.enroll(sessionUserOf(c), c.req.valid('json'))),

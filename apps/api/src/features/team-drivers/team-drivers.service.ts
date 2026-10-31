@@ -1,4 +1,9 @@
-import type { CreateTeamDriverBody, Driver, UpdateTeamDriverBody } from '@fia/shared/contracts'
+import type {
+  CreateTeamDriverBody,
+  Driver,
+  PublicDriver,
+  UpdateTeamDriverBody,
+} from '@fia/shared/contracts'
 import { AppError } from '@fia/shared/domain'
 import type { SessionUser } from '../../core/auth/session'
 import { toDriverDto } from './team-drivers.mapper'
@@ -11,7 +16,7 @@ export type UpdateTeamDriverCommand = {
 }
 
 export type TeamDriversService = {
-  readonly listPublic: () => Promise<readonly Driver[]>
+  readonly listPublic: () => Promise<readonly PublicDriver[]>
   readonly listMine: (user: SessionUser) => Promise<readonly Driver[]>
   readonly enroll: (user: SessionUser, body: CreateTeamDriverBody) => Promise<Driver>
   readonly update: (command: UpdateTeamDriverCommand) => Promise<Driver>
@@ -50,7 +55,7 @@ const executeDriverUpdate = async (
   ) {
     throw new AppError('DRIVER_LIMIT_EXCEEDED')
   }
-  const updated = await repository.update(id, body)
+  const updated = await repository.update(id, body, user.id)
   if (updated === null) {
     throw new AppError('STALE_VERSION')
   }
@@ -60,7 +65,12 @@ const executeDriverUpdate = async (
 export const createTeamDriversService = (
   repository: TeamDriversRepository,
 ): TeamDriversService => ({
-  listPublic: async () => (await repository.listAll()).map(toDriverDto),
+  listPublic: async () =>
+    (await repository.listAll()).map((row) => ({
+      ...toDriverDto(row),
+      teamName: row.teamName,
+      hasOfficialAccount: row.hasOfficialAccount,
+    })),
   listMine: async (user) => (await repository.listByTeam(teamOf(user))).map(toDriverDto),
   enroll: async (user, body) => {
     const teamId = teamOf(user)

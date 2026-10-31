@@ -2,26 +2,16 @@ import type { UpdateTeamDriverBody } from '@fia/shared/contracts'
 import type { DriverRow } from '@fia/shared/db'
 import { describe, expect, it, vi } from 'vitest'
 import type { SessionUser } from '../../core/auth/session'
+import { aDriverRow } from '../../testing/driver-row-builders'
 import type { TeamDriversRepository } from './team-drivers.port'
 import { createTeamDriversService } from './team-drivers.service'
 
 const mockUser: SessionUser = { id: 'user-1', role: 'team_staff', teamId: 'team-ferrari' }
 
-const mockRow: DriverRow = {
+const mockRow: DriverRow = aDriverRow({
   id: '00000000-0000-4000-8000-000000000001',
-  firstName: 'Charles',
-  lastName: 'Leclerc',
-  code: 'LEC',
-  number: 16,
-  country: 'Mónaco',
-  license: 'FIA-16-LEC',
-  categoryId: null,
   teamId: 'team-ferrari',
-  role: 'main',
-  version: 1,
-  createdAt: new Date('2026-01-01T00:00:00Z'),
-  updatedAt: new Date('2026-01-01T00:00:00Z'),
-}
+})
 
 const updateBody: UpdateTeamDriverBody = {
   firstName: 'Charles',
@@ -35,7 +25,9 @@ const updateBody: UpdateTeamDriverBody = {
 }
 
 const createRepo = (overrides: Partial<TeamDriversRepository> = {}): TeamDriversRepository => ({
-  listAll: vi.fn().mockResolvedValue([mockRow]),
+  listAll: vi
+    .fn()
+    .mockResolvedValue([{ ...mockRow, teamName: 'Ferrari', hasOfficialAccount: false }]),
   listByTeam: vi.fn().mockResolvedValue([mockRow]),
   findById: vi.fn().mockResolvedValue(mockRow),
   findByNumber: vi.fn().mockResolvedValue(null),
@@ -84,8 +76,10 @@ describe('TeamDriversService.update (US-11)', () => {
   })
 
   it('actualiza el piloto e incrementa versión o lanza STALE_VERSION', async () => {
-    const svc = createTeamDriversService(createRepo())
+    const repo = createRepo()
+    const svc = createTeamDriversService(repo)
     const updated = await svc.update({ user: mockUser, id: mockRow.id, body: updateBody })
+    expect(repo.update).toHaveBeenCalledWith(mockRow.id, updateBody, mockUser.id)
     expect(updated.role).toBe('reserve')
     expect(updated.version).toBe(2)
     const stale = createTeamDriversService(createRepo({ update: vi.fn().mockResolvedValue(null) }))

@@ -99,6 +99,13 @@
       "when": 1793456249338,
       "tag": "0013_create_driver_accounts",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1793457318609,
+      "tag": "0014_add_drivers_updated_by",
+      "breakpoints": true
     }
   ]
 }

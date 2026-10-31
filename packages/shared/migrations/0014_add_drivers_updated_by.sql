@@ -1,0 +1,2 @@
+ALTER TABLE "drivers" ADD COLUMN "updated_by_user_id" text;--> statement-breakpoint
+ALTER TABLE "drivers" ADD CONSTRAINT "drivers_updated_by_user_id_user_id_fk" FOREIGN KEY ("updated_by_user_id") REFERENCES "public"."user"("id") ON DELETE restrict ON UPDATE no action;

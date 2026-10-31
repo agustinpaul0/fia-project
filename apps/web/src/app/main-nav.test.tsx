@@ -21,7 +21,8 @@ describe('MainNav', () => {
     expect(screen.getByRole('link', { name: 'Sanciones' })).toHaveAttribute('href', '/sanctions')
     expect(screen.getByRole('link', { name: 'Técnica' })).toHaveAttribute('href', '/scrutineering')
     expect(screen.getByRole('link', { name: 'Inicio' })).toHaveAttribute('href', '/')
-    expect(linkNames()).toEqual(['Inicio', 'Resultados', 'Sanciones', 'Técnica'])
+    expect(screen.getByRole('link', { name: 'Nómina' })).toHaveAttribute('href', '/drivers')
+    expect(linkNames()).toEqual(['Inicio', 'Resultados', 'Sanciones', 'Técnica', 'Nómina'])
   })
 
   it('suma las secciones administrativas para fia_admin', async () => {

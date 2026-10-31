@@ -9,6 +9,7 @@ type NavTarget =
   | '/results'
   | '/sanctions'
   | '/scrutineering'
+  | '/drivers'
   | '/admin/team-staff'
   | '/admin/drivers'
   | '/admin/results'
@@ -23,6 +24,7 @@ const PUBLIC_LINKS: readonly NavItem[] = [
   { to: '/results', label: 'Resultados' },
   { to: '/sanctions', label: 'Sanciones' },
   { to: '/scrutineering', label: 'Técnica' },
+  { to: '/drivers', label: 'Nómina' },
 ]
 
 const ROLE_LINKS: Readonly<Record<Role, readonly NavItem[]>> = {

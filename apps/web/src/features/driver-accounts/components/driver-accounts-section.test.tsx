@@ -1,7 +1,6 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { aDriverAccount } from '@/testing/driver-account-builders'
-import { aDriver } from '@/testing/driver-builders'
+import { aDriverAccount, publicDriversResponse, SAINZ } from '@/testing/driver-account-builders'
 import { jsonResponse } from '@/testing/mock-fetch'
 import { mockFetchRoutes } from '@/testing/mock-fetch-routes'
 import { renderWithQuery } from '@/testing/render-with-query'
@@ -9,12 +8,6 @@ import { DriverAccountsSection } from './driver-accounts-section'
 
 vi.mock('sonner', () => ({ toast: { success: vi.fn() } }))
 
-const SAINZ = aDriver({
-  id: '00000000-0000-4000-8000-000000000055',
-  firstName: 'Carlos',
-  lastName: 'Sainz',
-  code: 'SAI',
-})
 const ACTIVE = aDriverAccount()
 const INACTIVE = aDriverAccount({
   id: '00000000-0000-4000-9000-000000000002',
@@ -43,7 +36,7 @@ describe('DriverAccountsSection (US-27)', () => {
   it('el alta sólo ofrece pilotos sin cuenta y envía los datos', async () => {
     const calls = mockFetchRoutes({
       'GET /driver-accounts': () => jsonResponse([ACTIVE]),
-      'GET /team-drivers/public': () => jsonResponse([aDriver(), SAINZ]),
+      'GET /team-drivers/public': publicDriversResponse,
       'POST /driver-accounts': () => jsonResponse(aDriverAccount({ driverId: SAINZ.id }), 201),
     })
     renderWithQuery(<DriverAccountsSection />)
