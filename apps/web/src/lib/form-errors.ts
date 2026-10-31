@@ -4,6 +4,7 @@ import type { FieldValues, Path, UseFormSetError } from 'react-hook-form'
 const FIELD_BY_CODE: Partial<Record<ErrorCode, string>> = {
   USER_ALREADY_EXISTS: 'email',
   STAFF_FILE_NUMBER_ALREADY_EXISTS: 'fileNumber',
+  DRIVER_ACCOUNT_ALREADY_EXISTS: 'driverId',
 }
 
 export type ServerFormError = {

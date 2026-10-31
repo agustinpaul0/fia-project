@@ -1,4 +1,4 @@
-import { fireEvent, screen } from '@testing-library/react'
+import { fireEvent, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { jsonResponse } from '@/testing/mock-fetch'
 import { mockFetchRoutes } from '@/testing/mock-fetch-routes'
@@ -23,9 +23,12 @@ describe('AdminResultsView', () => {
   it('ofrece la temporada actual y las 5 anteriores, empezando por la última completa', async () => {
     mockFetchRoutes({ 'GET /races?season=2025': () => jsonResponse([aRaceSummary(), SPRINT]) })
     renderWithRouter(<AdminResultsView now={NOW} />)
-    const options = (await screen.findAllByRole('option')).map((o) => o.textContent)
+    const select = await screen.findByRole('combobox', { name: 'Selección de temporada' })
+    const options = within(select)
+      .getAllByRole('option')
+      .map((o) => o.textContent)
     expect(options).toEqual([2026, 2025, 2024, 2023, 2022, 2021].map((y) => `Temporada ${y}`))
-    expect(screen.getByRole('combobox')).toHaveValue('2025')
+    expect(screen.getByRole('combobox', { name: 'Selección de temporada' })).toHaveValue('2025')
   })
 
   it('enlaza cada carrera al editor y muestra ganador o falta de resultados', async () => {
@@ -47,7 +50,9 @@ describe('AdminResultsView', () => {
     })
     renderWithRouter(<AdminResultsView now={NOW} />)
     await screen.findByRole('link', { name: 'Gran Premio de Mónaco 2025' })
-    fireEvent.change(screen.getByRole('combobox'), { target: { value: '2021' } })
+    fireEvent.change(screen.getByRole('combobox', { name: 'Selección de temporada' }), {
+      target: { value: '2021' },
+    })
     expect(await screen.findByText(NO_RACES_MESSAGE)).toBeInTheDocument()
   })
 })

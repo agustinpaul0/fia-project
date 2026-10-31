@@ -1,5 +1,6 @@
 import {
   cancelRaceBodySchema,
+  circuitOptionListSchema,
   driverStandingListSchema,
   eligibleDriverListSchema,
   idParamsSchema,
@@ -10,6 +11,7 @@ import {
   raceSummarySchema,
   updateRaceBodySchema,
 } from '@fia/shared/contracts'
+import { AppError } from '@fia/shared/domain'
 import { type Context, Hono } from 'hono'
 import { publicAccess, requireRole } from '../../core/auth/access'
 import type { AppEnv } from '../../core/auth/session'
@@ -24,12 +26,21 @@ const vClass = validate('json', raceClassificationBodySchema)
 const vUpdate = validate('json', updateRaceBodySchema)
 const vCancel = validate('json', cancelRaceBodySchema)
 
-const userIdOf = (c: Context<AppEnv>): string => c.get('sessionUser')?.id ?? 'system'
+const userIdOf = (c: Context<AppEnv>): string => {
+  const user = c.get('sessionUser')
+  if (!user) {
+    throw new AppError('UNAUTHENTICATED')
+  }
+  return user.id
+}
 
 export const createRaceResultsRoutes = (service: RaceResultsService): Hono<AppEnv> =>
   new Hono<AppEnv>()
     .get('/', publicAccess, vQuery, async (c) =>
       ok(c, raceSummaryListSchema, await service.listSeason(c.req.valid('query'))),
+    )
+    .get('/circuits', onlyFiaAdmin, async (c) =>
+      ok(c, circuitOptionListSchema, await service.listCircuits()),
     )
     .get('/standings', publicAccess, vQuery, async (c) =>
       ok(c, driverStandingListSchema, await service.seasonStandings(c.req.valid('query'))),

@@ -20,20 +20,21 @@ describe('UserNav', () => {
     expect(screen.getByText('Iniciar sesión')).toBeInTheDocument()
   })
 
-  it('muestra nombre y rol cuando es fia_admin', async () => {
+  it('muestra nombre y etiqueta del rol cuando es fia_admin', async () => {
     const { useSession } = await import('@/lib/auth-client')
     vi.mocked(useSession).mockReturnValue({
-      data: { user: { name: 'Admin FIA', role: 'fia_admin' } },
+      data: { user: { name: 'Mohammed Ben Sulayem', role: 'fia_admin' } },
       isPending: false,
       error: null,
     } as never)
     render(<UserNav />)
+    expect(screen.getByText('Mohammed Ben Sulayem')).toBeInTheDocument()
     expect(screen.getByText('Admin FIA')).toBeInTheDocument()
-    expect(screen.getByText('fia_admin')).toBeInTheDocument()
+    expect(screen.queryByText(/Piloto oficial/)).toBeNull()
     expect(screen.getByText('Salir')).toBeInTheDocument()
   })
 
-  it('muestra rol public si no tiene rol definido', async () => {
+  it('muestra Usuario común si no tiene rol definido', async () => {
     const { useSession } = await import('@/lib/auth-client')
     vi.mocked(useSession).mockReturnValue({
       data: { user: { name: 'Anon' } },
@@ -41,7 +42,19 @@ describe('UserNav', () => {
       error: null,
     } as never)
     render(<UserNav />)
-    expect(screen.getByText('public')).toBeInTheDocument()
+    expect(screen.getByText('Usuario común')).toBeInTheDocument()
+  })
+
+  it('muestra el rol Piloto y la insignia de cuenta oficial (US-27)', async () => {
+    const { useSession } = await import('@/lib/auth-client')
+    vi.mocked(useSession).mockReturnValue({
+      data: { user: { name: 'Franco Colapinto', role: 'driver' } },
+      isPending: false,
+      error: null,
+    } as never)
+    render(<UserNav />)
+    expect(screen.getByText('Piloto')).toBeInTheDocument()
+    expect(screen.getByText(/Piloto oficial/)).toBeInTheDocument()
   })
 
   it('ejecuta signOut al hacer click en Salir', async () => {

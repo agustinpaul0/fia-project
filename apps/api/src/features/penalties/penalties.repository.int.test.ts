@@ -57,6 +57,27 @@ describe('DrizzlePenaltiesRepository (Postgres real)', () => {
       expect(await types({ season: 2098 })).toEqual(['reprimand'])
       expect(await types({ type: 'fine' })).toEqual(['fine'])
       expect(await types({ teamId: MISSING })).toEqual([])
+      expect(await types({ sort: 'date_asc' })).toEqual(['reprimand', 'fine'])
+      const range = { from: '2098-01-01T00:00:00.000Z', to: '2098-12-31T00:00:00.000Z' }
+      expect(await types(range)).toEqual(['reprimand'])
+    }))
+
+  it('filtra por piloto', () =>
+    withRollback(connection, async (tx) => {
+      const { teamId, driverIds } = await seedRacingFixture(tx)
+      const repo = createDrizzlePenaltiesRepository(tx)
+      const issuedAt = '2099-05-01T00:00:00.000Z'
+      const base = {
+        teamId,
+        type: 'fine',
+        penalty: 'Multa',
+        reason: 'Motivo test.',
+        issuedAt,
+      } as const
+      const mine = await repo.create({ ...base, driverId: driverIds[0] ?? null })
+      await repo.create({ ...base, driverId: driverIds[1] ?? null })
+      const list = await repo.list({ issuedSince: SINCE, driverId: driverIds[0] ?? '' })
+      expect(list.map((p) => p.id)).toEqual([mine.id])
     }))
 
   it.each([

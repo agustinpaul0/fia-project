@@ -1,7 +1,9 @@
 import type * as C from '@fia/shared/contracts'
 import { AppError } from '@fia/shared/domain'
+import { createRaceCalendarService, type RaceCalendarService } from './race-results.calendar'
+import { findActiveOrFail, findOrFail } from './race-results.lookup'
 import { toRaceClassification, toRaceSummary } from './race-results.mapper'
-import type { RaceHeader, RaceResultsRepository } from './race-results.port'
+import type { RaceResultsRepository } from './race-results.port'
 import { scoreEntries } from './race-results.scoring'
 import { buildStandings } from './race-results.standings'
 
@@ -14,45 +16,11 @@ export type RaceResultsService = {
     raceId: string,
     body: C.RaceClassificationBody,
   ) => Promise<C.RaceClassification>
-  readonly updateRace: (
-    raceId: string,
-    body: C.UpdateRaceBody,
-    userId: string,
-  ) => Promise<C.RaceSummary>
-  readonly cancelRace: (raceId: string, version: number, userId: string) => Promise<C.RaceSummary>
-}
+} & RaceCalendarService
 
 export type RaceResultsServiceDeps = {
   readonly repository: RaceResultsRepository
   readonly clock: () => Date
-}
-
-const findOrFail = async (repo: RaceResultsRepository, id: string): Promise<RaceHeader> => {
-  const race = await repo.findRace(id)
-  if (!race) {
-    throw new AppError('RACE_NOT_FOUND')
-  }
-  return race
-}
-
-const findActiveOrFail = async (repo: RaceResultsRepository, id: string): Promise<RaceHeader> => {
-  const race = await findOrFail(repo, id)
-  if (race.status === 'cancelled') {
-    throw new AppError('RACE_ALREADY_CANCELLED')
-  }
-  return race
-}
-
-const runRaceMutation = async (
-  repo: RaceResultsRepository,
-  id: string,
-  run: () => Promise<boolean | undefined>,
-): Promise<C.RaceSummary> => {
-  await findActiveOrFail(repo, id)
-  if (!(await run())) {
-    throw new AppError('STALE_VERSION')
-  }
-  return toRaceSummary(await findOrFail(repo, id))
 }
 
 export const createRaceResultsService = ({
@@ -88,9 +56,6 @@ export const createRaceResultsService = ({
       }
       return getClassification(raceId)
     },
-    updateRace: (id, body, userId) =>
-      runRaceMutation(repo, id, async () => repo.updateRace?.(id, body, userId)),
-    cancelRace: (id, version, userId) =>
-      runRaceMutation(repo, id, async () => repo.cancelRace?.(id, version, userId)),
+    ...createRaceCalendarService(repo),
   }
 }

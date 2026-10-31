@@ -11,7 +11,7 @@ import {
   registerPublicKeysBodySchema,
   userPublicKeysSchema,
 } from '@fia/shared/contracts'
-import { AppError } from '@fia/shared/domain'
+import { AppError, CHAT_ROLES } from '@fia/shared/domain'
 import { type Context, Hono } from 'hono'
 import { requireRole } from '../../core/auth/access'
 import type { AppEnv } from '../../core/auth/session'
@@ -19,7 +19,7 @@ import { created, ok } from '../../core/http/respond'
 import { validate } from '../../core/http/validate'
 import type { ChatService } from './chat.service'
 
-const chatUsers = requireRole('fia_admin', 'team_staff')
+const chatUsers = requireRole(...CHAT_ROLES)
 
 const userIdOf = (c: Context<AppEnv>): string => {
   const user = c.get('sessionUser')

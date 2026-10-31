@@ -44,9 +44,10 @@ export const createRaceResultsWriter = (db: TransactionalDatabase) => ({
     const updated = await db
       .update(races)
       .set({
-        ...(body.name ? { name: body.name } : {}),
-        ...(body.date ? { date: new Date(body.date) } : {}),
-        ...(body.type ? { type: body.type } : {}),
+        name: body.name,
+        date: new Date(body.date),
+        type: body.type,
+        circuitId: body.circuitId,
         status: 'modified',
         updatedByUserId: userId,
         version: body.version + 1,

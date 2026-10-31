@@ -1,7 +1,14 @@
-import type { TechnicalControlStatus, TechnicalControlType } from '@fia/shared/contracts'
+import type {
+  TechnicalControl,
+  TechnicalControlStatus,
+  TechnicalControlType,
+} from '@fia/shared/contracts'
 import { type ReactNode, useState } from 'react'
 import { toast } from 'sonner'
+import { EMPTY_FILTERS_MESSAGE } from '@/components/common/data-filters-bar'
+import { IdentifierFilters } from '@/components/common/identifier-filters'
 import { QueryView } from '@/components/common/query-view'
+import { useCommonFilters } from '@/components/common/use-common-filters'
 import { Button } from '@/components/ui/button'
 import { useSession } from '@/lib/auth-client'
 import { useCreateTechnicalControl } from '../hooks/use-create-technical-control'
@@ -47,21 +54,34 @@ const TechnicalControlsHeader = (p: HeaderProps): ReactNode => (
   </div>
 )
 
+const FilteredControls = ({
+  items,
+}: {
+  readonly items: readonly TechnicalControl[]
+}): ReactNode => (
+  <IdentifierFilters items={items}>
+    {(visible) => <TechnicalControlsTable controls={visible} />}
+  </IdentifierFilters>
+)
+
 export const TechnicalControlsSection = (): ReactNode => {
   const { data: session } = useSession()
   const isFiaAdmin = session?.user?.role === 'fia_admin'
   const isTeamStaff = session?.user?.role === 'team_staff'
-  const [season, setSeason] = useState<number | undefined>(undefined)
+  const filters = useCommonFilters()
   const [controlType, setControlType] = useState<TechnicalControlType | undefined>(undefined)
   const [status, setStatus] = useState<TechnicalControlStatus | undefined>(undefined)
   const [onlyMine, setOnlyMine] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
 
-  const query = useTechnicalControls({ season, controlType, status }, isTeamStaff && onlyMine)
+  const query = useTechnicalControls(
+    { ...filters.query, controlType, status },
+    isTeamStaff && onlyMine,
+  )
   const createMut = useCreateTechnicalControl()
   const emptyMsg = onlyMine
     ? 'Tu escudería no posee controles técnicos registrados.'
-    : 'No se encontraron controles técnicos registrados para los filtros aplicados.'
+    : EMPTY_FILTERS_MESSAGE
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-8">
@@ -73,15 +93,14 @@ export const TechnicalControlsSection = (): ReactNode => {
         onOpenCreate={() => setDialogOpen(true)}
       />
       <TechnicalControlsFilters
-        selectedSeason={season}
+        filters={filters}
         selectedControlType={controlType}
         selectedStatus={status}
-        onSeasonChange={setSeason}
         onControlTypeChange={setControlType}
         onStatusChange={setStatus}
       />
       <QueryView query={query} isEmpty={(items) => items.length === 0} emptyMessage={emptyMsg}>
-        {(items) => <TechnicalControlsTable controls={items} />}
+        {(items) => <FilteredControls items={items} />}
       </QueryView>
       {isFiaAdmin && (
         <TechnicalControlCreateDialog

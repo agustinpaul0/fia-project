@@ -6,12 +6,13 @@ export type ConfirmPenaltyInput = {
   readonly id: string
   readonly userId: string
   readonly confirmedAt: Date
+  readonly version: number
 }
 
 export type PenaltiesRepository = {
   readonly list: (filter: PenaltiesListFilter) => Promise<readonly Penalty[]>
-  readonly findById?: (id: string) => Promise<Penalty | null>
+  readonly findById: (id: string) => Promise<Penalty | null>
   readonly create: (body: CreatePenaltyBody) => Promise<Penalty>
-  readonly confirm?: (input: ConfirmPenaltyInput) => Promise<Penalty | null>
+  readonly confirm: (input: ConfirmPenaltyInput) => Promise<Penalty | null>
   readonly driverBelongsToTeam: (driverId: string, teamId: string) => Promise<boolean>
 }

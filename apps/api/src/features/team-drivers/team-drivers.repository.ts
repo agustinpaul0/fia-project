@@ -1,10 +1,10 @@
 import type { UpdateTeamDriverBody } from '@fia/shared/contracts'
-import { type DriverRow, drivers, teams } from '@fia/shared/db'
+import { type DriverRow, driverAccounts, drivers, teams } from '@fia/shared/db'
 import { AppError } from '@fia/shared/domain'
 import { and, asc, eq } from 'drizzle-orm'
 import type { DbExecutor } from '../../core/db/executor'
 import { translateConstraintViolations } from '../../core/errors/constraint-violations'
-import type { TeamDriversRepository } from './team-drivers.port'
+import type { DriverWithTeam, TeamDriversRepository } from './team-drivers.port'
 import { DRIVER_CONSTRAINT_ERRORS } from './team-drivers-constraints'
 
 const categoryOf = async (db: DbExecutor, teamId: string): Promise<string | null> => {
@@ -16,23 +16,45 @@ const categoryOf = async (db: DbExecutor, teamId: string): Promise<string | null
   return team?.categoryId ?? null
 }
 
+type DriverUpdate = {
+  readonly id: string
+  readonly body: UpdateTeamDriverBody
+  readonly by: string
+}
+
 const updateDriverRow = (
   db: DbExecutor,
-  id: string,
-  body: UpdateTeamDriverBody,
+  { id, body, by }: DriverUpdate,
 ): Promise<DriverRow | null> =>
   translateConstraintViolations(DRIVER_CONSTRAINT_ERRORS, async () => {
     const { version, ...fields } = body
     const [updated] = await db
       .update(drivers)
-      .set({ ...fields, version: version + 1, updatedAt: new Date() })
+      .set({ ...fields, updatedByUserId: by, version: version + 1, updatedAt: new Date() })
       .where(and(eq(drivers.id, id), eq(drivers.version, version)))
       .returning()
     return updated ?? null
   })
 
+const listWithTeams = async (db: DbExecutor): Promise<readonly DriverWithTeam[]> =>
+  (
+    await db
+      .select({ driver: drivers, teamName: teams.name, accountId: driverAccounts.id })
+      .from(drivers)
+      .leftJoin(teams, eq(drivers.teamId, teams.id))
+      .leftJoin(
+        driverAccounts,
+        and(eq(driverAccounts.driverId, drivers.id), eq(driverAccounts.isActive, true)),
+      )
+      .orderBy(asc(teams.name), asc(drivers.number))
+  ).map(({ driver, teamName, accountId }) => ({
+    ...driver,
+    teamName,
+    hasOfficialAccount: accountId !== null,
+  }))
+
 export const createDrizzleTeamDriversRepository = (db: DbExecutor): TeamDriversRepository => ({
-  listAll: async () => db.select().from(drivers).orderBy(asc(drivers.number)),
+  listAll: () => listWithTeams(db),
   listByTeam: async (teamId) =>
     db.select().from(drivers).where(eq(drivers.teamId, teamId)).orderBy(asc(drivers.number)),
   findById: async (id) => {
@@ -73,5 +95,5 @@ export const createDrizzleTeamDriversRepository = (db: DbExecutor): TeamDriversR
       }
       return created
     }),
-  update: (id, body) => updateDriverRow(db, id, body),
+  update: (id, body, by) => updateDriverRow(db, { id, body, by }),
 })

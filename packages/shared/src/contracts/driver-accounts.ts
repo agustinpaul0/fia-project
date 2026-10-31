@@ -21,13 +21,18 @@ export const updateDriverAccountBodySchema = z.strictObject({
 })
 
 export const driverAccountSchema = z.strictObject({
-  id: z.string(),
+  id: z.uuid(),
+  userId: z.string(),
   driverId: z.uuid(),
+  driverName: z.string(),
+  driverCode: z.string(),
+  teamName: z.string().nullable(),
   name: z.string(),
   email: z.string(),
   role: z.literal('driver'),
   isOfficial: z.literal(true),
   isActive: z.boolean(),
+  deactivatedAt: z.iso.datetime().nullable(),
   version: versionSchema,
   createdAt: z.iso.datetime(),
   updatedAt: z.iso.datetime(),
@@ -36,6 +41,7 @@ export const driverAccountSchema = z.strictObject({
 export const driverAccountListSchema = z.array(driverAccountSchema).readonly()
 
 export type CreateDriverAccountBody = z.infer<typeof createDriverAccountBodySchema>
+export type CreateDriverAccountInput = z.input<typeof createDriverAccountBodySchema>
 export type UpdateDriverAccountBody = z.infer<typeof updateDriverAccountBodySchema>
 export type DriverAccount = z.infer<typeof driverAccountSchema>
 export type DriverAccountList = z.infer<typeof driverAccountListSchema>

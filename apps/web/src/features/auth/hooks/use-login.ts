@@ -1,6 +1,7 @@
 import { useNavigate } from '@tanstack/react-router'
 import { type FormEvent, useState } from 'react'
 import { signIn } from '@/lib/auth-client'
+import { homeFor } from '../role-home'
 
 export type LoginState = {
   readonly email: string
@@ -31,15 +32,7 @@ export const useLogin = (): LoginState => {
       setError(signInError.status === 429 ? RATE_LIMITED_ERROR : GENERIC_ERROR)
       return
     }
-    if (data?.user.role === 'fia_admin') {
-      void navigate({ to: '/admin/team-staff' })
-      return
-    }
-    if (data?.user.role === 'team_staff') {
-      void navigate({ to: '/team/drivers' })
-      return
-    }
-    void navigate({ to: '/' })
+    void navigate({ to: homeFor(data?.user.role) })
   }
   return { email, password, error, loading, setEmail, setPassword, submit }
 }

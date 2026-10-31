@@ -25,7 +25,7 @@ const mockPenalty: Penalty = {
   reason: 'Límites de pista.',
   issuedAt: '2026-05-24T14:30:00.000Z',
   confirmedAt: null,
-  confirmedByUserId: null,
+  confirmedByName: null,
   notificationStatus: 'pending',
   version: 1,
   createdAt: '2026-05-24T14:35:00.000Z',
@@ -41,11 +41,7 @@ describe('PenaltiesSection', () => {
     mockFetchOnce(jsonResponse([]))
     renderWithQuery(<PenaltiesSection />)
 
-    expect(
-      await screen.findByText(
-        'No se encontraron sanciones registradas para los filtros aplicados.',
-      ),
-    ).toBeInTheDocument()
+    expect(await screen.findByText('Sin resultados.')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: '+ Nueva sanción' })).toBeInTheDocument()
   })
 
@@ -53,7 +49,7 @@ describe('PenaltiesSection', () => {
     mockFetchOnce(jsonResponse([mockPenalty]))
     renderWithQuery(<PenaltiesSection />)
 
-    expect(await screen.findByText('Charles Leclerc')).toBeInTheDocument()
+    expect(await screen.findByRole('cell', { name: /Charles Leclerc/ })).toBeInTheDocument()
     expect(screen.getByText('(Ferrari)')).toBeInTheDocument()
     expect(screen.getByText('5 segundos')).toBeInTheDocument()
     expect(screen.getByText('Límites de pista.')).toBeInTheDocument()

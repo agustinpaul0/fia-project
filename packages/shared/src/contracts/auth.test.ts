@@ -64,7 +64,6 @@ describe('contratos de autenticación', () => {
       email: 'piloto@f.com',
       role: 'driver' as const,
       teamId: 'tm_1',
-      driverId: 'drv_1',
     }
     expect(authUserSchema.parse(driverUser)).toEqual(driverUser)
   })

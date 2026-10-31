@@ -14,8 +14,8 @@ type RawPenaltyRow = {
   readonly penalty: string
   readonly reason: string
   readonly issuedAt: Date
-  readonly confirmedAt?: Date | null | undefined
-  readonly confirmedByUserId?: string | null | undefined
+  readonly confirmedAt: Date | null
+  readonly confirmedByName: string | null
   readonly version: number
   readonly createdAt: Date
 }
@@ -34,7 +34,7 @@ export const toPenaltyDto = (row: RawPenaltyRow): Penalty => ({
   reason: row.reason,
   issuedAt: row.issuedAt.toISOString(),
   confirmedAt: row.confirmedAt ? row.confirmedAt.toISOString() : null,
-  confirmedByUserId: row.confirmedByUserId ?? null,
+  confirmedByName: row.confirmedByName,
   notificationStatus: row.confirmedAt ? 'confirmed' : 'pending',
   version: row.version,
   createdAt: row.createdAt.toISOString(),

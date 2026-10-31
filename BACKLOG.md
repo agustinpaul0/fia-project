@@ -1,8 +1,9 @@
 # Backlog — Sistema de gestión de la FIA
 
 Fuente: planificación del **Grupo Naranja** (PO / Analista y Management),
-[`docs/specs/GrupoNaranjaSprint0.pdf`](docs/specs/GrupoNaranjaSprint0.pdf) y, para el Sprint 2,
-[`docs/specs/GrupoNaranjaSprint1.pdf`](docs/specs/GrupoNaranjaSprint1.pdf). Las historias se transcriben tal
+[`docs/specs/GrupoNaranjaSprint0.pdf`](docs/specs/GrupoNaranjaSprint0.pdf), para el Sprint 2
+[`docs/specs/GrupoNaranjaSprint1.pdf`](docs/specs/GrupoNaranjaSprint1.pdf) y, para el Sprint 3,
+[`docs/specs/GrupoNaranjaSprint3.pdf`](docs/specs/GrupoNaranjaSprint3.pdf). Las historias se transcriben tal
 cual; lo agregado por el equipo implementador está marcado como **[equipo]**.
 
 ## Cómo se usa este archivo
@@ -560,18 +561,222 @@ carga licencias y controles vigentes, y la mutación web del shard `rest` pasó 
 
 ## Sprint 3 — 20/10/2026 → 03/11/2026 (demo: martes 03/11/2026)
 
+Fuente: [`docs/specs/GrupoNaranjaSprint3.pdf`](docs/specs/GrupoNaranjaSprint3.pdf) (§4). Escala de Naranja para este
+sprint: 1 SP = 0–0,5 h · 2 = 0,5–1 h · 3 = 1–1,5 h · 5 = 1,5–2 h · 8 = 2,5–3 h · 13 = 4 h.
+
 ### Resumen
 
-| ID | Ítem | SP | BV | Est. | Real | Estado | Dueño | Depende de | Plan |
+| ID | Ítem | SP | BV | Est. | Real impl. | Estado | Dueño | Depende de | Plan |
 |---|---|---|---|---|---|---|---|---|---|
-| US-29 | Detectar tipo de cuenta en login y mostrar interfaz correspondiente | 3 | 13 | 5 h | 0,5 h | Hecho | Equipo | US-4 | [Plan](docs/plans/US-29-role-detection-and-interfaces.md) |
-| US-27 | Crear, modificar y eliminar cuentas de usuario de los pilotos | 5 | 13 | 7 h | 1 h | Hecho | Equipo | US-10, US-29 | [Plan](docs/plans/US-27-driver-accounts.md) |
-| US-11 | Modificar datos de pilotos y condición de titular/suplente | 5 | 8 | 6,5 h | 0,75 h | Hecho | Equipo | US-10 | [Plan](docs/plans/US-11-modify-team-drivers.md) |
-| US-24 | Visualizar resultados y observaciones de controles técnicos | 3 | 13 | 4 h | 0,5 h | Hecho | Equipo | US-21 | [Plan](docs/plans/US-24-technical-controls-observations.md) |
-| US-15 | Asentar confirmación de notificación de sanción | 3 | 8 | 4,5 h | 0,75 h | Hecho | Equipo | US-13, US-9 | [Plan](docs/plans/US-15-penalty-notifications.md) |
-| US-16 | Consultar listado histórico y en vivo de sanciones emitidas | 3 | 8 | 5,5 h | 0,75 h | Hecho | Equipo | US-13 | [Plan](docs/plans/US-16-penalties-history-live.md) |
-| US-19 | Modificar o dar de baja eventos deportivos programados | 5 | 13 | 6 h | 0,75 h | Hecho | Equipo | US-20, T-2 | [Plan](docs/plans/US-19-modify-cancel-races.md) |
-| US-3 | Aplicar filtros reutilizables en listados del sistema | 5 | 8 | 6 h | 0,5 h | Hecho | Equipo | US-13, US-21 | [Plan](docs/plans/US-3-reusable-filters.md) |
+| US-19 | Modificar o dar de baja eventos deportivos programados | 5 | 13 | 2 h | 0,75 h | En revisión | Equipo | US-20, T-2 | [Plan](docs/plans/US-19-modify-cancel-races.md) |
+| US-24 | Visualizar resultados y observaciones de controles técnicos | 2 | 13 | 0,75 h | 0,5 h | En revisión | Equipo | US-21 | [Plan](docs/plans/US-24-technical-controls-observations.md) |
+| US-27 | Crear, modificar y eliminar cuentas de usuario de los pilotos | 5 | 13 | 1,5 h | 1 h | En revisión | Equipo | US-10, US-29 | [Plan](docs/plans/US-27-driver-accounts.md) |
+| US-29 | Detectar el tipo de cuenta en el login y mostrar la interfaz de cada rol | 3 | 13 | 1 h | 0,5 h | En revisión | Equipo | US-4 | [Plan](docs/plans/US-29-role-detection-and-interfaces.md) |
+| US-16 | Consultar el listado histórico y en vivo de sanciones | 3 | 8 | 1,25 h | 0,75 h | En revisión | Equipo | US-13 | [Plan](docs/plans/US-16-penalties-history-live.md) |
+| US-3 | Aplicar filtros (fecha, año, relevancia, tipo, identificador) | 5 | 8 | 1,5 h | 0,5 h | En revisión | Equipo | US-13, US-21 | [Plan](docs/plans/US-3-reusable-filters.md) |
+| US-11 | Modificar pilotos y su condición de titular o suplente | 5 | 8 | 2 h | 0,75 h | En revisión | Equipo | US-10 | [Plan](docs/plans/US-11-modify-team-drivers.md) |
+| US-15 | Asentar la confirmación de notificación de una sanción | 3 | 8 | 1 h | 0,75 h | En revisión | Equipo | US-13, US-9 | [Plan](docs/plans/US-15-penalty-notifications.md) |
+| QA-S3 | Auditoría de QA del sprint y corrección de criterios **[equipo]** | — | — | — | (completar) | En revisión | Agustín Paul | todas | [Plan](docs/plans/QA-S3-auditoria-sprint-3.md) |
+
+**Estado**: la implementación inicial se marcó `Hecho` sin PR ni review. La auditoría de QA (31/10) encontró que
+**ninguna US cumplía todos sus criterios** y que la integración contra Postgres estaba rota (faltaban migraciones).
+Las correcciones están en la rama `claude/beautiful-darwin-j55ewu`; pasan a `Hecho` cuando se mergee el PR a
+`develop`. Detalle por criterio y evidencia: [docs/plans/QA-S3-auditoria-sprint-3.md](docs/plans/QA-S3-auditoria-sprint-3.md).
+
+**Horas**: estimado de Naranja 11 h. Implementación inicial: 5,5 h (columna "Real impl."). Las horas de QA las
+carga quien la hizo (fila QA-S3).
+
+---
+
+### US-19 — Modificar o dar de baja eventos deportivos programados
+
+> **Como** Personal Administrativo de la FIA **quiero** modificar o dar de baja eventos deportivos previamente
+> programados **de forma que** el calendario refleje cualquier cambio o suspensión de último momento. — SP 5 · BV 13
+
+| Tarea (Naranja) | Est. | Hecha |
+|---|---|---|
+| Agregar el estado del evento (programado / modificado / cancelado) y el registro de cambios (quién y cuándo) | 0,25 h | [x] |
+| Endpoints de modificación y baja lógica, sólo para la FIA, con validaciones (evento existente, fecha válida) | 0,5 h | [x] |
+| Pantalla de edición y acción "dar de baja" con confirmación en el área de la FIA | 0,5 h | [x] (QA) |
+| Vista de calendario para escuderías y público con marca "Modificado" o "Cancelado" | 0,5 h | [x] (QA) |
+| Pruebas de permisos, validaciones y cancelación | 0,25 h | [x] |
+
+**Criterios de aceptación**
+- [x] La FIA modifica fecha, hora, circuito y tipo de un evento programado, o lo da de baja tras una confirmación.
+- [x] El cambio se ve en el calendario de escuderías y público en menos de 10 minutos, con la marca "Modificado" o "Cancelado". La baja es lógica.
+- [x] Cada cambio registra quién lo hizo y cuándo.
+- [x] Un rol distinto de la FIA recibe 401/403.
+- [x] Los datos faltantes o una fecha inválida se rechazan con un mensaje claro.
+
+**QA**: faltaban la pantalla, el circuito, la migración de `races.status` y el estado en el lector del calendario
+(sólo lo devolvía el fake); el autor caía en `'system'`. Corregido en `daa8d69`.
+
+---
+
+### US-24 — Visualizar resultados y observaciones de controles técnicos
+
+> **Como** Personal de las escuderías **quiero** visualizar los resultados y observaciones de los controles técnicos
+> realizados sobre los autos **de forma que** podamos corregir anomalías antes de los eventos deportivos. — SP 2 · BV 13
+
+| Tarea (Naranja) | Est. | Hecha |
+|---|---|---|
+| Agregar el campo "observaciones" al control técnico y al formulario de la FIA de US-21 | 0,25 h | [x] |
+| Endpoint y vista "mis autos", filtrados por la escudería autenticada, con los rechazados destacados | 0,25 h | [x] |
+| Pruebas de aislamiento por escudería y de datos completos | 0,25 h | [x] |
+
+**Criterios de aceptación**
+- [x] La escudería ve los controles técnicos de sus autos con fecha, hora, tipo, vehículo, resultado y observaciones.
+- [x] Los controles rechazados se distinguen visualmente de los aprobados.
+- [x] Las observaciones sólo las ven la escudería dueña y la FIA; el público ve únicamente el estado y el dictamen.
+- [x] Un control nuevo o modificado aparece en el listado en menos de 10 minutos.
+
+**QA**: faltaba la actualización automática (se agregó cada 60 s). Corregido en `123742e`.
+
+---
+
+### US-27 — Crear, modificar y eliminar cuentas de usuario de los pilotos
+
+> **Como** Personal Administrativo de la FIA **quiero** crear, modificar y eliminar cuentas de usuario de los pilotos
+> **de forma que** haya un usuario oficial para cada piloto y sea distinguible de un usuario normal. — SP 5 · BV 13
+
+| Tarea (Naranja) | Est. | Hecha |
+|---|---|---|
+| Agregar el rol "Piloto", vincular la cuenta a un piloto de US-10 e indicar que es cuenta oficial | 0,25 h | [x] (QA) |
+| Endpoints de alta, modificación y baja lógica reutilizando el servicio de cuentas de US-23 | 0,25 h | [x] (QA) |
+| Pantallas de listado, alta, edición y baja en el área de la FIA | 0,5 h | [x] (QA) |
+| Insignia de cuenta oficial en el perfil, los listados y el chat | 0,25 h | [x] (QA) |
+| Pruebas de permisos, mail único, cuenta duplicada y bloqueo de acceso tras la baja | 0,25 h | [x] |
+
+**Criterios de aceptación**
+- [x] La FIA crea una cuenta de piloto asociada a un piloto existente. Cada piloto tiene una sola cuenta y el mail no se repite ni se reutiliza.
+- [x] "Eliminar" es una baja lógica: el piloto dado de baja no puede iniciar sesión y se muestra como inactivo en el listado de la FIA.
+- [x] La cuenta muestra el rol "Piloto" y una insignia de cuenta oficial, distinguible de un usuario común.
+- [x] Sólo el personal de la FIA gestiona estas cuentas: cualquier otro rol recibe 401/403.
+- [x] La contraseña inicial la define el administrador, como en US-23.
+
+**QA**: sólo funcionaba con el fake en memoria (el repositorio real no implementaba las cuentas) y no había
+pantallas. Se reimplementó en `apps/api/src/features/driver-accounts` con tabla versionada. Corregido en `e9525ce`.
+
+---
+
+### US-29 — Detectar el tipo de cuenta en el login y mostrar la interfaz de cada rol
+
+> **Como** Miembro del equipo de desarrollo **quiero** que el sistema detecte en el inicio de sesión si la cuenta es
+> de un administrativo de la FIA, de una escudería o de un usuario común mediante identificadores integrados
+> **de forma que** haya interfaces específicas para cada uno. — SP 3 · BV 13
+
+| Tarea (Naranja) | Est. | Hecha |
+|---|---|---|
+| Ampliar los roles a Admin FIA, Admin escudería, Piloto y Usuario común, guardando el identificador en la cuenta | 0,25 h | [x] |
+| Ajustar el login para devolver el rol y redirigir, y guardas de ruta en el frontend | 0,25 h | [x] (QA) |
+| Layout y menú propios de cada rol, reutilizando el diseño común | 0,25 h | [x] (QA) |
+| Pruebas de la matriz rol × área (acceso permitido y denegado) | 0,25 h | [x] |
+
+**Criterios de aceptación**
+- [x] Al iniciar sesión, el sistema identifica el rol por un identificador guardado en la cuenta; el usuario no puede elegirlo.
+- [x] Cada rol ve su propia interfaz, con menú y funciones propias.
+- [x] Si alguien entra por URL al área de otro rol, el servidor responde 401/403 y lo redirige.
+- [x] Una cuenta dada de baja o sin rol válido no accede.
+- [x] Las cuentas creadas en sprints anteriores siguen funcionando con su rol correcto.
+
+**QA**: faltaban el área y el menú del piloto, la redirección del login y de las guardas, y el rechazo de roles
+desconocidos. Corregido en `ff03c9a`.
+
+---
+
+### US-16 — Consultar el listado histórico y en vivo de sanciones
+
+> **Como** Usuario **quiero** consultar el listado histórico y en vivo de sanciones emitidas durante la temporada
+> **de forma que** pueda comprender los recargos de tiempo o penalizaciones en la grilla. — SP 3 · BV 8
+
+| Tarea (Naranja) | Est. | Hecha |
+|---|---|---|
+| Temporada (año) en el listado de US-13, con la actual por defecto y selector de temporadas anteriores | 0,25 h | [x] (QA) |
+| Penalización clara en el listado y el detalle (tipo, valor, carrera, categoría y motivo) | 0,5 h | [x] |
+| Actualización automática del listado sin recargar la página | 0,25 h | [x] |
+| Pruebas (acceso sin sesión, sanción nueva sin recargar, histórico de 5 años, filtros de US-3) | 0,25 h | [x] |
+
+**Criterios de aceptación**
+- [x] Cualquier usuario, incluso sin sesión, ve las sanciones de la temporada actual y puede consultar temporadas anteriores (hasta 5 años).
+- [x] Cada sanción muestra fecha, carrera, categoría, sancionado, motivo y penalización.
+- [x] Una sanción nueva o modificada aparece en menos de 10 minutos sin recargar.
+- [x] El listado se filtra por fecha, tipo de sanción y escudería (filtros de US-3).
+- [x] El público no ve el estado "Pendiente" o "Notificada" de US-15.
+
+**QA**: no arrancaba en la temporada actual, el selector estaba fijo y faltaba el filtro por fecha. Corregido en `3017c61`.
+
+---
+
+### US-3 — Aplicar filtros (fecha, año, relevancia, tipo de control, identificador)
+
+> **Como** Usuario **quiero** aplicar filtros por fecha, año, relevancia, tipo de control técnico, identificador, etc.
+> **de forma que** se puedan conseguir los datos de forma más directa. — SP 5 · BV 8
+
+| Tarea (Naranja) | Est. | Hecha |
+|---|---|---|
+| Extraer los filtros de sanciones (US-13) a una lógica común en el backend | 0,5 h | [x] (QA) |
+| Aplicarlos a calendario, resultados y puntajes, y controles técnicos | 0,5 h | [x] (QA) |
+| Componente de filtros reutilizable con "Limpiar" y mensaje "Sin resultados" | 0,25 h | [x] (QA) |
+| Pruebas de filtros solos y combinados, con 5 años de datos | 0,25 h | [x] (QA) |
+
+**Criterios de aceptación**
+- [x] Calendario, resultados, sanciones y controles técnicos se filtran por fecha o rango, año, tipo de control e identificador (escudería, piloto o evento).
+- [x] Los filtros se combinan y se limpian con un solo botón. Los filtros de sanciones siguen funcionando.
+- [x] La relevancia ordena los resultados con los registros más recientes o próximos primero.
+- [x] Si no hay coincidencias, se muestra "Sin resultados".
+- [x] Los filtros funcionan igual para el público y para usuarios con sesión, y responden en menos de 2 segundos con 5 años de datos.
+
+**QA**: la lógica común existía pero no la usaba nadie; calendario y resultados no tenían filtros. Ver
+[`docs/features/filters`](docs/features/filters/README.md). Corregido en `3017c61`.
+
+---
+
+### US-11 — Modificar pilotos y su condición de titular o suplente
+
+> **Como** Personal de las escuderías **quiero** modificar la información de los pilotos y su condición de titular o
+> suplente en cualquier momento **de forma que** los cambios se reflejen de inmediato ante la FIA y el público. — SP 5 · BV 8
+
+| Tarea (Naranja) | Est. | Hecha |
+|---|---|---|
+| Endpoint PUT de edición y cambio titular/suplente con las validaciones de US-10 | 0,5 h | [x] |
+| Formulario de edición reutilizando el de alta | 0,25 h | [x] |
+| Registro de quién modificó y cuándo | 0,25 h | [x] (QA) |
+| Vista de sólo lectura de pilotos para la FIA y el público (versión mínima de US-17) | 0,5 h | [x] (QA) |
+| Pruebas de validaciones, acceso a pilotos ajenos y reflejo de cambios | 0,5 h | [x] |
+
+**Criterios de aceptación**
+- [x] La escudería edita los datos de sus pilotos y cambia su condición de titular o suplente en cualquier momento.
+- [x] Un cambio que viole las validaciones de US-10 es rechazado.
+- [x] Los cambios se ven ante la FIA y el público a más tardar en la siguiente carga de pantalla.
+- [x] Una escudería no puede editar pilotos de otra: el servidor responde 401/403.
+- [x] Cada modificación registra quién la hizo y cuándo.
+
+**QA**: faltaban el registro del autor (`drivers.updated_by_user_id`) y la vista pública (`/drivers`). Corregido en `490f033`.
+
+---
+
+### US-15 — Asentar la confirmación de notificación de una sanción
+
+> **Como** Personal de las escuderías **quiero** asentar en la plataforma la confirmación de notificación de una
+> sanción aplicada a mi equipo o piloto **de forma que** se cumpla con el procedimiento reglamentario. — SP 3 · BV 8
+
+| Tarea (Naranja) | Est. | Hecha |
+|---|---|---|
+| Notificar a la escudería al cargar una sanción, reutilizando el módulo de US-9 | 0,25 h | [x] (QA) |
+| Adaptar el flujo de confirmación de US-9 al tipo "sanción" (quién, cuándo, una vez por escudería) | 0,25 h | [x] |
+| Mostrar "Pendiente" o "Notificada" en el listado, con la confirmación visible para la FIA | 0,25 h | [x] (QA) |
+| Pruebas (doble confirmación, sanciones ajenas, visibilidad para la FIA) | 0,25 h | [x] |
+
+**Criterios de aceptación**
+- [x] La escudería recibe una notificación al aplicarse una sanción a su equipo o pilotos y puede confirmarla con un clic.
+- [x] Se guardan la sanción, la escudería, el usuario, la fecha y la hora. Confirma una persona por escudería y no se puede confirmar dos veces.
+- [x] La FIA ve el estado de cada sanción y quién la confirmó y cuándo.
+- [x] Una escudería sólo puede confirmar sanciones dirigidas a ella o a sus pilotos.
+- [x] El registro de confirmación no se puede editar ni borrar.
+
+**Acuerdo con el PO (31/10)**: la notificación va en la bandeja de notificaciones de US-9.
+
+**QA**: no se notificaba a la escudería y la FIA no veía quién confirmó. Corregido en `05603b0`.
 
 ---
 

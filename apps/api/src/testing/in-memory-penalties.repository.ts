@@ -1,4 +1,5 @@
 import type { CreatePenaltyBody, Penalty } from '@fia/shared/contracts'
+import { compareIsoDates, matchesDateCriteria } from '@fia/shared/domain'
 import type { PenaltiesListFilter, PenaltiesRepository } from '../features/penalties/penalties.port'
 
 export type InMemoryPenaltiesRepository = PenaltiesRepository & {
@@ -21,7 +22,7 @@ const buildPenaltyRow = (body: CreatePenaltyBody, seq: number): Penalty => {
     reason: body.reason,
     issuedAt: body.issuedAt ?? now,
     confirmedAt: null,
-    confirmedByUserId: null,
+    confirmedByName: null,
     notificationStatus: 'pending',
     version: 1,
     createdAt: now,
@@ -31,19 +32,17 @@ const buildPenaltyRow = (body: CreatePenaltyBody, seq: number): Penalty => {
 const filterPenalties = (
   items: readonly Penalty[],
   filter: PenaltiesListFilter,
-): readonly Penalty[] => {
-  let result = items.filter((p) => new Date(p.issuedAt) >= filter.issuedSince)
-  if (filter.teamId) {
-    result = result.filter((p) => p.teamId === filter.teamId)
-  }
-  if (filter.type) {
-    result = result.filter((p) => p.type === filter.type)
-  }
-  if (filter.season) {
-    result = result.filter((p) => new Date(p.issuedAt).getUTCFullYear() === filter.season)
-  }
-  return result
-}
+): readonly Penalty[] =>
+  [...items]
+    .sort((a, b) => compareIsoDates(filter.sort)(a.issuedAt, b.issuedAt))
+    .filter(
+      (p) =>
+        new Date(p.issuedAt) >= filter.issuedSince &&
+        matchesDateCriteria(p.issuedAt, filter) &&
+        (!filter.teamId || p.teamId === filter.teamId) &&
+        (!filter.driverId || p.driverId === filter.driverId) &&
+        (!filter.type || p.type === filter.type),
+    )
 
 export const createInMemoryPenaltiesRepository = (
   initial: readonly Penalty[] = [],
@@ -60,8 +59,8 @@ export const createInMemoryPenaltiesRepository = (
       penalties.push(penalty)
       return penalty
     },
-    confirm: async ({ id, userId, confirmedAt }) => {
-      const index = penalties.findIndex((p) => p.id === id)
+    confirm: async ({ id, userId, confirmedAt, version }) => {
+      const index = penalties.findIndex((p) => p.id === id && p.version === version)
       const current = penalties[index]
       if (!current || current.confirmedAt) {
         return null
@@ -69,7 +68,7 @@ export const createInMemoryPenaltiesRepository = (
       const updated: Penalty = {
         ...current,
         confirmedAt: confirmedAt.toISOString(),
-        confirmedByUserId: userId,
+        confirmedByName: userId,
         notificationStatus: 'confirmed',
         version: current.version + 1,
       }

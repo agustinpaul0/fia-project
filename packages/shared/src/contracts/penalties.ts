@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { versionSchema } from './common'
+import { commonFilterFields, DATE_RANGE_ISSUE, isValidDateRange } from './common-filters'
 
 export const penaltyTypeSchema = z.enum([
   'time_penalty',
@@ -35,20 +36,26 @@ export const penaltySchema = z.strictObject({
   penalty: z.string(),
   reason: z.string(),
   issuedAt: z.iso.datetime(),
-  confirmedAt: z.iso.datetime().nullable().optional(),
-  confirmedByUserId: z.string().nullable().optional(),
-  notificationStatus: penaltyNotificationStatusSchema.nullable().optional(),
+  confirmedAt: z.iso.datetime().nullable(),
+  confirmedByName: z.string().nullable(),
+  notificationStatus: penaltyNotificationStatusSchema.nullable(),
   version: versionSchema,
   createdAt: z.iso.datetime(),
 })
 
 export const penaltyListSchema = z.array(penaltySchema).readonly()
 
-export const penaltiesQuerySchema = z.strictObject({
-  season: z.coerce.number().int().min(2000).max(2100).optional(),
-  teamId: z.uuid().optional(),
-  type: penaltyTypeSchema.optional(),
-})
+export const penaltiesQuerySchema = z
+  .strictObject({
+    season: commonFilterFields.season,
+    from: commonFilterFields.from,
+    to: commonFilterFields.to,
+    teamId: commonFilterFields.teamId,
+    driverId: commonFilterFields.driverId,
+    sort: commonFilterFields.sort,
+    type: penaltyTypeSchema.optional(),
+  })
+  .refine(isValidDateRange, DATE_RANGE_ISSUE)
 
 export type PenaltyType = z.infer<typeof penaltyTypeSchema>
 export type CreatePenaltyBody = z.infer<typeof createPenaltyBodySchema>

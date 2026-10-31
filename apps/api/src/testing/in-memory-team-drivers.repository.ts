@@ -1,7 +1,6 @@
 import type { CreateTeamDriverBody, UpdateTeamDriverBody } from '@fia/shared/contracts'
 import type { DriverRow } from '@fia/shared/db'
 import type { TeamDriversRepository } from '../features/team-drivers/team-drivers.port'
-import { createInMemoryDriverAccountsStore } from './in-memory-driver-accounts'
 
 export type InMemoryTeamDriversRepository = TeamDriversRepository & {
   readonly items: DriverRow[]
@@ -20,6 +19,7 @@ const buildRow = (index: number, teamId: string, body: CreateTeamDriverBody): Dr
     teamId,
     categoryId: null,
     role: body.role,
+    updatedByUserId: null,
     version: 1,
     createdAt: now,
     updatedAt: now,
@@ -29,7 +29,7 @@ const buildRow = (index: number, teamId: string, body: CreateTeamDriverBody): Dr
 const applyUpdate = (
   drivers: DriverRow[],
   id: string,
-  body: UpdateTeamDriverBody,
+  { body, by }: { readonly body: UpdateTeamDriverBody; readonly by: string },
 ): DriverRow | null => {
   const index = drivers.findIndex((d) => d.id === id && d.version === body.version)
   const current = drivers[index]
@@ -40,6 +40,7 @@ const applyUpdate = (
   const updated: DriverRow = {
     ...current,
     ...fields,
+    updatedByUserId: by,
     version: version + 1,
     updatedAt: new Date(),
   }
@@ -52,9 +53,11 @@ export const createInMemoryTeamDriversRepository = (
 ): InMemoryTeamDriversRepository => {
   const drivers: DriverRow[] = [...initialDrivers]
   return {
-    ...createInMemoryDriverAccountsStore(),
     items: drivers,
-    listAll: async () => [...drivers].sort((a, b) => a.number - b.number),
+    listAll: async () =>
+      [...drivers]
+        .sort((a, b) => a.number - b.number)
+        .map((d) => ({ ...d, teamName: null, hasOfficialAccount: false })),
     listByTeam: async (teamId) =>
       drivers.filter((d) => d.teamId === teamId).sort((a, b) => a.number - b.number),
     findById: async (id) => drivers.find((d) => d.id === id) ?? null,
@@ -67,6 +70,6 @@ export const createInMemoryTeamDriversRepository = (
       drivers.push(row)
       return row
     },
-    update: async (id, body) => applyUpdate(drivers, id, body),
+    update: async (id, body, by) => applyUpdate(drivers, id, { body, by }),
   }
 }

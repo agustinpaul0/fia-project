@@ -6,8 +6,12 @@ export const RACING_ERRORS = {
     message: 'La carrera no existe o fue eliminada.',
   },
   RACE_ALREADY_CANCELLED: {
-    status: 400,
+    status: 409,
     message: 'No podés modificar un evento que ya fue cancelado.',
+  },
+  CIRCUIT_NOT_FOUND: {
+    status: 404,
+    message: 'El circuito elegido no existe.',
   },
   RACE_NOT_FINISHED: {
     status: 422,
@@ -45,9 +49,9 @@ export const RACING_ERRORS = {
     status: 404,
     message: 'La cuenta oficial del piloto solicitada no existe.',
   },
-  DRIVER_EMAIL_ALREADY_EXISTS: {
+  DRIVER_ACCOUNT_INACTIVE: {
     status: 409,
-    message: 'Ya existe una cuenta registrada con este correo electrónico.',
+    message: 'La cuenta del piloto está dada de baja y no se puede modificar.',
   },
   PENALTY_NOT_FOUND: {
     status: 404,

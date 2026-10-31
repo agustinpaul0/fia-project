@@ -1,6 +1,7 @@
 import type { DriverRow } from '@fia/shared/db'
 import { describe, expect, it } from 'vitest'
 import type { SessionUser } from '../../core/auth/session'
+import { aDriverRow } from '../../testing/driver-row-builders'
 import { createTestApp } from '../../testing/test-app'
 
 const STAFF_FERRARI: SessionUser = {
@@ -9,21 +10,7 @@ const STAFF_FERRARI: SessionUser = {
   teamId: '00000000-0000-4000-8000-000000000010',
 }
 
-const mockRow: DriverRow = {
-  id: '00000000-0000-4000-8000-000000000001',
-  firstName: 'Charles',
-  lastName: 'Leclerc',
-  code: 'LEC',
-  number: 16,
-  country: 'Mónaco',
-  license: 'FIA-16-LEC',
-  categoryId: null,
-  teamId: '00000000-0000-4000-8000-000000000010',
-  role: 'main',
-  version: 1,
-  createdAt: new Date('2026-01-01T00:00:00Z'),
-  updatedAt: new Date('2026-01-01T00:00:00Z'),
-}
+const mockRow: DriverRow = aDriverRow({ id: '00000000-0000-4000-8000-000000000001' })
 
 const validPayload = {
   firstName: 'Carlos',

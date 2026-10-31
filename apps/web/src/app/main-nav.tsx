@@ -4,83 +4,69 @@ import type { ReactNode } from 'react'
 import { NAV_ACTIVE, NAV_INACTIVE, NAV_LINK_CLASS } from '@/components/brand/nav-link-props'
 import { NotificationsNavLink } from '@/features/notifications/components/notifications-nav-link'
 
-const ADMIN_LINKS = [
-  { to: '/admin/team-staff', label: 'Personal' },
-  { to: '/admin/results', label: 'Carga de resultados' },
-  { to: '/admin/notifications', label: 'Confirmaciones' },
-] as const
+type NavTarget =
+  | '/'
+  | '/results'
+  | '/sanctions'
+  | '/scrutineering'
+  | '/drivers'
+  | '/admin/team-staff'
+  | '/admin/drivers'
+  | '/admin/results'
+  | '/admin/notifications'
+  | '/team/drivers'
+  | '/driver'
+  | '/chat'
 
-const AdminLinks = (): ReactNode =>
-  ADMIN_LINKS.map((link) => (
-    <Link
-      key={link.to}
-      to={link.to}
-      className={NAV_LINK_CLASS}
-      activeProps={NAV_ACTIVE}
-      inactiveProps={NAV_INACTIVE}
-    >
-      {link.label}
-    </Link>
-  ))
+type NavItem = { readonly to: NavTarget; readonly label: string }
+
+const PUBLIC_LINKS: readonly NavItem[] = [
+  { to: '/results', label: 'Resultados' },
+  { to: '/sanctions', label: 'Sanciones' },
+  { to: '/scrutineering', label: 'Técnica' },
+  { to: '/drivers', label: 'Nómina' },
+]
+
+const ROLE_LINKS: Readonly<Record<Role, readonly NavItem[]>> = {
+  fia_admin: [
+    { to: '/admin/team-staff', label: 'Personal' },
+    { to: '/admin/drivers', label: 'Cuentas de pilotos' },
+    { to: '/admin/results', label: 'Carga de resultados' },
+    { to: '/admin/notifications', label: 'Confirmaciones' },
+    { to: '/chat', label: 'Mensajes' },
+  ],
+  team_staff: [
+    { to: '/team/drivers', label: 'Pilotos' },
+    { to: '/chat', label: 'Mensajes' },
+  ],
+  driver: [
+    { to: '/driver', label: 'Mi panel' },
+    { to: '/chat', label: 'Mensajes' },
+  ],
+  public: [],
+}
+
+const NavLink = ({ to, label }: NavItem): ReactNode => (
+  <Link
+    to={to}
+    className={NAV_LINK_CLASS}
+    activeProps={NAV_ACTIVE}
+    inactiveProps={NAV_INACTIVE}
+    activeOptions={{ exact: to === '/' }}
+  >
+    {label}
+  </Link>
+)
 
 export const MainNav = ({ userRole }: { readonly userRole: Role | null }): ReactNode => (
   <nav aria-label="Principal" className="flex items-center gap-2 overflow-x-auto">
-    <Link
-      to="/"
-      className={NAV_LINK_CLASS}
-      activeProps={NAV_ACTIVE}
-      inactiveProps={NAV_INACTIVE}
-      activeOptions={{ exact: true }}
-    >
-      Inicio
-    </Link>
-    <Link
-      to="/results"
-      className={NAV_LINK_CLASS}
-      activeProps={NAV_ACTIVE}
-      inactiveProps={NAV_INACTIVE}
-    >
-      Resultados
-    </Link>
-    <Link
-      to="/sanctions"
-      className={NAV_LINK_CLASS}
-      activeProps={NAV_ACTIVE}
-      inactiveProps={NAV_INACTIVE}
-    >
-      Sanciones
-    </Link>
-    <Link
-      to="/scrutineering"
-      className={NAV_LINK_CLASS}
-      activeProps={NAV_ACTIVE}
-      inactiveProps={NAV_INACTIVE}
-    >
-      Técnica
-    </Link>
-    {userRole === 'fia_admin' ? <AdminLinks /> : null}
-    {userRole === 'team_staff' ? (
-      <>
-        <Link
-          to="/team/drivers"
-          className={NAV_LINK_CLASS}
-          activeProps={NAV_ACTIVE}
-          inactiveProps={NAV_INACTIVE}
-        >
-          Pilotos
-        </Link>
-        <NotificationsNavLink />
-      </>
-    ) : null}
-    {userRole !== null ? (
-      <Link
-        to="/chat"
-        className={NAV_LINK_CLASS}
-        activeProps={NAV_ACTIVE}
-        inactiveProps={NAV_INACTIVE}
-      >
-        Mensajes
-      </Link>
-    ) : null}
+    <NavLink to="/" label="Inicio" />
+    {PUBLIC_LINKS.map((item) => (
+      <NavLink key={item.to} {...item} />
+    ))}
+    {(userRole === null ? [] : ROLE_LINKS[userRole]).map((item) => (
+      <NavLink key={item.to} {...item} />
+    ))}
+    {userRole === 'team_staff' ? <NotificationsNavLink /> : null}
   </nav>
 )

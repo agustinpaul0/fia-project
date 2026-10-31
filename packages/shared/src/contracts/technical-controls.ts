@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { versionSchema } from './common'
+import { commonFilterFields, DATE_RANGE_ISSUE, isValidDateRange } from './common-filters'
 
 export const technicalControlTypeSchema = z.enum([
   'weight',
@@ -55,12 +56,18 @@ export const technicalControlSchema = z.strictObject({
 
 export const technicalControlListSchema = z.array(technicalControlSchema).readonly()
 
-export const technicalControlsQuerySchema = z.strictObject({
-  season: z.coerce.number().int().min(2000).max(2100).optional(),
-  teamId: z.uuid().optional(),
-  controlType: technicalControlTypeSchema.optional(),
-  status: technicalControlStatusSchema.optional(),
-})
+export const technicalControlsQuerySchema = z
+  .strictObject({
+    season: commonFilterFields.season,
+    from: commonFilterFields.from,
+    to: commonFilterFields.to,
+    teamId: commonFilterFields.teamId,
+    driverId: commonFilterFields.driverId,
+    sort: commonFilterFields.sort,
+    controlType: technicalControlTypeSchema.optional(),
+    status: technicalControlStatusSchema.optional(),
+  })
+  .refine(isValidDateRange, DATE_RANGE_ISSUE)
 
 export type TechnicalControlType = z.infer<typeof technicalControlTypeSchema>
 export type TechnicalControlStatus = z.infer<typeof technicalControlStatusSchema>

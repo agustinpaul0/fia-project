@@ -52,6 +52,9 @@ describe('contratos de sanciones (penalties)', () => {
       driverName: 'Charles Leclerc',
       raceName: 'GP de Mónaco',
       issuedAt: '2026-05-24T14:30:00.000Z',
+      confirmedAt: '2026-05-25T10:00:00.000Z',
+      confirmedByName: 'Fred Vasseur',
+      notificationStatus: 'confirmed',
       version: 1,
       createdAt: '2026-05-24T14:35:00.000Z',
     }

@@ -1,4 +1,5 @@
 import type { CreateTechnicalControlBody, TechnicalControl } from '@fia/shared/contracts'
+import { compareIsoDates, matchesDateCriteria } from '@fia/shared/domain'
 import type {
   TechnicalControlsListFilter,
   TechnicalControlsRepository,
@@ -16,22 +17,18 @@ export const createInMemoryTechnicalControlsRepository = (
 
   return {
     controls,
-    list: async (filter: TechnicalControlsListFilter) => {
-      let result = controls.filter((c) => new Date(c.expiresAt) > filter.activeAt)
-      if (filter.teamId) {
-        result = result.filter((c) => c.teamId === filter.teamId)
-      }
-      if (filter.controlType) {
-        result = result.filter((c) => c.controlType === filter.controlType)
-      }
-      if (filter.status) {
-        result = result.filter((c) => c.status === filter.status)
-      }
-      if (filter.season) {
-        result = result.filter((c) => new Date(c.inspectedAt).getUTCFullYear() === filter.season)
-      }
-      return result
-    },
+    list: async (filter: TechnicalControlsListFilter) =>
+      [...controls]
+        .sort((a, b) => compareIsoDates(filter.sort)(a.inspectedAt, b.inspectedAt))
+        .filter(
+          (c) =>
+            new Date(c.expiresAt) > filter.activeAt &&
+            matchesDateCriteria(c.inspectedAt, filter) &&
+            (!filter.teamId || c.teamId === filter.teamId) &&
+            (!filter.driverId || c.driverId === filter.driverId) &&
+            (!filter.controlType || c.controlType === filter.controlType) &&
+            (!filter.status || c.status === filter.status),
+        ),
     create: async (body: CreateTechnicalControlBody) => {
       const now = new Date().toISOString()
       const control: TechnicalControl = {

@@ -21,11 +21,24 @@ export const createRaceBodySchema = z.strictObject({
 })
 
 export const updateRaceBodySchema = z.strictObject({
-  name: z.string().trim().min(2, 'El nombre debe tener al menos 2 caracteres.').max(100).optional(),
-  date: z.iso.datetime('La fecha debe estar en formato ISO 8601.').optional(),
-  type: raceTypeSchema.optional(),
+  name: z
+    .string('El nombre es obligatorio.')
+    .trim()
+    .min(2, 'El nombre debe tener al menos 2 caracteres.')
+    .max(100, 'El nombre no puede superar los 100 caracteres.'),
+  date: z.iso.datetime({ message: 'Ingresá una fecha y hora válidas.', offset: true }),
+  type: raceTypeSchema,
+  circuitId: z.uuid('Elegí un circuito válido.'),
   version: versionSchema,
 })
+
+export const circuitOptionSchema = z.strictObject({
+  id: z.uuid(),
+  name: z.string(),
+  country: z.string(),
+})
+
+export const circuitOptionListSchema = z.array(circuitOptionSchema).readonly()
 
 export const cancelRaceBodySchema = z.strictObject({
   version: versionSchema,
@@ -53,3 +66,4 @@ export type Race = z.infer<typeof raceSchema>
 export type CreateRaceBody = z.infer<typeof createRaceBodySchema>
 export type UpdateRaceBody = z.infer<typeof updateRaceBodySchema>
 export type CancelRaceBody = z.infer<typeof cancelRaceBodySchema>
+export type CircuitOption = z.infer<typeof circuitOptionSchema>

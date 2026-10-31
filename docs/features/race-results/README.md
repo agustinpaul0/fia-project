@@ -29,6 +29,11 @@ usa para volver a notificar.
 | Actualización visible en menos de 10 minutos (en la web es inmediata) | PO |
 | El campeonato suma los puntos de Grandes Premios y sprints; desempata por victorias y luego por nombre | dev |
 | Se muestran las últimas 5 temporadas y la actual | PO (US-5) |
+| La FIA modifica nombre, fecha y hora (cargada en hora argentina), tipo y circuito de un evento, o lo da de baja tras confirmar | US-19 |
+| Un evento modificado queda `status = modified` y uno dado de baja `cancelled` (baja lógica, `check` en la base); el calendario muestra "Modificado"/"Cancelado" | US-19 |
+| Cada cambio guarda quién (`races.updated_by_user_id`, FK a `user`) y cuándo (`updated_at`) | US-19 |
+| Un evento cancelado no se puede modificar ni recibir resultados | US-19 |
+| El calendario se vuelve a consultar solo cada 60 s (criterio: < 10 min) | US-19 (QA) |
 
 ## Roles y permisos
 
@@ -37,6 +42,7 @@ usa para volver a notificar.
 | Ver carreras y clasificaciones | ✓ | ✓ | ✓ |
 | Ver pilotos habilitados para cargar | ✓ | ✗ (403) | ✗ (401) |
 | Cargar o corregir una clasificación | ✓ | ✗ (403) | ✗ (401) |
+| Modificar o dar de baja un evento | ✓ | ✗ (403) | ✗ (401) |
 
 ## API
 
@@ -47,6 +53,9 @@ usa para volver a notificar.
 | GET | `/races/:id/classification` | público | — | `{ race, results[] }` ordenado por posición |
 | GET | `/races/:id/drivers` | fia_admin | — | pilotos de la categoría de la carrera |
 | PUT | `/races/:id/classification` | fia_admin | `{ version, entries: [{ driverId }] }` en orden de llegada | clasificación guardada (versión + 1, revisión + 1) |
+| GET | `/races/circuits` | fia_admin | — | circuitos para el formulario |
+| PUT | `/races/:id` | fia_admin | `{ name, date, type, circuitId, version }` (todos obligatorios) | `RaceSummary` con `status: modified` |
+| DELETE | `/races/:id` | fia_admin | `{ version }` | `RaceSummary` con `status: cancelled` |
 
 ## Datos
 
@@ -67,6 +76,9 @@ usa para volver a notificar.
 | Piloto inexistente | `DRIVER_NOT_FOUND` | 404 | Uno de los pilotos elegidos no existe. Recargá la página y volvé a intentar. |
 | Piloto de otra categoría o sin escudería | `DRIVER_NOT_IN_CATEGORY` | 422 | Uno de los pilotos elegidos no corre en la categoría de esta carrera. |
 | Otra persona guardó antes | `STALE_VERSION` | 409 | Otra persona modificó este registro… (la web recarga la clasificación vigente) |
+| Modificar o cargar resultados de un evento cancelado | `RACE_ALREADY_CANCELLED` | 409 | No podés modificar un evento que ya fue cancelado. |
+| Circuito inexistente | `CIRCUIT_NOT_FOUND` | 404 | El circuito elegido no existe. |
+| Datos faltantes o fecha inválida al modificar | `VALIDATION_FAILED` | 400 | Mensaje por campo (p. ej. "Ingresá una fecha y hora válidas.") |
 
 ## Pantallas
 

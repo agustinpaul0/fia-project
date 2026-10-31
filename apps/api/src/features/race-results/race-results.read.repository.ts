@@ -1,4 +1,4 @@
-import type { RaceListQuery } from '@fia/shared/contracts'
+import { type CircuitOption, type RaceListQuery, raceStatusSchema } from '@fia/shared/contracts'
 import { categories, circuits, drivers, raceResults, races, seasons, teams } from '@fia/shared/db'
 import { and, asc, eq, type SQL } from 'drizzle-orm'
 import type { DbExecutor } from '../../core/db/executor'
@@ -23,7 +23,9 @@ const selectRaceHeaders = (db: DbExecutor, where: SQL | undefined) =>
       seasonYear: seasons.year,
       categoryId: races.categoryId,
       categoryCode: categories.code,
+      circuitId: races.circuitId,
       circuitName: circuits.name,
+      status: races.status,
       version: races.version,
       resultsRevision: races.resultsRevision,
       winner,
@@ -39,12 +41,18 @@ const selectRaceHeaders = (db: DbExecutor, where: SQL | undefined) =>
 
 type HeaderRecord = Awaited<ReturnType<typeof selectRaceHeaders>>[number]
 
-const toHeader = ({ winner: w, ...race }: HeaderRecord): RaceHeader => ({
+const toHeader = ({ winner: w, status, ...race }: HeaderRecord): RaceHeader => ({
   ...race,
+  status: raceStatusSchema.parse(status),
   winnerName: w === null ? null : `${w.first} ${w.last}`,
 })
 
 export const createRaceResultsReader = (db: DbExecutor) => ({
+  listCircuits: async (): Promise<readonly CircuitOption[]> =>
+    db
+      .select({ id: circuits.id, name: circuits.name, country: circuits.country })
+      .from(circuits)
+      .orderBy(asc(circuits.name)),
   listSeason: async (query: RaceListQuery): Promise<readonly RaceHeader[]> =>
     (await selectRaceHeaders(db, seasonWhere(query))).map(toHeader),
   findRace: async (id: string): Promise<RaceHeader | null> => {

@@ -30,7 +30,7 @@ const seedPenalty: Penalty = {
   reason: 'Infracción de límites de pista.',
   issuedAt: '2026-05-24T14:30:00.000Z',
   confirmedAt: null,
-  confirmedByUserId: null,
+  confirmedByName: null,
   notificationStatus: 'pending',
   version: 1,
   createdAt: '2026-05-24T14:35:00.000Z',
