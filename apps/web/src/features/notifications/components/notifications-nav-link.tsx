@@ -1,10 +1,12 @@
 import { Link } from '@tanstack/react-router'
 import type { ReactNode } from 'react'
 import { NAV_ACTIVE, NAV_INACTIVE, NAV_LINK_CLASS } from '@/components/brand/nav-link-props'
+import { usePendingPenalties } from '@/features/penalties/hooks/use-pending-penalties'
 import { useMyNotifications } from '../hooks/use-notifications'
 
 export const NotificationsNavLink = (): ReactNode => {
-  const pending = useMyNotifications().data?.length ?? 0
+  const scores = useMyNotifications().data?.length ?? 0
+  const pending = scores + (usePendingPenalties().data?.length ?? 0)
   return (
     <Link
       to="/notifications"

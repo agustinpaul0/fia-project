@@ -1,6 +1,9 @@
+import { roleSchema } from '@fia/shared/contracts'
+import { ROLE_LABELS } from '@fia/shared/domain'
 import { Link } from '@tanstack/react-router'
 import { LogOut, UserRound } from 'lucide-react'
 import type { ReactNode } from 'react'
+import { OfficialBadge } from '@/components/brand/official-badge'
 import { signOut, useSession } from '@/lib/auth-client'
 
 const LIGHT_BUTTON =
@@ -18,15 +21,17 @@ export const UserNav = (): ReactNode => {
   if (!session) {
     return <LoginLink />
   }
-  const role = session.user.role ?? 'public'
+  const parsed = roleSchema.safeParse(session.user.role)
+  const role = parsed.success ? parsed.data : 'public'
   return (
     <div className="flex items-center gap-3">
       <div className="flex items-center gap-1.5 border-2 border-outline bg-primary-container px-3 py-1 font-bold font-label text-[11px] text-primary uppercase tracking-wider">
         <span className="hidden whitespace-nowrap 2xl:inline">{session.user.name}</span>
         <span className="whitespace-nowrap">
-          [ <span className="normal-case">{role}</span> ]
+          [ <span className="normal-case">{ROLE_LABELS[role]}</span> ]
         </span>
       </div>
+      {role === 'driver' ? <OfficialBadge label="Piloto oficial" /> : null}
       <button
         type="button"
         className={`${LIGHT_BUTTON} hover:border-secondary hover:bg-secondary`}

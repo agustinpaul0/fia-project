@@ -2,13 +2,13 @@ export type CreateAccountInput = {
   readonly email: string
   readonly password: string
   readonly name: string
-  readonly role: 'team_staff'
-  readonly teamId: string
+  readonly role: 'team_staff' | 'driver'
+  readonly teamId: string | null
 }
 
 export type UpdateAccountInput = {
   readonly name: string
-  readonly teamId: string
+  readonly teamId: string | null
 }
 
 export type StaffAccountsPort = {

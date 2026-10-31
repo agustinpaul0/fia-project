@@ -1,7 +1,14 @@
-import { createTeamDriverBodySchema, driverListSchema, driverSchema } from '@fia/shared/contracts'
+import {
+  createTeamDriverBodySchema,
+  driverListSchema,
+  driverSchema,
+  idParamsSchema,
+  publicDriverListSchema,
+  updateTeamDriverBodySchema,
+} from '@fia/shared/contracts'
 import { AppError } from '@fia/shared/domain'
 import { type Context, Hono } from 'hono'
-import { requireRole } from '../../core/auth/access'
+import { publicAccess, requireRole } from '../../core/auth/access'
 import type { AppEnv, SessionUser } from '../../core/auth/session'
 import { created, ok } from '../../core/http/respond'
 import { validate } from '../../core/http/validate'
@@ -15,13 +22,26 @@ const sessionUserOf = (c: Context<AppEnv>): SessionUser => {
   return user
 }
 
-const onlyTeamStaff = requireRole('team_staff')
+const onlyStaff = requireRole('team_staff')
+const vParam = validate('param', idParamsSchema)
+const vCreateDriver = validate('json', createTeamDriverBodySchema)
+const vUpdateDriver = validate('json', updateTeamDriverBodySchema)
 
-export const createTeamDriversRoutes = (service: TeamDriversService): Hono<AppEnv> =>
+export const createTeamDriversRoutes = (s: TeamDriversService): Hono<AppEnv> =>
   new Hono<AppEnv>()
-    .get('/', onlyTeamStaff, async (c) =>
-      ok(c, driverListSchema, await service.listMine(sessionUserOf(c))),
+    .get('/public', publicAccess, async (c) => ok(c, publicDriverListSchema, await s.listPublic()))
+    .get('/', onlyStaff, async (c) => ok(c, driverListSchema, await s.listMine(sessionUserOf(c))))
+    .post('/', onlyStaff, vCreateDriver, async (c) =>
+      created(c, driverSchema, await s.enroll(sessionUserOf(c), c.req.valid('json'))),
     )
-    .post('/', onlyTeamStaff, validate('json', createTeamDriverBodySchema), async (c) =>
-      created(c, driverSchema, await service.enroll(sessionUserOf(c), c.req.valid('json'))),
+    .put('/:id', onlyStaff, vParam, vUpdateDriver, async (c) =>
+      ok(
+        c,
+        driverSchema,
+        await s.update({
+          user: sessionUserOf(c),
+          id: c.req.valid('param').id,
+          body: c.req.valid('json'),
+        }),
+      ),
     )

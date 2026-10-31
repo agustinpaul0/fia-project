@@ -10,10 +10,16 @@ export const API_PATHS = {
   penalties: '/penalties',
   technicalControls: '/technical-controls',
   chat: '/chat',
+  driverAccounts: '/driver-accounts',
 } as const
 
 export const categoryPath = (id: string): string => `${API_PATHS.categories}/${id}`
 export const teamStaffPath = (id: string): string => `${API_PATHS.teamStaff}/${id}`
+export const teamDriverPath = (id: string): string => `${API_PATHS.teamDrivers}/${id}`
+export const PUBLIC_DRIVERS_PATH = `${API_PATHS.teamDrivers}/public`
+export const MY_DRIVER_ACCOUNT_PATH = `${API_PATHS.driverAccounts}/me`
+export const driverAccountPath = (id: string): string => `${API_PATHS.driverAccounts}/${id}`
+export const MY_TECHNICAL_CONTROLS_PATH = `${API_PATHS.technicalControls}/mine`
 export const teamDriverOptionsPath = (teamId: string): string =>
   `${API_PATHS.teams}/${teamId}/drivers`
 export const teamRaceOptionsPath = (teamId: string, season: number): string =>
@@ -25,11 +31,15 @@ const seasonQuery = (season: number, category: string | null): string =>
 
 export const racesOfSeasonPath = (season: number, category: string | null = null): string =>
   `${API_PATHS.races}?${seasonQuery(season, category)}`
+export const racePath = (id: string): string => `${API_PATHS.races}/${id}`
+export const RACE_CIRCUITS_PATH = `${API_PATHS.races}/circuits`
 export const raceClassificationPath = (id: string): string =>
   `${API_PATHS.races}/${id}/classification`
 export const raceDriversPath = (id: string): string => `${API_PATHS.races}/${id}/drivers`
 export const confirmNotificationPath = (id: string): string =>
   `${API_PATHS.notifications}/${id}/confirm`
+export const PENDING_PENALTIES_PATH = `${API_PATHS.penalties}/pending`
+export const confirmPenaltyPath = (id: string): string => `${API_PATHS.penalties}/${id}/confirm`
 export const NOTIFICATIONS_AUDIT_PATH = `${API_PATHS.notifications}/audit`
 export const seasonStandingsPath = (season: number, category: string | null = null): string =>
   `${API_PATHS.races}/standings?${seasonQuery(season, category)}`

@@ -1,6 +1,9 @@
 import { z } from 'zod'
+import { RACE_TYPES } from '../domain/scoring'
 import { versionSchema } from './common'
-import { raceTypeSchema } from './race-classification'
+
+export const raceTypeSchema = z.enum(RACE_TYPES)
+export const raceStatusSchema = z.enum(['scheduled', 'modified', 'cancelled'])
 
 export const raceRoundSchema = z
   .number()
@@ -17,6 +20,30 @@ export const createRaceBodySchema = z.strictObject({
   date: z.iso.datetime(),
 })
 
+export const updateRaceBodySchema = z.strictObject({
+  name: z
+    .string('El nombre es obligatorio.')
+    .trim()
+    .min(2, 'El nombre debe tener al menos 2 caracteres.')
+    .max(100, 'El nombre no puede superar los 100 caracteres.'),
+  date: z.iso.datetime({ message: 'Ingresá una fecha y hora válidas.', offset: true }),
+  type: raceTypeSchema,
+  circuitId: z.uuid('Elegí un circuito válido.'),
+  version: versionSchema,
+})
+
+export const circuitOptionSchema = z.strictObject({
+  id: z.uuid(),
+  name: z.string(),
+  country: z.string(),
+})
+
+export const circuitOptionListSchema = z.array(circuitOptionSchema).readonly()
+
+export const cancelRaceBodySchema = z.strictObject({
+  version: versionSchema,
+})
+
 export const raceSchema = z.strictObject({
   id: z.uuid(),
   seasonId: z.uuid(),
@@ -26,11 +53,17 @@ export const raceSchema = z.strictObject({
   type: raceTypeSchema,
   name: z.string(),
   date: z.iso.datetime(),
+  status: raceStatusSchema.optional(),
+  updatedByUserId: z.string().nullable().optional(),
   resultsRevision: z.int().nonnegative(),
   version: versionSchema,
   createdAt: z.iso.datetime(),
   updatedAt: z.iso.datetime(),
 })
 
+export type RaceStatus = z.infer<typeof raceStatusSchema>
 export type Race = z.infer<typeof raceSchema>
 export type CreateRaceBody = z.infer<typeof createRaceBodySchema>
+export type UpdateRaceBody = z.infer<typeof updateRaceBodySchema>
+export type CancelRaceBody = z.infer<typeof cancelRaceBodySchema>
+export type CircuitOption = z.infer<typeof circuitOptionSchema>

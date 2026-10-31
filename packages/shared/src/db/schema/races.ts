@@ -4,12 +4,14 @@ import {
   integer,
   pgEnum,
   pgTable,
+  text,
   timestamp,
   unique,
   uuid,
   varchar,
 } from 'drizzle-orm/pg-core'
 import { RACE_TYPES } from '../../domain/scoring'
+import { user } from './auth'
 import { categories } from './categories'
 import { circuits } from './circuits'
 import { idColumn, versionedChecks, versionedColumns } from './columns'
@@ -34,6 +36,10 @@ export const races = pgTable(
     type: raceTypeEnum('type').notNull().default('grand_prix'),
     name: varchar('name', { length: 100 }).notNull(),
     date: timestamp('date', { withTimezone: true, mode: 'date' }).notNull(),
+    status: varchar('status', { length: 20 }).notNull().default('scheduled'),
+    updatedByUserId: text('updated_by_user_id').references(() => user.id, {
+      onDelete: 'restrict',
+    }),
     resultsRevision: integer('results_revision').notNull().default(0),
     ...versionedColumns(),
   },
@@ -44,6 +50,7 @@ export const races = pgTable(
       table.round,
       table.type,
     ),
+    check('races_status_valid', sql`${table.status} in ('scheduled', 'modified', 'cancelled')`),
     check('races_round_positive', sql`${table.round} >= 1`),
     check('races_results_revision_non_negative', sql`${table.resultsRevision} >= 0`),
     ...versionedChecks('races', table),

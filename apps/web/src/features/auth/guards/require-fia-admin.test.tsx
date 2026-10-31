@@ -2,6 +2,9 @@ import { render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { RequireFiaAdmin } from './require-fia-admin'
 
+const navigate = vi.fn()
+vi.mock('@tanstack/react-router', () => ({ useNavigate: () => navigate }))
+
 vi.mock('@/lib/auth-client', () => ({
   useSession: vi.fn(),
 }))

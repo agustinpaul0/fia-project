@@ -3,9 +3,11 @@ import { describe, expect, it, vi } from 'vitest'
 import type { PenaltiesRepository } from './penalties.port'
 import { createPenaltiesService } from './penalties.service'
 
+const TEAM_ID = '00000000-0000-4000-8000-000000000001'
+
 const mockPenalty: Penalty = {
   id: '00000000-0000-4000-8000-000000000010',
-  teamId: '00000000-0000-4000-8000-000000000001',
+  teamId: TEAM_ID,
   teamName: 'Ferrari',
   categoryCode: 'F1',
   driverId: '00000000-0000-4000-8000-000000000002',
@@ -16,12 +18,15 @@ const mockPenalty: Penalty = {
   penalty: '5s recargo',
   reason: 'Infracción en curva 1.',
   issuedAt: '2026-05-24T14:30:00.000Z',
+  confirmedAt: null,
+  confirmedByName: null,
+  notificationStatus: 'pending',
   version: 1,
   createdAt: '2026-05-24T14:35:00.000Z',
 }
 
 const validBody: CreatePenaltyBody = {
-  teamId: '00000000-0000-4000-8000-000000000001',
+  teamId: TEAM_ID,
   driverId: '00000000-0000-4000-8000-000000000002',
   type: 'time_penalty',
   penalty: '5s recargo',
@@ -30,42 +35,52 @@ const validBody: CreatePenaltyBody = {
 
 const mockRepo = (overrides: Partial<PenaltiesRepository> = {}): PenaltiesRepository => ({
   list: vi.fn().mockResolvedValue([mockPenalty]),
+  findById: vi.fn().mockResolvedValue(mockPenalty),
   create: vi.fn().mockResolvedValue(mockPenalty),
+  confirm: vi.fn().mockResolvedValue({
+    ...mockPenalty,
+    confirmedAt: '2026-05-24T15:00:00.000Z',
+    confirmedByName: 'staff-1',
+    notificationStatus: 'confirmed',
+  }),
   driverBelongsToTeam: vi.fn().mockResolvedValue(true),
   ...overrides,
 })
 
 describe('PenaltiesService', () => {
-  it('lista sólo las sanciones de los últimos 5 años, con los filtros pedidos', async () => {
+  it('lista sanciones de los últimos 5 años y oculta notificación al público', async () => {
     const repo = mockRepo()
     const service = createPenaltiesService(repo, () => new Date('2026-10-16T12:00:00.000Z'))
-    const result = await service.list({ season: 2026 })
-    expect(repo.list).toHaveBeenCalledWith({
-      season: 2026,
-      issuedSince: new Date('2021-10-16T12:00:00.000Z'),
-    })
-    expect(result).toHaveLength(1)
+    const anonResult = await service.list({ season: 2026 }, null)
+    expect(anonResult[0]?.notificationStatus).toBeNull()
+    const staffResult = await service.list(
+      { season: 2026 },
+      { role: 'team_staff', teamId: TEAM_ID },
+    )
+    expect(staffResult[0]?.notificationStatus).toBe('pending')
   })
 
-  it('permite crear sanción si el piloto pertenece a la escudería', async () => {
-    const repo = mockRepo({ driverBelongsToTeam: vi.fn().mockResolvedValue(true) })
-    const service = createPenaltiesService(repo)
-    const result = await service.create(validBody)
-    expect(repo.create).toHaveBeenCalledWith(validBody)
-    expect(result.id).toBe(mockPenalty.id)
-  })
-
-  it('permite crear sanción a nivel escudería sin piloto', async () => {
+  it('permite confirmar notificación una sola vez a la escudería sancionada', async () => {
     const repo = mockRepo()
     const service = createPenaltiesService(repo)
-    await service.create({ ...validBody, driverId: null })
-    expect(repo.driverBelongsToTeam).not.toHaveBeenCalled()
-    expect(repo.create).toHaveBeenCalled()
+    const confirmed = await service.confirm(mockPenalty.id, { id: 'staff-1', teamId: TEAM_ID })
+    expect(confirmed.notificationStatus).toBe('confirmed')
+
+    const repoAlready = mockRepo({
+      findById: vi.fn().mockResolvedValue({ ...mockPenalty, confirmedAt: '2026-05-24T15:00:00Z' }),
+    })
+    const svc2 = createPenaltiesService(repoAlready)
+    await expect(
+      svc2.confirm(mockPenalty.id, { id: 'staff-2', teamId: TEAM_ID }),
+    ).rejects.toMatchObject({ code: 'NOTIFICATION_ALREADY_CONFIRMED' })
   })
 
-  it('rechaza con INVALID_PENALTY_TARGET si el piloto no pertenece a la escudería', async () => {
+  it('rechaza confirmar sanción de otra escudería o piloto ajeno al crear', async () => {
     const repo = mockRepo({ driverBelongsToTeam: vi.fn().mockResolvedValue(false) })
     const service = createPenaltiesService(repo)
+    await expect(
+      service.confirm(mockPenalty.id, { id: 'staff-other', teamId: 'other-team' }),
+    ).rejects.toMatchObject({ code: 'FORBIDDEN' })
     await expect(service.create(validBody)).rejects.toMatchObject({
       code: 'INVALID_PENALTY_TARGET',
     })

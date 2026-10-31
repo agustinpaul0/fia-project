@@ -1,5 +1,12 @@
 import type { ChatConversation } from '@fia/shared/contracts'
 import type { ReactNode } from 'react'
+import { OfficialBadge } from '@/components/brand/official-badge'
+
+const ROLE_TAG: Readonly<Record<string, string>> = {
+  fia_admin: 'FIA Admin',
+  team_staff: 'Escudería',
+  driver: 'Piloto',
+}
 
 type Props = {
   readonly conversation: ChatConversation
@@ -20,9 +27,10 @@ export const ChatConversationItem = ({ conversation, isSelected, onSelect }: Pro
     <div className="flex justify-between items-start">
       <span className="font-headline font-bold text-sm truncate">{conversation.otherUserName}</span>
       <span className="font-mono text-[10px] uppercase opacity-75">
-        {conversation.otherUserRole === 'fia_admin' ? 'FIA Admin' : 'Escudería'}
+        {ROLE_TAG[conversation.otherUserRole] ?? 'Usuario'}
       </span>
     </div>
+    {conversation.otherUserRole === 'driver' ? <OfficialBadge label="Piloto oficial" /> : null}
     {conversation.otherTeamName && (
       <div className="font-mono text-xs opacity-90 truncate mt-0.5">
         {conversation.otherTeamName}

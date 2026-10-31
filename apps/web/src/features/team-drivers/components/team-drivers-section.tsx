@@ -1,16 +1,21 @@
+import type { Driver } from '@fia/shared/contracts'
 import { type ReactNode, useState } from 'react'
 import { toast } from 'sonner'
 import { QueryView } from '@/components/common/query-view'
 import { Button } from '@/components/ui/button'
 import { useCreateTeamDriver } from '../hooks/use-create-team-driver'
 import { useTeamDrivers } from '../hooks/use-team-drivers'
+import { useUpdateTeamDriver } from '../hooks/use-update-team-driver'
 import { TeamDriverCreateDialog } from './team-driver-create-dialog'
+import { TeamDriverEditDialog } from './team-driver-edit-dialog'
 import { TeamDriversTable } from './team-drivers-table'
 
 export const TeamDriversSection = (): ReactNode => {
   const query = useTeamDrivers()
   const createMut = useCreateTeamDriver()
+  const updateMut = useUpdateTeamDriver()
   const [open, setOpen] = useState(false)
+  const [editing, setEditing] = useState<Driver | null>(null)
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-8">
@@ -33,7 +38,7 @@ export const TeamDriversSection = (): ReactNode => {
         isEmpty={(items) => items.length === 0}
         emptyMessage="No hay pilotos inscriptos en tu escudería."
       >
-        {(drivers) => <TeamDriversTable drivers={drivers} />}
+        {(drivers) => <TeamDriversTable drivers={drivers} onEdit={setEditing} />}
       </QueryView>
 
       <TeamDriverCreateDialog
@@ -42,6 +47,19 @@ export const TeamDriversSection = (): ReactNode => {
         onSubmit={async (data) => {
           await createMut.mutateAsync(data)
           toast.success('Piloto inscripto exitosamente.')
+        }}
+      />
+
+      <TeamDriverEditDialog
+        driver={editing}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) {
+            setEditing(null)
+          }
+        }}
+        onSubmit={async (id, body) => {
+          await updateMut.mutateAsync({ id, body })
+          toast.success('Piloto actualizado exitosamente.')
         }}
       />
     </div>

@@ -1,17 +1,24 @@
 import {
+  type CancelRaceBody,
+  type CircuitOption,
+  circuitOptionListSchema,
   type DriverStanding,
   driverStandingListSchema,
   type EligibleDriver,
   eligibleDriverListSchema,
+  RACE_CIRCUITS_PATH,
   type RaceClassification,
   type RaceClassificationBody,
   type RaceSummary,
   raceClassificationPath,
   raceClassificationSchema,
   raceDriversPath,
+  racePath,
   raceSummaryListSchema,
+  raceSummarySchema,
   racesOfSeasonPath,
   seasonStandingsPath,
+  type UpdateRaceBody,
 } from '@fia/shared/contracts'
 import { apiRequest } from '@/lib/api/http-client'
 
@@ -53,3 +60,22 @@ export const saveRaceClassification = ({
     body,
     schema: raceClassificationSchema,
   })
+
+export const updateScheduledRace = (raceId: string, body: UpdateRaceBody): Promise<RaceSummary> =>
+  apiRequest({
+    path: racePath(raceId),
+    method: 'PUT',
+    body,
+    schema: raceSummarySchema,
+  })
+
+export const cancelScheduledRace = (raceId: string, body: CancelRaceBody): Promise<RaceSummary> =>
+  apiRequest({
+    path: racePath(raceId),
+    method: 'DELETE',
+    body,
+    schema: raceSummarySchema,
+  })
+
+export const fetchCircuits = (): Promise<readonly CircuitOption[]> =>
+  apiRequest({ path: RACE_CIRCUITS_PATH, schema: circuitOptionListSchema })

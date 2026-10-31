@@ -26,6 +26,7 @@ const mockRow: DriverRow = {
   categoryId: null,
   teamId: '00000000-0000-4000-8000-000000000010',
   role: 'main',
+  updatedByUserId: null,
   version: 1,
   createdAt: new Date('2026-01-01T00:00:00Z'),
   updatedAt: new Date('2026-01-01T00:00:00Z'),
@@ -48,6 +49,15 @@ describe('rutas de lectura team-drivers', () => {
       teamDrivers: [mockRow],
     })
     const res = await app.request('/team-drivers')
+    expect(res.status).toBe(200)
+    const body = (await res.json()) as Array<{ code: string }>
+    expect(body).toHaveLength(1)
+    expect(body[0]?.code).toBe('LEC')
+  })
+
+  it('permite consultar la nómina pública sin sesión en GET /team-drivers/public', async () => {
+    const { app } = createTestApp({ sessionUser: null, teamDrivers: [mockRow] })
+    const res = await app.request('/team-drivers/public')
     expect(res.status).toBe(200)
     const body = (await res.json()) as Array<{ code: string }>
     expect(body).toHaveLength(1)

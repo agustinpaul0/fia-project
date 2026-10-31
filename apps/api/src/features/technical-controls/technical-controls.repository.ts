@@ -1,8 +1,9 @@
 import type { TechnicalControl } from '@fia/shared/contracts'
 import { drivers, races, teams, technicalControls } from '@fia/shared/db'
 import { AppError } from '@fia/shared/domain'
-import { and, desc, eq } from 'drizzle-orm'
+import { and, eq } from 'drizzle-orm'
 import type { DbExecutor } from '../../core/db/executor'
+import { dateOrder } from '../../core/db/filter-conditions'
 import { translateConstraintViolations } from '../../core/errors/constraint-violations'
 import { toTechnicalControlDto } from './technical-controls.mapper'
 import type { TechnicalControlsRepository } from './technical-controls.port'
@@ -36,7 +37,7 @@ export const createDrizzleTechnicalControlsRepository = (
       .leftJoin(drivers, eq(technicalControls.driverId, drivers.id))
       .leftJoin(races, eq(technicalControls.raceId, races.id))
       .where(and(...conditions))
-      .orderBy(desc(technicalControls.inspectedAt))
+      .orderBy(dateOrder(technicalControls.inspectedAt, filter.sort))
     return rows.map(toTechnicalControlDto)
   },
   create: async (body) =>

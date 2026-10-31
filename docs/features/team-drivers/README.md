@@ -1,6 +1,6 @@
 # Feature: gestión e inscripción de pilotos por escudería
 
-- **US relacionadas**: US-10 (Cargar la información de los pilotos titulares y suplentes — Sprint 2).
+- **US relacionadas**: US-10 (Cargar la información de los pilotos titulares y suplentes — Sprint 2), US-11 (Modificar la información de los pilotos y su condición de titular o suplente — Sprint 3).
 - **Código**:
   - `packages/shared/src/contracts/team-drivers.ts`
   - `packages/shared/src/db/schema/base-data.ts` (`drivers`, `teams`, `categories`)
@@ -24,6 +24,9 @@ Permite al personal autenticado de una escudería (`team_staff`) inscribir y con
 | La foto o documentación del piloto queda para US-22 | PO (P3) |
 | Tope reglamentario: máximo 2 titulares y 2 suplentes por escudería | PO |
 | La licencia es obligatoria al inscribir; los pilotos cargados por el seed la traen como `FIA-<número>-<código>` | US-10 + QA |
+| La escudería modifica datos y condición en cualquier momento, con las mismas validaciones de US-10 y concurrencia optimista (`version`) | US-11 |
+| Cada modificación guarda quién la hizo (`drivers.updated_by_user_id`, FK a `user`) y cuándo (`updated_at`) | US-11 (QA) |
+| La nómina pública `/drivers` (FIA y público, sólo lectura) refleja los cambios en la siguiente carga de pantalla e indica qué pilotos tienen cuenta oficial | US-11 + US-27 (QA) |
 
 ## Roles y permisos
 
@@ -31,13 +34,17 @@ Permite al personal autenticado de una escudería (`team_staff`) inscribir y con
 |---|---|---|---|
 | Listar pilotos de su escudería (`GET /team-drivers`) | ✗ (403) | ✓ | ✗ (401) |
 | Inscribir piloto (`POST /team-drivers`) | ✗ (403) | ✓ | ✗ (401) |
+| Modificar piloto propio (`PUT /team-drivers/:id`) | ✗ (403) | ✓ (ajeno ⇒ 403) | ✗ (401) |
+| Nómina pública (`GET /team-drivers/public`) | ✓ | ✓ | ✓ |
 
 ## API
 
 | Método | Ruta | Acceso | Body | Respuesta |
 |---|---|---|---|---|
+| GET | `/team-drivers/public` | `publicAccess` | — | 200 `PublicDriver[]` (con `teamName` y `hasOfficialAccount`) |
 | GET | `/team-drivers` | `team_staff` | — | 200 `DriverRow[]` |
 | POST | `/team-drivers` | `team_staff` | `CreateTeamDriverBody` | 201 `DriverRow` |
+| PUT | `/team-drivers/:id` | `team_staff` | `UpdateTeamDriverBody` | 200 `DriverRow` |
 
 ## Errores
 
@@ -49,3 +56,6 @@ Permite al personal autenticado de una escudería (`team_staff`) inscribir y con
 | Código de 3 letras repetido | `DRIVER_CODE_ALREADY_TAKEN` | 409 | El código de tres letras ya está asignado a otro piloto. |
 | Se superó el tope de titulares o suplentes | `DRIVER_LIMIT_EXCEEDED` | 422 | Se alcanzó el límite reglamentario de pilotos para esta condición. |
 | Datos faltantes o con formato inválido | `VALIDATION_FAILED` | 400 | Hay datos inválidos. Revisá los campos marcados y volvé a intentar. |
+| Modificar un piloto de otra escudería | `FORBIDDEN` | 403 | No tenés permisos para realizar esta acción. |
+| Modificar un piloto inexistente | `DRIVER_NOT_FOUND` | 404 | (catálogo) |
+| Modificar con una versión vieja | `STALE_VERSION` | 409 | (catálogo) |

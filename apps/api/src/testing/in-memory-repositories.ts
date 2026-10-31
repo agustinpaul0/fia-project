@@ -12,6 +12,7 @@ import type { RaceHeader } from '../features/race-results/race-results.port'
 import type { TeamStaffUnitOfWork } from '../features/team-staff/team-staff-unit-of-work.port'
 import { createInMemoryCategoriesRepository } from './in-memory-categories.repository'
 import { createInMemoryChatRepository } from './in-memory-chat.repository'
+import { createInMemoryDriverAccountsUow } from './in-memory-driver-accounts'
 import { createInMemoryNotifications } from './in-memory-notifications.repository'
 import { createInMemoryPenaltiesRepository } from './in-memory-penalties.repository'
 import { createInMemoryRaceResults } from './in-memory-race-results.repository'
@@ -54,6 +55,7 @@ export const createAllInMemoryRepositories = (options: RepositoriesOptions) => {
     options.technicalControls ?? [],
   )
   const chat = createInMemoryChatRepository(options.chatContacts ?? [])
+  const driverAccountsUow = createInMemoryDriverAccountsUow(teamDrivers.items)
   return {
     categories,
     teams,
@@ -64,5 +66,6 @@ export const createAllInMemoryRepositories = (options: RepositoriesOptions) => {
     penalties,
     technicalControls,
     chat,
+    driverAccountsUow,
   }
 }

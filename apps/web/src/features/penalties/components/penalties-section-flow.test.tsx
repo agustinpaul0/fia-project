@@ -14,6 +14,7 @@ const toastSuccess = vi.fn()
 vi.mock('sonner', () => ({ toast: { success: (msg: string) => toastSuccess(msg) } }))
 
 const FERRARI = aPenalty().teamId
+const CURRENT = `GET /penalties?season=${new Date().getFullYear()}` as const
 
 describe('PenaltiesSection (flujo)', () => {
   afterEach(() => {
@@ -21,13 +22,13 @@ describe('PenaltiesSection (flujo)', () => {
     session.role = 'fia_admin'
   })
 
-  it('pide al servidor la temporada y el tipo elegidos', async () => {
+  it('arranca en la temporada actual y pide al servidor la temporada y el tipo elegidos (US-16)', async () => {
     const calls = mockFetchRoutes({
-      'GET /penalties': () => jsonResponse([aPenalty()]),
+      [CURRENT]: () => jsonResponse([aPenalty()]),
       'GET /penalties?season=2024&type=fine': () => jsonResponse([]),
     })
     renderWithQuery(<PenaltiesSection />)
-    await screen.findByText('Charles Leclerc')
+    await screen.findByRole('cell', { name: /Charles Leclerc/ })
     fireEvent.change(screen.getByLabelText('Temporada:'), { target: { value: '2024' } })
     fireEvent.change(screen.getByLabelText('Tipo:'), { target: { value: 'fine' } })
     await waitFor(() =>
@@ -37,17 +38,16 @@ describe('PenaltiesSection (flujo)', () => {
 
   it('el público ve el listado pero no puede cargar sanciones', async () => {
     session.role = 'public'
-    mockFetchRoutes({ 'GET /penalties': () => jsonResponse([aPenalty()]) })
+    mockFetchRoutes({ [CURRENT]: () => jsonResponse([aPenalty()]) })
     renderWithQuery(<PenaltiesSection />)
-    expect(await screen.findByText('Charles Leclerc')).toBeInTheDocument()
+    expect(await screen.findByRole('cell', { name: /Charles Leclerc/ })).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: '+ Nueva sanción' })).not.toBeInTheDocument()
   })
 
   it('la FIA registra una sanción y el listado se actualiza', async () => {
     let saved = false
     const calls = mockFetchRoutes({
-      'GET /penalties': () =>
-        jsonResponse(saved ? [aPenalty({ driverId: null, driverName: null })] : []),
+      [CURRENT]: () => jsonResponse(saved ? [aPenalty({ driverId: null, driverName: null })] : []),
       'GET /teams': () => jsonResponse([{ id: FERRARI, name: 'Ferrari' }]),
       [`GET /teams/${FERRARI}/drivers`]: () => jsonResponse([]),
       'POST /penalties': () => {

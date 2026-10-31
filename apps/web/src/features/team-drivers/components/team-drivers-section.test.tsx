@@ -54,4 +54,18 @@ describe('TeamDriversSection', () => {
 
     expect(screen.getByText('Inscribir nuevo piloto')).toBeInTheDocument()
   })
+
+  it('abre el diálogo de edición y envía PUT al guardar cambios', async () => {
+    mockFetchOnce(jsonResponse([mockDriver]))
+    renderWithQuery(<TeamDriversSection />)
+
+    const editBtn = await screen.findByRole('button', { name: 'Editar' })
+    fireEvent.click(editBtn)
+    expect(screen.getByText('Editar piloto')).toBeInTheDocument()
+
+    mockFetchOnce(jsonResponse({ ...mockDriver, role: 'reserve', version: 2 }))
+    mockFetchOnce(jsonResponse([{ ...mockDriver, role: 'reserve', version: 2 }]))
+    fireEvent.click(screen.getByRole('button', { name: 'Guardar cambios' }))
+    expect(await screen.findByText('Charles Leclerc')).toBeInTheDocument()
+  })
 })

@@ -7,6 +7,7 @@ import {
   driverNumberSchema,
   driverRoleSchema,
   driverSchema,
+  updateTeamDriverBodySchema,
 } from './drivers'
 
 describe('contratos de pilotos', () => {
@@ -74,10 +75,12 @@ describe('contratos de pilotos', () => {
     expect(driverSchema.parse(dto)).toEqual(dto)
   })
 
-  it('valida alta de piloto por escudería y lista de pilotos', () => {
+  it('valida alta y modificación de piloto por escudería y lista de pilotos', () => {
     const body = { ...valid, license: ' FIA-16-LEC ' }
     const parsed = createTeamDriverBodySchema.parse(body)
     expect(parsed).toEqual({ ...valid, license: 'FIA-16-LEC', role: 'main' })
+    const updated = updateTeamDriverBodySchema.parse({ ...body, role: 'reserve', version: 2 })
+    expect(updated).toEqual({ ...valid, license: 'FIA-16-LEC', role: 'reserve', version: 2 })
     const list = driverListSchema.parse([])
     expect(list).toEqual([])
   })

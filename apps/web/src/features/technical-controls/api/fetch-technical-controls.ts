@@ -1,5 +1,6 @@
 import {
   API_PATHS,
+  MY_TECHNICAL_CONTROLS_PATH,
   type TechnicalControl,
   type TechnicalControlsQuery,
   technicalControlListSchema,
@@ -9,21 +10,11 @@ import { apiRequest } from '@/lib/api/http-client'
 export const TECHNICAL_CONTROLS_QUERY_KEY = ['technical-controls'] as const
 
 const toQueryString = (filter?: TechnicalControlsQuery): string => {
-  if (!filter) {
-    return ''
-  }
   const params = new URLSearchParams()
-  if (filter.season) {
-    params.set('season', String(filter.season))
-  }
-  if (filter.teamId) {
-    params.set('teamId', filter.teamId)
-  }
-  if (filter.controlType) {
-    params.set('controlType', filter.controlType)
-  }
-  if (filter.status) {
-    params.set('status', filter.status)
+  for (const [key, value] of Object.entries(filter ?? {})) {
+    if (value !== undefined && value !== '') {
+      params.set(key, String(value))
+    }
   }
   const qs = params.toString()
   return qs ? `?${qs}` : ''
@@ -31,8 +22,11 @@ const toQueryString = (filter?: TechnicalControlsQuery): string => {
 
 export const fetchTechnicalControls = (
   filter?: TechnicalControlsQuery,
-): Promise<readonly TechnicalControl[]> =>
-  apiRequest({
-    path: `${API_PATHS.technicalControls}${toQueryString(filter)}`,
+  onlyMine = false,
+): Promise<readonly TechnicalControl[]> => {
+  const basePath = onlyMine ? MY_TECHNICAL_CONTROLS_PATH : API_PATHS.technicalControls
+  return apiRequest({
+    path: `${basePath}${toQueryString(filter)}`,
     schema: technicalControlListSchema,
   })
+}

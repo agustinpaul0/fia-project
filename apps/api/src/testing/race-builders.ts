@@ -4,6 +4,16 @@ export const F1_CATEGORY_ID = '00000000-0000-4000-8000-0000000000c1'
 export const F2_CATEGORY_ID = '00000000-0000-4000-8000-0000000000c2'
 export const PAST_RACE_DATE = new Date('2025-03-16T05:00:00.000Z')
 export const TEST_NOW = new Date('2026-09-28T12:00:00.000Z')
+export const TEST_CIRCUIT = {
+  id: '00000000-0000-4000-8000-0000000000a1',
+  name: 'Albert Park',
+  country: 'Australia',
+} as const
+export const OTHER_CIRCUIT = {
+  id: '00000000-0000-4000-8000-0000000000a2',
+  name: 'Circuit de Monaco',
+  country: 'Mónaco',
+} as const
 
 export type TestDriver = {
   readonly id: string
@@ -25,7 +35,9 @@ export const aRaceHeader = (overrides: Partial<RaceHeader> = {}): RaceHeader => 
   seasonYear: 2025,
   categoryId: F1_CATEGORY_ID,
   categoryCode: 'F1',
-  circuitName: 'Albert Park',
+  circuitId: TEST_CIRCUIT.id,
+  circuitName: TEST_CIRCUIT.name,
+  status: 'scheduled',
   version: 1,
   resultsRevision: 0,
   winnerName: null,

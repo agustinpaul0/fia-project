@@ -9,18 +9,11 @@ import { apiRequest } from '@/lib/api/http-client'
 export const PENALTIES_QUERY_KEY = ['penalties'] as const
 
 const toQueryString = (filter?: PenaltiesQuery): string => {
-  if (!filter) {
-    return ''
-  }
   const params = new URLSearchParams()
-  if (filter.season) {
-    params.set('season', String(filter.season))
-  }
-  if (filter.teamId) {
-    params.set('teamId', filter.teamId)
-  }
-  if (filter.type) {
-    params.set('type', filter.type)
+  for (const [key, value] of Object.entries(filter ?? {})) {
+    if (value !== undefined && value !== '') {
+      params.set(key, String(value))
+    }
   }
   const qs = params.toString()
   return qs ? `?${qs}` : ''

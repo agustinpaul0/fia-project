@@ -11,11 +11,14 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ChatRouteImport } from './routes/chat'
+import { Route as DriverRouteImport } from './routes/driver'
+import { Route as DriversRouteImport } from './routes/drivers'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as ResultsRouteImport } from './routes/results'
 import { Route as SanctionsRouteImport } from './routes/sanctions'
 import { Route as ScrutineeringRouteImport } from './routes/scrutineering'
+import { Route as AdminDriversRouteImport } from './routes/admin.drivers'
 import { Route as AdminNotificationsRouteImport } from './routes/admin.notifications'
 import { Route as AdminTeamStaffRouteImport } from './routes/admin.team-staff'
 import { Route as RacesRaceIdRouteImport } from './routes/races.$raceId'
@@ -31,6 +34,16 @@ const IndexRoute = IndexRouteImport.update({
 const ChatRoute = ChatRouteImport.update({
   id: '/chat',
   path: '/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DriverRoute = DriverRouteImport.update({
+  id: '/driver',
+  path: '/driver',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DriversRoute = DriversRouteImport.update({
+  id: '/drivers',
+  path: '/drivers',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -56,6 +69,11 @@ const SanctionsRoute = SanctionsRouteImport.update({
 const ScrutineeringRoute = ScrutineeringRouteImport.update({
   id: '/scrutineering',
   path: '/scrutineering',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminDriversRoute = AdminDriversRouteImport.update({
+  id: '/admin/drivers',
+  path: '/admin/drivers',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminNotificationsRoute = AdminNotificationsRouteImport.update({
@@ -92,11 +110,14 @@ const AdminResultsRaceIdRoute = AdminResultsRaceIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/chat': typeof ChatRoute
+  '/driver': typeof DriverRoute
+  '/drivers': typeof DriversRoute
   '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/results': typeof ResultsRoute
   '/sanctions': typeof SanctionsRoute
   '/scrutineering': typeof ScrutineeringRoute
+  '/admin/drivers': typeof AdminDriversRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/team-staff': typeof AdminTeamStaffRoute
   '/races/$raceId': typeof RacesRaceIdRoute
@@ -107,11 +128,14 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/chat': typeof ChatRoute
+  '/driver': typeof DriverRoute
+  '/drivers': typeof DriversRoute
   '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/results': typeof ResultsRoute
   '/sanctions': typeof SanctionsRoute
   '/scrutineering': typeof ScrutineeringRoute
+  '/admin/drivers': typeof AdminDriversRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/team-staff': typeof AdminTeamStaffRoute
   '/races/$raceId': typeof RacesRaceIdRoute
@@ -123,11 +147,14 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/chat': typeof ChatRoute
+  '/driver': typeof DriverRoute
+  '/drivers': typeof DriversRoute
   '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/results': typeof ResultsRoute
   '/sanctions': typeof SanctionsRoute
   '/scrutineering': typeof ScrutineeringRoute
+  '/admin/drivers': typeof AdminDriversRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/team-staff': typeof AdminTeamStaffRoute
   '/races/$raceId': typeof RacesRaceIdRoute
@@ -140,11 +167,14 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/chat'
+    | '/driver'
+    | '/drivers'
     | '/login'
     | '/notifications'
     | '/results'
     | '/sanctions'
     | '/scrutineering'
+    | '/admin/drivers'
     | '/admin/notifications'
     | '/admin/team-staff'
     | '/races/$raceId'
@@ -155,11 +185,14 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/chat'
+    | '/driver'
+    | '/drivers'
     | '/login'
     | '/notifications'
     | '/results'
     | '/sanctions'
     | '/scrutineering'
+    | '/admin/drivers'
     | '/admin/notifications'
     | '/admin/team-staff'
     | '/races/$raceId'
@@ -170,11 +203,14 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/chat'
+    | '/driver'
+    | '/drivers'
     | '/login'
     | '/notifications'
     | '/results'
     | '/sanctions'
     | '/scrutineering'
+    | '/admin/drivers'
     | '/admin/notifications'
     | '/admin/team-staff'
     | '/races/$raceId'
@@ -186,11 +222,14 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ChatRoute: typeof ChatRoute
+  DriverRoute: typeof DriverRoute
+  DriversRoute: typeof DriversRoute
   LoginRoute: typeof LoginRoute
   NotificationsRoute: typeof NotificationsRoute
   ResultsRoute: typeof ResultsRoute
   SanctionsRoute: typeof SanctionsRoute
   ScrutineeringRoute: typeof ScrutineeringRoute
+  AdminDriversRoute: typeof AdminDriversRoute
   AdminNotificationsRoute: typeof AdminNotificationsRoute
   AdminTeamStaffRoute: typeof AdminTeamStaffRoute
   RacesRaceIdRoute: typeof RacesRaceIdRoute
@@ -213,6 +252,20 @@ declare module '@tanstack/react-router' {
       path: '/chat'
       fullPath: '/chat'
       preLoaderRoute: typeof ChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/driver': {
+      id: '/driver'
+      path: '/driver'
+      fullPath: '/driver'
+      preLoaderRoute: typeof DriverRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/drivers': {
+      id: '/drivers'
+      path: '/drivers'
+      fullPath: '/drivers'
+      preLoaderRoute: typeof DriversRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -248,6 +301,13 @@ declare module '@tanstack/react-router' {
       path: '/scrutineering'
       fullPath: '/scrutineering'
       preLoaderRoute: typeof ScrutineeringRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/drivers': {
+      id: '/admin/drivers'
+      path: '/admin/drivers'
+      fullPath: '/admin/drivers'
+      preLoaderRoute: typeof AdminDriversRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/notifications': {
@@ -298,11 +358,14 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ChatRoute: ChatRoute,
+  DriverRoute: DriverRoute,
+  DriversRoute: DriversRoute,
   LoginRoute: LoginRoute,
   NotificationsRoute: NotificationsRoute,
   ResultsRoute: ResultsRoute,
   SanctionsRoute: SanctionsRoute,
   ScrutineeringRoute: ScrutineeringRoute,
+  AdminDriversRoute: AdminDriversRoute,
   AdminNotificationsRoute: AdminNotificationsRoute,
   AdminTeamStaffRoute: AdminTeamStaffRoute,
   RacesRaceIdRoute: RacesRaceIdRoute,

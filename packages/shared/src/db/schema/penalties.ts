@@ -1,5 +1,6 @@
 import { sql } from 'drizzle-orm'
 import { check, index, pgTable, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core'
+import { user } from './auth'
 import { idColumn, versionedChecks, versionedColumns } from './columns'
 import { drivers } from './drivers'
 import { races } from './races'
@@ -18,6 +19,10 @@ export const penalties = pgTable(
     penalty: varchar('penalty', { length: 100 }).notNull(),
     reason: text('reason').notNull(),
     issuedAt: timestamp('issued_at', { withTimezone: true, mode: 'date' }).notNull(),
+    confirmedAt: timestamp('confirmed_at', { withTimezone: true, mode: 'date' }),
+    confirmedByUserId: text('confirmed_by_user_id').references(() => user.id, {
+      onDelete: 'restrict',
+    }),
     ...versionedColumns(),
   },
   (table) => [
@@ -31,6 +36,10 @@ export const penalties = pgTable(
     ),
     check('penalties_penalty_length', sql`char_length(${table.penalty}) >= 2`),
     check('penalties_reason_length', sql`char_length(${table.reason}) between 5 and 255`),
+    check(
+      'penalties_confirmation_complete',
+      sql`(${table.confirmedAt} is null) = (${table.confirmedByUserId} is null)`,
+    ),
     ...versionedChecks('penalties', table),
   ],
 )

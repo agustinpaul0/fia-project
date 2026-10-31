@@ -5,8 +5,10 @@ import { jsonResponse, mockFetchOnce } from '@/testing/mock-fetch'
 import { renderWithQuery } from '@/testing/render-with-query'
 import { PenaltiesSection } from './penalties-section'
 
+const mockUseSession = vi.fn(() => ({ data: { user: { role: 'fia_admin' } } }))
+
 vi.mock('@/lib/auth-client', () => ({
-  useSession: vi.fn(() => ({ data: { user: { role: 'fia_admin' } } })),
+  useSession: () => mockUseSession(),
 }))
 
 const mockPenalty: Penalty = {
@@ -22,6 +24,9 @@ const mockPenalty: Penalty = {
   penalty: '5 segundos',
   reason: 'Límites de pista.',
   issuedAt: '2026-05-24T14:30:00.000Z',
+  confirmedAt: null,
+  confirmedByName: null,
+  notificationStatus: 'pending',
   version: 1,
   createdAt: '2026-05-24T14:35:00.000Z',
 }
@@ -29,29 +34,35 @@ const mockPenalty: Penalty = {
 describe('PenaltiesSection', () => {
   afterEach(() => {
     vi.unstubAllGlobals()
+    mockUseSession.mockReturnValue({ data: { user: { role: 'fia_admin' } } })
   })
 
   it('muestra estado vacío cuando no hay sanciones registradas', async () => {
     mockFetchOnce(jsonResponse([]))
     renderWithQuery(<PenaltiesSection />)
 
-    expect(
-      await screen.findByText(
-        'No se encontraron sanciones registradas para los filtros aplicados.',
-      ),
-    ).toBeInTheDocument()
+    expect(await screen.findByText('Sin resultados.')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: '+ Nueva sanción' })).toBeInTheDocument()
   })
 
-  it('muestra el listado de sanciones con todos los datos necesarios', async () => {
+  it('muestra el listado de sanciones con estado de notificación para roles autorizados', async () => {
     mockFetchOnce(jsonResponse([mockPenalty]))
     renderWithQuery(<PenaltiesSection />)
 
-    expect(await screen.findByText('Charles Leclerc')).toBeInTheDocument()
+    expect(await screen.findByRole('cell', { name: /Charles Leclerc/ })).toBeInTheDocument()
     expect(screen.getByText('(Ferrari)')).toBeInTheDocument()
     expect(screen.getByText('5 segundos')).toBeInTheDocument()
     expect(screen.getByText('Límites de pista.')).toBeInTheDocument()
-    expect(screen.getAllByText('Recargo de tiempo').length).toBeGreaterThanOrEqual(1)
+    expect(screen.getByText('Pendiente')).toBeInTheDocument()
+  })
+
+  it('permite a la escudería confirmar la notificación con un clic', async () => {
+    mockUseSession.mockReturnValue({ data: { user: { role: 'team_staff' } } })
+    mockFetchOnce(jsonResponse([mockPenalty]))
+    renderWithQuery(<PenaltiesSection />)
+
+    const confirmBtn = await screen.findByRole('button', { name: 'Confirmar' })
+    expect(confirmBtn).toBeInTheDocument()
   })
 
   it('abre el diálogo de nueva sanción al pulsar el botón', async () => {

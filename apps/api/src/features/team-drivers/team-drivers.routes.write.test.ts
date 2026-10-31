@@ -1,6 +1,7 @@
 import type { DriverRow } from '@fia/shared/db'
 import { describe, expect, it } from 'vitest'
 import type { SessionUser } from '../../core/auth/session'
+import { aDriverRow } from '../../testing/driver-row-builders'
 import { createTestApp } from '../../testing/test-app'
 
 const STAFF_FERRARI: SessionUser = {
@@ -9,21 +10,7 @@ const STAFF_FERRARI: SessionUser = {
   teamId: '00000000-0000-4000-8000-000000000010',
 }
 
-const mockRow: DriverRow = {
-  id: '00000000-0000-4000-8000-000000000001',
-  firstName: 'Charles',
-  lastName: 'Leclerc',
-  code: 'LEC',
-  number: 16,
-  country: 'Mónaco',
-  license: 'FIA-16-LEC',
-  categoryId: null,
-  teamId: '00000000-0000-4000-8000-000000000010',
-  role: 'main',
-  version: 1,
-  createdAt: new Date('2026-01-01T00:00:00Z'),
-  updatedAt: new Date('2026-01-01T00:00:00Z'),
-}
+const mockRow: DriverRow = aDriverRow({ id: '00000000-0000-4000-8000-000000000001' })
 
 const validPayload = {
   firstName: 'Carlos',
@@ -60,10 +47,7 @@ describe('rutas de escritura team-drivers', () => {
   })
 
   it('rechaza con 409 si el número de coche ya existe', async () => {
-    const { app } = createTestApp({
-      sessionUser: STAFF_FERRARI,
-      teamDrivers: [mockRow],
-    })
+    const { app } = createTestApp({ sessionUser: STAFF_FERRARI, teamDrivers: [mockRow] })
     const res = await app.request('/team-drivers', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
@@ -80,5 +64,24 @@ describe('rutas de escritura team-drivers', () => {
       body: JSON.stringify({ ...validPayload, teamId: '00000000-0000-4000-8000-000000000099' }),
     })
     expect(res.status).toBe(400)
+  })
+
+  it('modifica datos y condición de un piloto propio con PUT /team-drivers/:id', async () => {
+    const { app } = createTestApp({ sessionUser: STAFF_FERRARI, teamDrivers: [mockRow] })
+    const res = await app.request(`/team-drivers/${mockRow.id}`, {
+      method: 'PUT',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        ...validPayload,
+        code: 'LEC',
+        number: 16,
+        role: 'reserve',
+        version: 1,
+      }),
+    })
+    expect(res.status).toBe(200)
+    const body = (await res.json()) as { role: string; version: number }
+    expect(body.role).toBe('reserve')
+    expect(body.version).toBe(2)
   })
 })

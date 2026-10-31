@@ -32,7 +32,8 @@ export const ChatNewConversation = ({ onCreated }: Props): ReactNode => {
         <option value="">Elegí un destinatario...</option>
         {contacts.map((c) => (
           <option key={c.id} value={c.id}>
-            {c.name} — {c.teamName ?? 'Administración FIA'}
+            {c.name} —{' '}
+            {c.role === 'driver' ? '✓ Piloto oficial' : (c.teamName ?? 'Administración FIA')}
           </option>
         ))}
       </select>
