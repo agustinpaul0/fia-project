@@ -49,7 +49,7 @@ describe('PenaltiesSection', () => {
     mockFetchOnce(jsonResponse([mockPenalty]))
     renderWithQuery(<PenaltiesSection />)
 
-    expect(await screen.findByText('Charles Leclerc')).toBeInTheDocument()
+    expect(await screen.findByRole('cell', { name: /Charles Leclerc/ })).toBeInTheDocument()
     expect(screen.getByText('(Ferrari)')).toBeInTheDocument()
     expect(screen.getByText('5 segundos')).toBeInTheDocument()
     expect(screen.getByText('Límites de pista.')).toBeInTheDocument()

@@ -1,7 +1,12 @@
-import type { TechnicalControlStatus, TechnicalControlType } from '@fia/shared/contracts'
+import type {
+  TechnicalControl,
+  TechnicalControlStatus,
+  TechnicalControlType,
+} from '@fia/shared/contracts'
 import { type ReactNode, useState } from 'react'
 import { toast } from 'sonner'
 import { EMPTY_FILTERS_MESSAGE } from '@/components/common/data-filters-bar'
+import { IdentifierFilters } from '@/components/common/identifier-filters'
 import { QueryView } from '@/components/common/query-view'
 import { useCommonFilters } from '@/components/common/use-common-filters'
 import { Button } from '@/components/ui/button'
@@ -49,6 +54,16 @@ const TechnicalControlsHeader = (p: HeaderProps): ReactNode => (
   </div>
 )
 
+const FilteredControls = ({
+  items,
+}: {
+  readonly items: readonly TechnicalControl[]
+}): ReactNode => (
+  <IdentifierFilters items={items}>
+    {(visible) => <TechnicalControlsTable controls={visible} />}
+  </IdentifierFilters>
+)
+
 export const TechnicalControlsSection = (): ReactNode => {
   const { data: session } = useSession()
   const isFiaAdmin = session?.user?.role === 'fia_admin'
@@ -85,7 +100,7 @@ export const TechnicalControlsSection = (): ReactNode => {
         onStatusChange={setStatus}
       />
       <QueryView query={query} isEmpty={(items) => items.length === 0} emptyMessage={emptyMsg}>
-        {(items) => <TechnicalControlsTable controls={items} />}
+        {(items) => <FilteredControls items={items} />}
       </QueryView>
       {isFiaAdmin && (
         <TechnicalControlCreateDialog

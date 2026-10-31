@@ -1,5 +1,5 @@
 import type { TechnicalControl } from '@fia/shared/contracts'
-import { fireEvent, screen } from '@testing-library/react'
+import { fireEvent, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { jsonResponse, mockFetchOnce } from '@/testing/mock-fetch'
 import { renderWithQuery } from '@/testing/render-with-query'
@@ -53,7 +53,7 @@ describe('TechnicalControlsSection', () => {
     mockFetchOnce(jsonResponse([mockControl, rejected]))
     renderWithQuery(<TechnicalControlsSection />)
 
-    expect(await screen.findAllByText(/Ferrari/)).toHaveLength(2)
+    expect(within(await screen.findByRole('table')).getAllByText(/Ferrari/)).toHaveLength(2)
     expect(screen.getByText('Alerón trasero excede tolerancia.')).toBeInTheDocument()
   })
 

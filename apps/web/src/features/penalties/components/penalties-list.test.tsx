@@ -1,7 +1,8 @@
 import { fireEvent, render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
+import { EMPTY_FILTERS_MESSAGE } from '@/components/common/data-filters-bar'
 import { aPenalty } from '@/testing/penalty-builders'
-import { NO_TEAM_PENALTIES, PenaltiesList } from './penalties-list'
+import { PenaltiesList } from './penalties-list'
 
 const TEAM_FINE = aPenalty({
   id: '00000000-0000-4000-8000-000000000002',
@@ -47,7 +48,7 @@ describe('PenaltiesList', () => {
   it('filtra por escudería con las escuderías del listado', () => {
     render(<PenaltiesList penalties={[aPenalty(), TEAM_FINE]} />)
     const options = within(screen.getByLabelText('Escudería:')).getAllByRole('option')
-    expect(options.map((o) => o.textContent)).toEqual(['Todas', 'Alpine', 'Ferrari'])
+    expect(options.map((o) => o.textContent)).toEqual(['Todos', 'Alpine', 'Ferrari'])
     fireEvent.change(screen.getByLabelText('Escudería:'), { target: { value: TEAM_FINE.teamId } })
     expect(rowTexts()).toEqual(['Alpine (Escudería)'])
     expect(screen.getByText('Total de sanciones registradas: 1')).toBeInTheDocument()
@@ -55,11 +56,19 @@ describe('PenaltiesList', () => {
     expect(rowTexts()).toHaveLength(2)
   })
 
+  it('filtra por piloto (identificador, US-3)', () => {
+    render(<PenaltiesList penalties={[aPenalty(), TEAM_FINE]} />)
+    const pilot = aPenalty().driverId ?? ''
+    fireEvent.change(screen.getByLabelText('Piloto:'), { target: { value: pilot } })
+    expect(rowTexts()).toHaveLength(1)
+    expect(screen.getByText('Total de sanciones registradas: 1')).toBeInTheDocument()
+  })
+
   it('avisa si otro filtro deja sin sanciones a la escudería elegida', () => {
     const { rerender } = render(<PenaltiesList penalties={[aPenalty(), TEAM_FINE]} />)
     fireEvent.change(screen.getByLabelText('Escudería:'), { target: { value: TEAM_FINE.teamId } })
     rerender(<PenaltiesList penalties={[aPenalty()]} />)
-    expect(screen.getByText(NO_TEAM_PENALTIES)).toBeInTheDocument()
+    expect(screen.getByText(EMPTY_FILTERS_MESSAGE)).toBeInTheDocument()
     expect(screen.queryByRole('table')).not.toBeInTheDocument()
   })
 })

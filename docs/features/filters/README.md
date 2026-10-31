@@ -5,7 +5,8 @@
   - `packages/shared/src/contracts/common-filters.ts` (campos y validación de rango),
     `packages/shared/src/domain/date-filters.ts` y `domain/filters.ts` (criterios y relevancia en memoria)
   - `apps/api/src/core/db/filter-conditions.ts` (condiciones y orden con el query builder de Drizzle)
-  - `apps/web/src/components/common/use-common-filters.ts`, `data-filters-bar.tsx`, `data-filters-fields.tsx`
+  - `apps/web/src/components/common/use-common-filters.ts`, `data-filters-bar.tsx`, `data-filters-fields.tsx`,
+    `identifier-filters.tsx` (escudería y piloto sobre el listado)
 
 ## Qué hace
 
@@ -13,8 +14,8 @@ Una sola lógica de filtros para calendario, resultados, sanciones y controles t
 
 | Listado | Fecha/rango | Año | Tipo | Identificador | Orden | Dónde se filtra |
 |---|---|---|---|---|---|---|
-| Sanciones (`/sanctions`) | ✓ | ✓ (arranca en la actual) | tipo de sanción | escudería y piloto (`driverId`) | ✓ | servidor |
-| Controles técnicos (`/scrutineering`) | ✓ | ✓ | tipo de control y dictamen | escudería y piloto (`driverId`) | ✓ | servidor |
+| Sanciones (`/sanctions`) | ✓ | ✓ (arranca en la actual) | tipo de sanción | escudería y piloto | ✓ | servidor (fecha, año, tipo, orden) + listado (escudería, piloto) |
+| Controles técnicos (`/scrutineering`) | ✓ | ✓ | tipo de control y dictamen | escudería y piloto | ✓ | servidor (fecha, año, tipo, orden) + listado (escudería, piloto) |
 | Calendario (carreras de la temporada) | ✓ | selector de temporada | — | evento (nombre o circuito) | ✓ | cliente (`applyClientFilters`) |
 | Resultados (campeonato) | — | selector de temporada | — | piloto o escudería | posición | cliente |
 

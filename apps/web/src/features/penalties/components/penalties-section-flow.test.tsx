@@ -28,7 +28,7 @@ describe('PenaltiesSection (flujo)', () => {
       'GET /penalties?season=2024&type=fine': () => jsonResponse([]),
     })
     renderWithQuery(<PenaltiesSection />)
-    await screen.findByText('Charles Leclerc')
+    await screen.findByRole('cell', { name: /Charles Leclerc/ })
     fireEvent.change(screen.getByLabelText('Temporada:'), { target: { value: '2024' } })
     fireEvent.change(screen.getByLabelText('Tipo:'), { target: { value: 'fine' } })
     await waitFor(() =>
@@ -40,7 +40,7 @@ describe('PenaltiesSection (flujo)', () => {
     session.role = 'public'
     mockFetchRoutes({ [CURRENT]: () => jsonResponse([aPenalty()]) })
     renderWithQuery(<PenaltiesSection />)
-    expect(await screen.findByText('Charles Leclerc')).toBeInTheDocument()
+    expect(await screen.findByRole('cell', { name: /Charles Leclerc/ })).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: '+ Nueva sanción' })).not.toBeInTheDocument()
   })
 
