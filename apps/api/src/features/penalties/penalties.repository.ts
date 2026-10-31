@@ -1,5 +1,5 @@
 import type { CreatePenaltyBody, Penalty } from '@fia/shared/contracts'
-import { categories, drivers, penalties, races, teams } from '@fia/shared/db'
+import { categories, drivers, penalties, races, teams, user } from '@fia/shared/db'
 import { AppError } from '@fia/shared/domain'
 import { and, eq, gte, isNull, type SQL } from 'drizzle-orm'
 import type { DbExecutor } from '../../core/db/executor'
@@ -26,6 +26,7 @@ const findPenaltyRow = async (db: DbExecutor, id: string): Promise<Penalty | nul
     .innerJoin(categories, eq(teams.categoryId, categories.id))
     .leftJoin(drivers, eq(penalties.driverId, drivers.id))
     .leftJoin(races, eq(penalties.raceId, races.id))
+    .leftJoin(user, eq(penalties.confirmedByUserId, user.id))
     .where(eq(penalties.id, id))
     .limit(1)
   return row ? toPenaltyDto(row) : null
@@ -61,17 +62,25 @@ export const createDrizzlePenaltiesRepository = (db: DbExecutor): PenaltiesRepos
       .innerJoin(categories, eq(teams.categoryId, categories.id))
       .leftJoin(drivers, eq(penalties.driverId, drivers.id))
       .leftJoin(races, eq(penalties.raceId, races.id))
+      .leftJoin(user, eq(penalties.confirmedByUserId, user.id))
       .where(and(...buildFilterConditions(filter)))
       .orderBy(dateOrder(penalties.issuedAt, filter.sort))
     return rows.map(toPenaltyDto)
   },
   findById: (id) => findPenaltyRow(db, id),
   create: (body) => insertPenaltyRow(db, body),
-  confirm: async ({ id, userId, confirmedAt }) => {
+  confirm: async ({ id, userId, confirmedAt, version }) => {
     const [updated] = await db
       .update(penalties)
-      .set({ confirmedAt, confirmedByUserId: userId, updatedAt: confirmedAt })
-      .where(and(eq(penalties.id, id), isNull(penalties.confirmedAt)))
+      .set({
+        confirmedAt,
+        confirmedByUserId: userId,
+        updatedAt: confirmedAt,
+        version: version + 1,
+      })
+      .where(
+        and(eq(penalties.id, id), eq(penalties.version, version), isNull(penalties.confirmedAt)),
+      )
       .returning({ id: penalties.id })
     return updated ? findPenaltyRow(db, updated.id) : null
   },

@@ -1,4 +1,4 @@
-import { categories, drivers, penalties, races, teams } from '@fia/shared/db'
+import { categories, drivers, penalties, races, teams, user } from '@fia/shared/db'
 
 export const penaltySelectFields = {
   id: penalties.id,
@@ -15,7 +15,7 @@ export const penaltySelectFields = {
   reason: penalties.reason,
   issuedAt: penalties.issuedAt,
   confirmedAt: penalties.confirmedAt,
-  confirmedByUserId: penalties.confirmedByUserId,
+  confirmedByName: user.name,
   version: penalties.version,
   createdAt: penalties.createdAt,
 }

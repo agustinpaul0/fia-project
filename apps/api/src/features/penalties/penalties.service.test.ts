@@ -19,7 +19,7 @@ const mockPenalty: Penalty = {
   reason: 'Infracción en curva 1.',
   issuedAt: '2026-05-24T14:30:00.000Z',
   confirmedAt: null,
-  confirmedByUserId: null,
+  confirmedByName: null,
   notificationStatus: 'pending',
   version: 1,
   createdAt: '2026-05-24T14:35:00.000Z',
@@ -40,7 +40,7 @@ const mockRepo = (overrides: Partial<PenaltiesRepository> = {}): PenaltiesReposi
   confirm: vi.fn().mockResolvedValue({
     ...mockPenalty,
     confirmedAt: '2026-05-24T15:00:00.000Z',
-    confirmedByUserId: 'staff-1',
+    confirmedByName: 'staff-1',
     notificationStatus: 'confirmed',
   }),
   driverBelongsToTeam: vi.fn().mockResolvedValue(true),

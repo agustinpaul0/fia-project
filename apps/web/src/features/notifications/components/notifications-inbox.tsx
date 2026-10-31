@@ -3,6 +3,7 @@ import type { ReactNode } from 'react'
 import { QueryView } from '@/components/common/query-view'
 import { useConfirmNotification, useMyNotifications } from '../hooks/use-notifications'
 import { NotificationCard } from './notification-card'
+import { PendingPenaltiesPanel } from './pending-penalties-panel'
 
 export const NO_PENDING_MESSAGE = 'No tenés notificaciones pendientes.'
 
@@ -44,6 +45,10 @@ export const NotificationsInbox = (): ReactNode => {
   return (
     <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 md:py-12 lg:px-8">
       <InboxHero list={query.data} />
+      <PendingPenaltiesPanel />
+      <h2 className="font-bold font-headline text-2xl text-primary uppercase">
+        Puntajes a confirmar
+      </h2>
       <QueryView
         query={query}
         isEmpty={(list) => list.length === 0}

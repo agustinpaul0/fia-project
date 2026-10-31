@@ -23,6 +23,10 @@ Permite al personal administrativo de la FIA (`fia_admin`) cargar sanciones ofic
 | El formulario ofrece los pilotos (`GET /teams/:id/drivers`) y las carreras de la temporada de la fecha (`GET /teams/:id/races?season=`) de la categoría de la escudería elegida; si la fecha queda vacía se usa la actual | US-13 + PO |
 | Retención: el listado muestra sólo las sanciones emitidas en los últimos 5 años (lo calcula el servicio) | US-13 |
 | Filtros: temporada y tipo (en el servidor) y escudería (sobre el listado) | US-13 |
+| Al cargarse una sanción, la escudería la ve en su bandeja de notificaciones (`/notifications`, sección "Sanciones a confirmar") y en el contador del menú, y la confirma con un clic | US-15 (reutiliza la bandeja de US-9, PO 31/10) |
+| La confirmación guarda usuario y fecha (`confirmed_by_user_id`, `confirmed_at`, juntos por `check`), una sola vez por escudería (update condicionado a `confirmed_at is null` y a `version`) | US-15 |
+| No existe endpoint para editar o borrar la confirmación; `confirmed_by_user_id` es FK `restrict` | US-15 |
+| La FIA y la escudería dueña ven "Pendiente/Notificada" y quién confirmó y cuándo; el público no ve el estado | US-15 + US-16 |
 
 ## Roles y permisos
 
@@ -30,6 +34,8 @@ Permite al personal administrativo de la FIA (`fia_admin`) cargar sanciones ofic
 |---|---|---|---|
 | Consultar sanciones (`GET /penalties`) | ✓ | ✓ | ✓ |
 | Registrar sanción (`POST /penalties`) | ✓ | ✗ (403) | ✗ (401) |
+| Ver pendientes de su escudería (`GET /penalties/pending`) | ✗ (403) | ✓ | ✗ (401) |
+| Confirmar sanción propia (`POST /penalties/:id/confirm`) | ✗ (403) | ✓ (ajena ⇒ 403) | ✗ (401) |
 
 ## API
 
@@ -37,6 +43,8 @@ Permite al personal administrativo de la FIA (`fia_admin`) cargar sanciones ofic
 |---|---|---|---|---|
 | GET | `/penalties` | `publicAccess` | `?season=&teamId=&type=` | 200 `Penalty[]` ordenadas por fecha descendente |
 | POST | `/penalties` | `fia_admin` | `CreatePenaltyBody` | 201 `Penalty` |
+| GET | `/penalties/pending` | `team_staff` | — | 200 `Penalty[]` sin confirmar de su escudería |
+| POST | `/penalties/:id/confirm` | `team_staff` | — | 200 `Penalty` con `confirmedByName` y `confirmedAt` |
 
 ## Errores
 
@@ -47,3 +55,7 @@ Permite al personal administrativo de la FIA (`fia_admin`) cargar sanciones ofic
 | Carrera inexistente | `RACE_NOT_FOUND` | 404 | La carrera no existe o fue eliminada. |
 | El piloto no es de esa escudería | `INVALID_PENALTY_TARGET` | 400 | El piloto seleccionado no pertenece a la escudería indicada. |
 | Datos faltantes o inválidos | `VALIDATION_FAILED` | 400 | Hay datos inválidos. Revisá los campos marcados y volvé a intentar. |
+| Confirmar una sanción ya confirmada | `NOTIFICATION_ALREADY_CONFIRMED` | 409 | (catálogo) |
+| Confirmar una sanción de otra escudería | `FORBIDDEN` | 403 | No tenés permisos para realizar esta acción. |
+| Confirmar sin escudería asociada | `TEAM_REQUIRED` | 403 | (catálogo) |
+| Sanción inexistente | `PENALTY_NOT_FOUND` | 404 | La sanción solicitada no existe o fue eliminada. |

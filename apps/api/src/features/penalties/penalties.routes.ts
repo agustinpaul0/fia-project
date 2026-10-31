@@ -24,6 +24,13 @@ export const createPenaltiesRoutes = (service: PenaltiesService): Hono<AppEnv> =
     .post('/', onlyFiaAdmin, validate('json', createPenaltyBodySchema), async (c) =>
       created(c, penaltySchema, await service.create(c.req.valid('json'))),
     )
+    .get('/pending', onlyTeamStaff, async (c) => {
+      const user = c.get('sessionUser')
+      if (!user) {
+        throw new AppError('UNAUTHENTICATED')
+      }
+      return ok(c, penaltyListSchema, await service.pending(user))
+    })
     .post('/:id/confirm', onlyTeamStaff, validate('param', idParamsSchema), async (c) => {
       const user = c.get('sessionUser')
       if (!user) {

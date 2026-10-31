@@ -36,9 +36,9 @@ export const penaltySchema = z.strictObject({
   penalty: z.string(),
   reason: z.string(),
   issuedAt: z.iso.datetime(),
-  confirmedAt: z.iso.datetime().nullable().optional(),
-  confirmedByUserId: z.string().nullable().optional(),
-  notificationStatus: penaltyNotificationStatusSchema.nullable().optional(),
+  confirmedAt: z.iso.datetime().nullable(),
+  confirmedByName: z.string().nullable(),
+  notificationStatus: penaltyNotificationStatusSchema.nullable(),
   version: versionSchema,
   createdAt: z.iso.datetime(),
 })

@@ -21,7 +21,7 @@ const buildPenaltyRow = (body: CreatePenaltyBody, seq: number): Penalty => {
     reason: body.reason,
     issuedAt: body.issuedAt ?? now,
     confirmedAt: null,
-    confirmedByUserId: null,
+    confirmedByName: null,
     notificationStatus: 'pending',
     version: 1,
     createdAt: now,
@@ -70,8 +70,8 @@ export const createInMemoryPenaltiesRepository = (
       penalties.push(penalty)
       return penalty
     },
-    confirm: async ({ id, userId, confirmedAt }) => {
-      const index = penalties.findIndex((p) => p.id === id)
+    confirm: async ({ id, userId, confirmedAt, version }) => {
+      const index = penalties.findIndex((p) => p.id === id && p.version === version)
       const current = penalties[index]
       if (!current || current.confirmedAt) {
         return null
@@ -79,7 +79,7 @@ export const createInMemoryPenaltiesRepository = (
       const updated: Penalty = {
         ...current,
         confirmedAt: confirmedAt.toISOString(),
-        confirmedByUserId: userId,
+        confirmedByName: userId,
         notificationStatus: 'confirmed',
         version: current.version + 1,
       }

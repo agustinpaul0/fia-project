@@ -26,6 +26,11 @@ const NotificationCell = ({
         >
           {confirmed ? 'Notificada' : 'Pendiente'}
         </span>
+        {confirmed && penalty.confirmedByName && penalty.confirmedAt ? (
+          <span className="font-mono text-[11px] text-on-surface-variant">
+            {`${penalty.confirmedByName} · ${formatDateTime(penalty.confirmedAt)}`}
+          </span>
+        ) : null}
         {!confirmed && onConfirm ? (
           <button
             type="button"

@@ -1,5 +1,6 @@
 import type { CreatePenaltyBody, PenaltiesQuery, Penalty } from '@fia/shared/contracts'
 import { AppError, type Role } from '@fia/shared/domain'
+import { createPenaltyConfirmations, type PenaltyConfirmations } from './penalties.confirmations'
 import type { PenaltiesRepository } from './penalties.port'
 
 export type PenaltiesViewer = {
@@ -10,11 +11,7 @@ export type PenaltiesViewer = {
 export type PenaltiesService = {
   readonly list: (filter: PenaltiesQuery, viewer?: PenaltiesViewer) => Promise<readonly Penalty[]>
   readonly create: (body: CreatePenaltyBody) => Promise<Penalty>
-  readonly confirm: (
-    id: string,
-    user: { readonly id: string; readonly teamId: string | null },
-  ) => Promise<Penalty>
-}
+} & PenaltyConfirmations
 
 export const PENALTY_RETENTION_YEARS = 5
 
@@ -41,15 +38,15 @@ const sanitizeForViewer = (penalty: Penalty, viewer?: PenaltiesViewer): Penalty 
   if (canViewNotificationStatus(penalty, viewer)) {
     return {
       ...penalty,
-      confirmedAt: penalty.confirmedAt ?? null,
-      confirmedByUserId: penalty.confirmedByUserId ?? null,
+      confirmedAt: penalty.confirmedAt,
+      confirmedByName: penalty.confirmedByName,
       notificationStatus: penalty.confirmedAt ? 'confirmed' : 'pending',
     }
   }
   return {
     ...penalty,
     confirmedAt: null,
-    confirmedByUserId: null,
+    confirmedByName: null,
     notificationStatus: null,
   }
 }
@@ -71,24 +68,5 @@ export const createPenaltiesService = (
     }
     return repo.create(body)
   },
-  confirm: async (id, user) => {
-    if (!user.teamId) {
-      throw new AppError('TEAM_REQUIRED')
-    }
-    const existing = await repo.findById?.(id)
-    if (!existing) {
-      throw new AppError('PENALTY_NOT_FOUND')
-    }
-    if (existing.teamId !== user.teamId) {
-      throw new AppError('FORBIDDEN')
-    }
-    if (existing.confirmedAt) {
-      throw new AppError('NOTIFICATION_ALREADY_CONFIRMED')
-    }
-    const updated = await repo.confirm?.({ id, userId: user.id, confirmedAt: now() })
-    if (!updated) {
-      throw new AppError('NOTIFICATION_ALREADY_CONFIRMED')
-    }
-    return updated
-  },
+  ...createPenaltyConfirmations(repo, { now, since: () => retentionStart(now()) }),
 })
