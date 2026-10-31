@@ -41,11 +41,7 @@ describe('PenaltiesSection', () => {
     mockFetchOnce(jsonResponse([]))
     renderWithQuery(<PenaltiesSection />)
 
-    expect(
-      await screen.findByText(
-        'No se encontraron sanciones registradas para los filtros aplicados.',
-      ),
-    ).toBeInTheDocument()
+    expect(await screen.findByText('Sin resultados.')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: '+ Nueva sanción' })).toBeInTheDocument()
   })
 

@@ -1,7 +1,9 @@
 import type { DriverStanding } from '@fia/shared/contracts'
 import { ArrowRight, Flag } from 'lucide-react'
 import { type ReactNode, useState } from 'react'
+import { EMPTY_FILTERS_MESSAGE } from '@/components/common/data-filters-bar'
 import { STANDINGS_PREVIEW_SIZE, visibleStandings } from '../season/season-summary'
+import { IdentifierField } from './identifier-field'
 import { StandingsTable } from './standings-table'
 
 type Props = { readonly standings: readonly DriverStanding[] }
@@ -44,3 +46,33 @@ export const StandingsHeading = ({ season }: { readonly season: number }): React
     </span>
   </div>
 )
+
+export const filterStandings = (
+  standings: readonly DriverStanding[],
+  text: string,
+): readonly DriverStanding[] => {
+  const needle = text.trim().toLowerCase()
+  return standings.filter((s) =>
+    `${s.driverName} ${s.driverCode} ${s.teamName}`.toLowerCase().includes(needle),
+  )
+}
+
+export const FilteredStandings = ({ standings }: Props): ReactNode => {
+  const [text, setText] = useState('')
+  const visible = filterStandings(standings, text)
+  return (
+    <div className="flex flex-col gap-3">
+      <IdentifierField
+        id="filter-standings"
+        label="Piloto o escudería:"
+        value={text}
+        onChange={setText}
+      />
+      {visible.length === 0 ? (
+        <p className="font-mono text-on-surface-variant text-sm">{EMPTY_FILTERS_MESSAGE}</p>
+      ) : (
+        <StandingsCard standings={visible} />
+      )}
+    </div>
+  )
+}

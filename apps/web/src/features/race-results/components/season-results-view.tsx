@@ -8,7 +8,7 @@ import { SeasonHero } from './season-hero'
 import { SeasonMetrics } from './season-metrics'
 import { RacesHeading, SeasonRaces } from './season-races-panel'
 import { SeasonSelect } from './season-select'
-import { StandingsCard, StandingsHeading } from './standings-panel'
+import { FilteredStandings, StandingsHeading } from './standings-panel'
 
 export const NO_STANDINGS_MESSAGE = 'Todavía no hay puntos sumados en esta temporada.'
 
@@ -40,7 +40,7 @@ export const SeasonResultsView = ({ category, now = new Date() }: Props): ReactN
             >
               {(list) => (
                 <StaleFade stale={standings.isPlaceholderData}>
-                  <StandingsCard standings={list} />
+                  <FilteredStandings standings={list} />
                 </StaleFade>
               )}
             </QueryView>

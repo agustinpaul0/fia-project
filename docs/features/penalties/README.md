@@ -22,7 +22,9 @@ Permite al personal administrativo de la FIA (`fia_admin`) cargar sanciones ofic
 | Datos de la sanción: categoría (la de la escudería), escudería, piloto (opcional), tipo, sanción, motivo, carrera (opcional) y fecha | PO (P4) |
 | El formulario ofrece los pilotos (`GET /teams/:id/drivers`) y las carreras de la temporada de la fecha (`GET /teams/:id/races?season=`) de la categoría de la escudería elegida; si la fecha queda vacía se usa la actual | US-13 + PO |
 | Retención: el listado muestra sólo las sanciones emitidas en los últimos 5 años (lo calcula el servicio) | US-13 |
-| Filtros: temporada y tipo (en el servidor) y escudería (sobre el listado) | US-13 |
+| Filtros: temporada (por defecto la actual), rango de fechas, tipo, piloto y orden en el servidor; escudería sobre el listado (ver `docs/features/filters`) | US-13 + US-3 + US-16 |
+| Temporadas consultables: la actual y las 5 anteriores (retención de 5 años) | US-16 |
+| El listado se actualiza solo cada 5 s, sin recargar la página | US-16 |
 | Al cargarse una sanción, la escudería la ve en su bandeja de notificaciones (`/notifications`, sección "Sanciones a confirmar") y en el contador del menú, y la confirma con un clic | US-15 (reutiliza la bandeja de US-9, PO 31/10) |
 | La confirmación guarda usuario y fecha (`confirmed_by_user_id`, `confirmed_at`, juntos por `check`), una sola vez por escudería (update condicionado a `confirmed_at is null` y a `version`) | US-15 |
 | No existe endpoint para editar o borrar la confirmación; `confirmed_by_user_id` es FK `restrict` | US-15 |
@@ -41,7 +43,7 @@ Permite al personal administrativo de la FIA (`fia_admin`) cargar sanciones ofic
 
 | Método | Ruta | Acceso | Query / Body | Respuesta |
 |---|---|---|---|---|
-| GET | `/penalties` | `publicAccess` | `?season=&teamId=&type=` | 200 `Penalty[]` ordenadas por fecha descendente |
+| GET | `/penalties` | `publicAccess` | `?season=&from=&to=&teamId=&driverId=&type=&sort=` | 200 `Penalty[]` (por defecto, más recientes primero) |
 | POST | `/penalties` | `fia_admin` | `CreatePenaltyBody` | 201 `Penalty` |
 | GET | `/penalties/pending` | `team_staff` | — | 200 `Penalty[]` sin confirmar de su escudería |
 | POST | `/penalties/:id/confirm` | `team_staff` | — | 200 `Penalty` con `confirmedByName` y `confirmedAt` |

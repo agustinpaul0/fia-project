@@ -1,7 +1,9 @@
 import type { PenaltyType } from '@fia/shared/contracts'
 import { type ReactNode, useState } from 'react'
 import { toast } from 'sonner'
+import { EMPTY_FILTERS_MESSAGE } from '@/components/common/data-filters-bar'
 import { QueryView } from '@/components/common/query-view'
+import { useCommonFilters } from '@/components/common/use-common-filters'
 import { Button } from '@/components/ui/button'
 import { useSession } from '@/lib/auth-client'
 import { useConfirmPenalty } from '../hooks/use-confirm-penalty'
@@ -39,11 +41,11 @@ export const PenaltiesSection = (): ReactNode => {
   const { data: session } = useSession()
   const isFiaAdmin = session?.user?.role === 'fia_admin'
   const isTeamStaff = session?.user?.role === 'team_staff'
-  const [season, setSeason] = useState<number | undefined>(undefined)
+  const filters = useCommonFilters({ season: new Date().getFullYear() })
   const [type, setType] = useState<PenaltyType | undefined>(undefined)
   const [dialogOpen, setDialogOpen] = useState(false)
 
-  const query = usePenalties({ season, type })
+  const query = usePenalties({ ...filters.query, type })
   const createMut = useCreatePenalty()
   const confirmMut = useConfirmPenalty()
 
@@ -57,16 +59,11 @@ export const PenaltiesSection = (): ReactNode => {
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-8">
       <PenaltiesHeader isFiaAdmin={isFiaAdmin} onOpenCreate={() => setDialogOpen(true)} />
-      <PenaltiesFilters
-        selectedSeason={season}
-        selectedType={type}
-        onSeasonChange={setSeason}
-        onTypeChange={setType}
-      />
+      <PenaltiesFilters filters={filters} selectedType={type} onTypeChange={setType} />
       <QueryView
         query={query}
         isEmpty={(items) => items.length === 0}
-        emptyMessage="No se encontraron sanciones registradas para los filtros aplicados."
+        emptyMessage={EMPTY_FILTERS_MESSAGE}
       >
         {(items) => <PenaltiesList penalties={items} onConfirm={handleConfirm} />}
       </QueryView>

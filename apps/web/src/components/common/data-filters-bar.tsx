@@ -1,53 +1,56 @@
 import type { ReactNode } from 'react'
-import { FIELD_CLASS } from '@/features/team-staff/components/field-message'
+import { recentSeasons } from '@/lib/recent-seasons'
+import { DateRangeFields, SeasonField, SortField } from './data-filters-fields'
+import type { CommonFilters } from './use-common-filters'
 
-export const EMPTY_FILTERS_MESSAGE = 'Sin resultados que coincidan con los filtros aplicados.'
-
-const DEFAULT_SEASONS = [2026, 2025, 2024, 2023, 2022, 2021] as const
+export const EMPTY_FILTERS_MESSAGE = 'Sin resultados.'
 
 export type DataFiltersBarProps = {
-  readonly selectedSeason?: number | undefined
-  readonly onSeasonChange: (season?: number | undefined) => void
-  readonly hasActiveFilters?: boolean | undefined
+  readonly filters: CommonFilters
   readonly onReset?: (() => void) | undefined
+  readonly hasExtraFilters?: boolean | undefined
+  readonly withSeason?: boolean | undefined
+  readonly now?: Date | undefined
   readonly children?: ReactNode | undefined
 }
 
 export const DataFiltersBar = ({
-  selectedSeason,
-  onSeasonChange,
-  hasActiveFilters = false,
+  filters,
   onReset,
+  hasExtraFilters = false,
+  withSeason = true,
+  now = new Date(),
   children,
 }: DataFiltersBarProps): ReactNode => (
-  <div className="flex flex-wrap items-center gap-3 border-2 border-outline bg-surface p-4 shadow-brutal-sm">
-    <div className="flex items-center gap-2">
-      <label htmlFor="filter-season" className="font-bold font-mono text-xs uppercase">
-        Temporada:
-      </label>
-      <select
-        id="filter-season"
-        value={selectedSeason ?? ''}
-        onChange={(e) => onSeasonChange(e.target.value ? Number(e.target.value) : undefined)}
-        className={`${FIELD_CLASS} w-auto font-mono text-xs`}
-      >
-        <option value="">Todas</option>
-        {DEFAULT_SEASONS.map((y) => (
-          <option key={y} value={y}>
-            {y}
-          </option>
-        ))}
-      </select>
+  <div className="flex flex-col gap-2 border-2 border-outline bg-surface p-4 shadow-brutal-sm">
+    <div className="flex flex-wrap items-center gap-3">
+      {withSeason ? (
+        <SeasonField
+          values={filters.values}
+          onChange={filters.setValues}
+          seasons={recentSeasons(now)}
+        />
+      ) : null}
+      <DateRangeFields values={filters.values} onChange={filters.setValues} />
+      {children}
+      <SortField values={filters.values} onChange={filters.setValues} />
+      {filters.isActive || hasExtraFilters ? (
+        <button
+          type="button"
+          onClick={() => {
+            filters.reset()
+            onReset?.()
+          }}
+          className="ml-auto border border-black bg-white px-3 py-1.5 font-bold font-mono text-xs uppercase hover:bg-surface-container"
+        >
+          Limpiar filtros
+        </button>
+      ) : null}
     </div>
-    {children}
-    {hasActiveFilters && onReset ? (
-      <button
-        type="button"
-        onClick={onReset}
-        className="ml-auto border border-black bg-white px-3 py-1.5 font-bold font-mono text-xs uppercase hover:bg-surface-container"
-      >
-        Limpiar filtros
-      </button>
+    {filters.rangeError ? (
+      <p role="alert" className="font-mono text-secondary text-xs">
+        {filters.rangeError}
+      </p>
     ) : null}
   </div>
 )

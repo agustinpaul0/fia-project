@@ -1,13 +1,13 @@
 import type { TechnicalControlStatus, TechnicalControlType } from '@fia/shared/contracts'
 import type { ReactNode } from 'react'
 import { DataFiltersBar } from '@/components/common/data-filters-bar'
+import type { CommonFilters } from '@/components/common/use-common-filters'
 import { FIELD_CLASS } from '@/features/team-staff/components/field-message'
 
 type Props = {
-  readonly selectedSeason?: number | undefined
+  readonly filters: CommonFilters
   readonly selectedControlType?: TechnicalControlType | undefined
   readonly selectedStatus?: TechnicalControlStatus | undefined
-  readonly onSeasonChange: (season?: number | undefined) => void
   readonly onControlTypeChange: (type?: TechnicalControlType | undefined) => void
   readonly onStatusChange: (status?: TechnicalControlStatus | undefined) => void
 }
@@ -44,15 +44,9 @@ const TypeSelect = ({
 
 export const TechnicalControlsFilters = (p: Props): ReactNode => (
   <DataFiltersBar
-    selectedSeason={p.selectedSeason}
-    onSeasonChange={p.onSeasonChange}
-    hasActiveFilters={
-      p.selectedSeason !== undefined ||
-      p.selectedControlType !== undefined ||
-      p.selectedStatus !== undefined
-    }
+    filters={p.filters}
+    hasExtraFilters={p.selectedControlType !== undefined || p.selectedStatus !== undefined}
     onReset={() => {
-      p.onSeasonChange(undefined)
       p.onControlTypeChange(undefined)
       p.onStatusChange(undefined)
     }}

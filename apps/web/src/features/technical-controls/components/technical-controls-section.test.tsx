@@ -39,11 +39,7 @@ describe('TechnicalControlsSection', () => {
     mockFetchOnce(jsonResponse([]))
     renderWithQuery(<TechnicalControlsSection />)
 
-    expect(
-      await screen.findByText(
-        'No se encontraron controles técnicos registrados para los filtros aplicados.',
-      ),
-    ).toBeInTheDocument()
+    expect(await screen.findByText('Sin resultados.')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: '+ Nuevo control técnico' })).toBeInTheDocument()
   })
 

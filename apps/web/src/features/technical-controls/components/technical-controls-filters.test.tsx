@@ -1,59 +1,25 @@
 import { fireEvent, render, screen } from '@testing-library/react'
+import type { ReactNode } from 'react'
 import { describe, expect, it, vi } from 'vitest'
+import { useCommonFilters } from '@/components/common/use-common-filters'
 import { TechnicalControlsFilters } from './technical-controls-filters'
 
+type Handlers = { readonly onControlTypeChange: () => void; readonly onStatusChange: () => void }
+
+const Harness = (h: Handlers): ReactNode => (
+  <TechnicalControlsFilters filters={useCommonFilters()} selectedStatus="passed" {...h} />
+)
+
 describe('TechnicalControlsFilters', () => {
-  it('dispara onSeasonChange con número y con undefined', () => {
-    const onSeasonChange = vi.fn()
-    render(
-      <TechnicalControlsFilters
-        selectedSeason={2026}
-        onSeasonChange={onSeasonChange}
-        onControlTypeChange={vi.fn()}
-        onStatusChange={vi.fn()}
-      />,
-    )
-    const select = screen.getByLabelText(/Temporada/)
-    fireEvent.change(select, { target: { value: '2025' } })
-    expect(onSeasonChange).toHaveBeenCalledWith(2025)
-
-    fireEvent.change(select, { target: { value: '' } })
-    expect(onSeasonChange).toHaveBeenCalledWith(undefined)
-  })
-
-  it('dispara onControlTypeChange con tipo y con undefined', () => {
-    const onControlTypeChange = vi.fn()
-    render(
-      <TechnicalControlsFilters
-        selectedControlType="weight"
-        onSeasonChange={vi.fn()}
-        onControlTypeChange={onControlTypeChange}
-        onStatusChange={vi.fn()}
-      />,
-    )
-    const select = screen.getByLabelText(/Tipo/)
-    fireEvent.change(select, { target: { value: 'fuel' } })
-    expect(onControlTypeChange).toHaveBeenCalledWith('fuel')
-
-    fireEvent.change(select, { target: { value: '' } })
-    expect(onControlTypeChange).toHaveBeenCalledWith(undefined)
-  })
-
-  it('dispara onStatusChange con status y con undefined', () => {
-    const onStatusChange = vi.fn()
-    render(
-      <TechnicalControlsFilters
-        selectedStatus="passed"
-        onSeasonChange={vi.fn()}
-        onControlTypeChange={vi.fn()}
-        onStatusChange={onStatusChange}
-      />,
-    )
-    const select = screen.getByLabelText(/Resultado/)
-    fireEvent.change(select, { target: { value: 'rejected' } })
-    expect(onStatusChange).toHaveBeenCalledWith('rejected')
-
-    fireEvent.change(select, { target: { value: '' } })
-    expect(onStatusChange).toHaveBeenCalledWith(undefined)
+  it('avisa tipo y resultado, y los limpia con el botón común', () => {
+    const h = { onControlTypeChange: vi.fn(), onStatusChange: vi.fn() }
+    render(<Harness {...h} />)
+    fireEvent.change(screen.getByLabelText(/Tipo/), { target: { value: 'fuel' } })
+    expect(h.onControlTypeChange).toHaveBeenLastCalledWith('fuel')
+    fireEvent.change(screen.getByLabelText(/Resultado/), { target: { value: 'rejected' } })
+    expect(h.onStatusChange).toHaveBeenLastCalledWith('rejected')
+    fireEvent.click(screen.getByRole('button', { name: 'Limpiar filtros' }))
+    expect(h.onControlTypeChange).toHaveBeenLastCalledWith(undefined)
+    expect(h.onStatusChange).toHaveBeenLastCalledWith(undefined)
   })
 })

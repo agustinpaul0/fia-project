@@ -1,4 +1,5 @@
 import type { CreatePenaltyBody, Penalty } from '@fia/shared/contracts'
+import { compareIsoDates, matchesDateCriteria } from '@fia/shared/domain'
 import type { PenaltiesListFilter, PenaltiesRepository } from '../features/penalties/penalties.port'
 
 export type InMemoryPenaltiesRepository = PenaltiesRepository & {
@@ -28,28 +29,16 @@ const buildPenaltyRow = (body: CreatePenaltyBody, seq: number): Penalty => {
   }
 }
 
-const inRange = (iso: string, filter: PenaltiesListFilter): boolean => {
-  const at = new Date(iso)
-  return (
-    at >= filter.issuedSince &&
-    (!filter.from || at >= new Date(filter.from)) &&
-    (!filter.to || at <= new Date(filter.to)) &&
-    (!filter.season || at.getUTCFullYear() === filter.season)
-  )
-}
-
-const byDate = (sort: PenaltiesListFilter['sort']) => (a: Penalty, b: Penalty) =>
-  sort === 'date_asc' ? a.issuedAt.localeCompare(b.issuedAt) : b.issuedAt.localeCompare(a.issuedAt)
-
 const filterPenalties = (
   items: readonly Penalty[],
   filter: PenaltiesListFilter,
 ): readonly Penalty[] =>
   [...items]
-    .sort(byDate(filter.sort))
+    .sort((a, b) => compareIsoDates(filter.sort)(a.issuedAt, b.issuedAt))
     .filter(
       (p) =>
-        inRange(p.issuedAt, filter) &&
+        new Date(p.issuedAt) >= filter.issuedSince &&
+        matchesDateCriteria(p.issuedAt, filter) &&
         (!filter.teamId || p.teamId === filter.teamId) &&
         (!filter.driverId || p.driverId === filter.driverId) &&
         (!filter.type || p.type === filter.type),

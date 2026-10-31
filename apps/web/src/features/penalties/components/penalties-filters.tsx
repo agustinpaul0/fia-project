@@ -1,29 +1,20 @@
 import type { PenaltyType } from '@fia/shared/contracts'
 import type { ReactNode } from 'react'
 import { DataFiltersBar } from '@/components/common/data-filters-bar'
+import type { CommonFilters } from '@/components/common/use-common-filters'
 import { FIELD_CLASS } from '@/features/team-staff/components/field-message'
 
 type Props = {
-  readonly selectedSeason?: number | undefined
+  readonly filters: CommonFilters
   readonly selectedType?: PenaltyType | undefined
-  readonly onSeasonChange: (season?: number | undefined) => void
   readonly onTypeChange: (type?: PenaltyType | undefined) => void
 }
 
-export const PenaltiesFilters = ({
-  selectedSeason,
-  selectedType,
-  onSeasonChange,
-  onTypeChange,
-}: Props): ReactNode => (
+export const PenaltiesFilters = ({ filters, selectedType, onTypeChange }: Props): ReactNode => (
   <DataFiltersBar
-    selectedSeason={selectedSeason}
-    onSeasonChange={onSeasonChange}
-    hasActiveFilters={selectedSeason !== undefined || selectedType !== undefined}
-    onReset={() => {
-      onSeasonChange(undefined)
-      onTypeChange(undefined)
-    }}
+    filters={filters}
+    hasExtraFilters={selectedType !== undefined}
+    onReset={() => onTypeChange(undefined)}
   >
     <div className="flex items-center gap-2">
       <label htmlFor="filter-type" className="font-bold font-mono text-xs uppercase">

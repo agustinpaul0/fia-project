@@ -55,7 +55,7 @@ const mountFeatureRoutes = (app: Hono<AppEnv>, deps: AppDependencies): void => {
     app.route(
       API_PATHS.technicalControls,
       createTechnicalControlsRoutes(
-        createTechnicalControlsService(deps.repositories.technicalControls),
+        createTechnicalControlsService(deps.repositories.technicalControls, clock),
       ),
     )
   }

@@ -85,7 +85,9 @@ describe('SeasonResultsView', () => {
       'GET /races?season=2026&category=F2': () => jsonResponse([]),
     })
     renderWithRouter(<SeasonResultsView category="F2" now={NOW} />)
-    fireEvent.change(await screen.findByRole('combobox'), { target: { value: '2026' } })
+    fireEvent.change(await screen.findByRole('combobox', { name: 'Selección de temporada' }), {
+      target: { value: '2026' },
+    })
     expect(await screen.findByText('Campeonato de pilotos 2026')).toBeInTheDocument()
     expect(await screen.findByText(NO_STANDINGS_MESSAGE)).toBeInTheDocument()
     expect(await screen.findByText(NO_RACES_MESSAGE)).toBeInTheDocument()
