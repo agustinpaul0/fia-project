@@ -23,6 +23,9 @@ Permite al personal de comisarios de la FIA (`fia_admin`) registrar el historial
 | El listado oculta los controles cuya vigencia ya pasó | US-21 |
 | Las fechas se cargan en hora de Buenos Aires y viajan en UTC | AGENTS.md |
 | La vigencia la carga la FIA y el control se muestra hasta que vence | PO (P5) |
+| "Mis autos" (`GET /technical-controls/mine`) muestra a la escudería sus controles con fecha, hora, tipo, vehículo, dictamen y observaciones; los rechazados se destacan | US-24 |
+| Las observaciones sólo las ven la escudería dueña y la FIA; el público ve estado y dictamen | US-24 |
+| El listado se vuelve a consultar solo cada 60 s (criterio: < 10 min sin recargar) | US-24 (QA) |
 
 ## Roles y permisos
 

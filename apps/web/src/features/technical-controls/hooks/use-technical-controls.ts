@@ -5,6 +5,8 @@ import {
   TECHNICAL_CONTROLS_QUERY_KEY,
 } from '../api/fetch-technical-controls'
 
+export const TECHNICAL_CONTROLS_POLL_MS = 60_000
+
 export const useTechnicalControls = (
   filter?: TechnicalControlsQuery,
   onlyMine = false,
@@ -12,4 +14,5 @@ export const useTechnicalControls = (
   useQuery({
     queryKey: [...TECHNICAL_CONTROLS_QUERY_KEY, filter, onlyMine],
     queryFn: () => fetchTechnicalControls(filter, onlyMine),
+    refetchInterval: TECHNICAL_CONTROLS_POLL_MS,
   })
